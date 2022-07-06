@@ -62,6 +62,7 @@
         android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:clipToPadding="false"
+        tools:listitem="@layout/note_list_item"
         android:transitionGroup="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
@@ -70,7 +71,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -86,14 +88,16 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
+        android:layout_margin="15dp"
         android:animateLayoutChanges="true"
+        android:background="@drawable/floating_action_button_bg"
+        android:backgroundTint="#FFB637"
         android:clickable="true"
         android:clipToPadding="false"
         android:focusable="true"
@@ -103,10 +107,22 @@
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_add_24"
-            app:fabSize="normal"
             android:backgroundTint="#FFB637"
+            android:elevation="0dp"
+            android:src="@drawable/ic_baseline_add_24"
+            app:borderWidth="0dp"
+            app:fabSize="normal"
             app:useCompatPadding="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="0dp"
+            android:paddingEnd="20dp"
+            android:text="Add Note"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
+            android:textColor="@color/black" />
 
     </LinearLayout>
 
