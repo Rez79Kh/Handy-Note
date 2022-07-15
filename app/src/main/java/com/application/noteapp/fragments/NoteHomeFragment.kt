@@ -1,60 +1,53 @@
 package com.application.noteapp.fragments
 
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.view.WindowManager
+import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import com.application.noteapp.R
+import com.application.noteapp.activities.MainActivity
+import com.application.noteapp.databinding.FragmentNoteHomeBinding
+import com.application.noteapp.util.hideKeyboard
+import com.google.android.material.transition.MaterialElevationScale
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [NoteHomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class NoteHomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
+    lateinit var binding: FragmentNoteHomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
+        exitTransition = MaterialElevationScale(false).apply { duration = 300 }
+        enterTransition = MaterialElevationScale(true).apply { duration = 300 }
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentNoteHomeBinding.bind(view)
+        val navigator = Navigation.findNavController(view)
+        var activity = activity as MainActivity
+        requireView().hideKeyboard()
+
+        CoroutineScope(Dispatchers.Main).launch {
+            activity.window.statusBarColor = Color.WHITE
+            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            activity.window.statusBarColor = Color.parseColor("#9E9D9D")
         }
-    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_note_home, container, false)
-    }
+        binding.addNoteButton.setOnClickListener {
+            binding.appBar.visibility = View.INVISIBLE
+            navigator.navigate(NoteHomeFragmentDirections.actionNoteHomeFragmentToAddOrUpdateNoteFragment())
+        }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment NoteHomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            NoteHomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        binding.addNoteFloatingActButton.setOnClickListener {
+            binding.appBar.visibility = View.INVISIBLE
+            navigator.navigate(NoteHomeFragmentDirections.actionNoteHomeFragmentToAddOrUpdateNoteFragment())
+        }
+
     }
 }

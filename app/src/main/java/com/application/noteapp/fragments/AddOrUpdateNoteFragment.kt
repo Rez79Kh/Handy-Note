@@ -1,60 +1,136 @@
 package com.application.noteapp.fragments
 
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import com.application.noteapp.R
+import com.application.noteapp.activities.MainActivity
+import com.application.noteapp.databinding.ColorPickerBottomSheetBinding
+import com.application.noteapp.databinding.FragmentAddOrUpdateNoteBinding
+import com.application.noteapp.model.Note
+import com.application.noteapp.util.hideKeyboard
+import com.application.noteapp.viewmodel.NoteViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.transition.MaterialContainerTransform
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import java.text.SimpleDateFormat
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [AddOrUpdateNoteFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class AddOrUpdateNoteFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
+    lateinit var binding: FragmentAddOrUpdateNoteBinding
+    lateinit var navigator: NavController
+    val viewModel: NoteViewModel by activityViewModels()
+    val currentDate = SimpleDateFormat.getInstance().format(Date())
+    var note: Note? = null
+    var color: Int = -1
+    val job = CoroutineScope(Dispatchers.Main)
+    val args: AddOrUpdateNoteFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+
+        val anim = MaterialContainerTransform().apply {
+            drawingViewId = R.id.mainFragment
+            duration = 300
+            scrimColor = Color.TRANSPARENT
         }
+
+        sharedElementEnterTransition = anim
+        sharedElementReturnTransition = anim
+
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_or_update_note, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentAddOrUpdateNoteBinding.bind(view)
+
+        val activity = activity as MainActivity
+
+        navigator = Navigation.findNavController(view)
+
+        binding.backButton.setOnClickListener {
+            requireView().hideKeyboard()
+            navigator.popBackStack()
+        }
+
+        binding.saveButton.setOnClickListener {
+            saveNote()
+        }
+
+        try {
+            binding.noteTitleEditText.setOnFocusChangeListener { _, focused ->
+                if (focused) {
+                    binding.markDownStyleBar.visibility = View.VISIBLE
+                    binding.noteContentEditText.setStylesBar(binding.styleBar)
+                } else binding.markDownStyleBar.visibility = View.GONE
+
+            }
+        } catch (ex: Exception) {
+            Log.d("Exception", ex.toString())
+        }
+
+        binding.toolsFloatingActButton.setOnClickListener {
+            val bottomsheetDialog =
+                BottomSheetDialog(requireContext(), R.style.BottomSheetDialogTheme)
+            val bottomSheetView = layoutInflater.inflate(R.layout.color_picker_bottom_sheet, null)
+            with(bottomsheetDialog) {
+                setContentView(bottomSheetView)
+                show()
+            }
+            val bottomSheetBinding = ColorPickerBottomSheetBinding.bind(bottomSheetView)
+
+            bottomSheetBinding.apply {
+                colorPicker.apply {
+                    setSelectedColor(color)
+                    setOnColorSelectedListener { selectedColor ->
+                        color = selectedColor
+                        binding.apply {
+                            addOrUpdateNoteFragmentParent.setBackgroundColor(color)
+                            FragmentAddOrUpdateToolbar.setBackgroundColor(color)
+                            markDownStyleBar.setBackgroundColor(color)
+                            activity.window.statusBarColor = color
+                        }
+                        bottomSheetBinding.bottomSheetCard.setCardBackgroundColor(color)
+                    }
+                }
+                bottomSheetCard.setBackgroundColor(color)
+            }
+            bottomSheetView.post {
+                bottomsheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
+
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AddOrUpdateNoteFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AddOrUpdateNoteFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    fun saveNote() {
+        if (!binding.noteTitleEditText.text.toString()
+                .isEmpty() && !binding.noteContentEditText.text.toString().isEmpty()
+        ) {
+            note = args.note
+            when (note) {
+                null -> {
+                    viewModel.insertNote(
+                        Note(
+                            0,
+                            binding.noteTitleEditText.text.toString(),
+                            binding.noteContentEditText.text.toString(),
+                            currentDate, color
+                        )
+                    )
+                    navigator.navigate(AddOrUpdateNoteFragmentDirections.actionAddOrUpdateNoteFragmentToNoteHomeFragment())
+                }
+                else -> {
+                    // update note
                 }
             }
+        }
     }
 }

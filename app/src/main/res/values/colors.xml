@@ -7,20 +7,32 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="blue">#0047BD</color>
+    <color name="light_blue">#0288D9</color>
+    <color name="sky_blue">#14AAF5</color>
+    <color name="green">#00AB38</color>
+    <color name="lime_green">#7ECC49</color>
+    <color name="orange">#FFB300</color>
+    <color name="yellow">#FFE63B</color>
+    <color name="purple">#8200AC</color>
+    <color name="light_purple">#CC72F5</color>
+    <color name="red">#DB4035</color>
+    <color name="grey">#B8B8B8</color>
+    <color name="charcoal">#808080</color>
 
     <array name="color_picker_colors">
-        <color name="blue">#0047BD</color>
-        <color name="light_blue">#0288D9</color>
-        <color name="sky_blue">#14AAF5</color>
-        <color name="green">#00AB38</color>
-        <color name="lime_green">#7ECC49</color>
-        <color name="orange">#FFB300</color>
-        <color name="yellow">#FFE63B</color>
-        <color name="purple">#8200AC</color>
-        <color name="light_purple">#CC72F5</color>
-        <color name="red">#DB4035</color>
-        <color name="grey">#B8B8B8</color>
-        <color name="charcoal">#808080</color>
-
+        <item>@color/blue</item>
+        <item>@color/light_blue</item>
+        <item>@color/sky_blue</item>
+        <item>@color/green</item>
+        <item>@color/lime_green</item>
+        <item>@color/orange</item>
+        <item>@color/yellow</item>
+        <item>@color/purple</item>
+        <item>@color/light_purple</item>
+        <item>@color/red</item>
+        <item>@color/grey</item>
+        <item>@color/charcoal</item>
     </array>
+    
 </resources>
