@@ -22,5 +22,10 @@
         <action
             android:id="@+id/action_addOrUpdateNoteFragment_to_noteHomeFragment"
             app:destination="@id/noteHomeFragment" />
+        <argument
+            android:name="note"
+            app:argType="com.application.noteapp.model.Note"
+            android:defaultValue="@null"
+            app:nullable="true"/>
     </fragment>
 </navigation>

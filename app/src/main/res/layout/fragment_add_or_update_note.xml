@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/addOrUpdateNoteFragmentParent"
     tools:context=".fragments.AddOrUpdateNoteFragment">
 
     <RelativeLayout
@@ -13,6 +14,7 @@
 
 
         <ImageView
+            android:id="@+id/backButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -27,7 +29,7 @@
 
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/noteEditedDateID"
+            android:id="@+id/noteEditedOnDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -47,6 +49,7 @@
 
 
         <ImageView
+            android:id="@+id/saveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -79,6 +82,7 @@
 
 
                 <EditText
+                    android:id="@+id/noteTitleEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -92,6 +96,7 @@
                     android:textSize="22sp" />
 
                 <com.yahiaangelo.markdownedittext.MarkdownEditText
+                    android:id="@+id/noteContentEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="22dp"
@@ -112,6 +117,7 @@
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/toolsFloatingActButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
@@ -133,6 +139,7 @@
         android:visibility="gone">
 
         <com.yahiaangelo.markdownedittext.MarkdownStylesBar
+            android:id="@+id/styleBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
