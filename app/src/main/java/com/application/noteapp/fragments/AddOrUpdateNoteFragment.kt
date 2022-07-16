@@ -4,8 +4,10 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
@@ -31,6 +33,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     val currentDate = SimpleDateFormat.getInstance().format(Date())
     var note: Note? = null
     var color: Int = -1
+    lateinit var result: String
     val job = CoroutineScope(Dispatchers.Main)
     val args: AddOrUpdateNoteFragmentArgs by navArgs()
 
@@ -51,6 +54,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddOrUpdateNoteBinding.bind(view)
+        binding.noteEditedOnDate.text = getString(R.string.edited_on, currentDate)
 
         val activity = activity as MainActivity
 
@@ -66,8 +70,9 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         }
 
         try {
-            binding.noteTitleEditText.setOnFocusChangeListener { _, focused ->
+            binding.noteContentEditText.setOnFocusChangeListener { _, focused ->
                 if (focused) {
+                    requireView().hideKeyboard()
                     binding.markDownStyleBar.visibility = View.VISIBLE
                     binding.noteContentEditText.setStylesBar(binding.styleBar)
                 } else binding.markDownStyleBar.visibility = View.GONE
@@ -125,6 +130,10 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                             currentDate, color
                         )
                     )
+                    result = "Note Saved"
+                    setFragmentResult("key", bundleOf("bundleKey" to result))
+
+
                     navigator.navigate(AddOrUpdateNoteFragmentDirections.actionAddOrUpdateNoteFragmentToNoteHomeFragment())
                 }
                 else -> {

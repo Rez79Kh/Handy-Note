@@ -13,6 +13,7 @@ import com.application.noteapp.util.hideKeyboard
 import com.google.android.material.transition.MaterialElevationScale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
@@ -34,8 +35,9 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
         requireView().hideKeyboard()
 
         CoroutineScope(Dispatchers.Main).launch {
-            activity.window.statusBarColor = Color.WHITE
-            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            delay(10)
+            activity.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             activity.window.statusBarColor = Color.parseColor("#9E9D9D")
         }
 
