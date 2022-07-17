@@ -8,9 +8,9 @@
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/noteHomeFragmentParent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/noteHomeFragmentParent"
         tools:context=".fragments.NoteHomeFragment">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -24,10 +24,6 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:contentInsetEnd="0dp"
-                app:contentInsetLeft="0dp"
-                app:contentInsetRight="0dp"
-                app:contentInsetStart="0dp"
                 app:layout_scrollFlags="scroll|enterAlways">
 
                 <LinearLayout
@@ -40,7 +36,7 @@
                         android:id="@+id/homePageTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
+                        android:layout_marginTop="10dp"
                         android:drawablePadding="10dp"
                         android:gravity="center_vertical"
                         android:text="Reza's Note"
@@ -49,18 +45,24 @@
                         android:textStyle="bold"
                         app:drawableLeftCompat="@drawable/home_note_icon" />
 
-                    <EditText
-                        android:id="@+id/searchBar"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/search_bar_bg"
-                        android:drawableStart="@drawable/search_bar_icon"
-                        android:drawablePadding="10dp"
-                        android:hint="Search your note"
-                        android:imeOptions="actionSearch"
-                        android:importantForAutofill="no"
-                        android:inputType="textFilter" />
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="15dp">
+
+                        <EditText
+                            android:id="@+id/searchBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/search_bar_bg"
+                            android:drawableStart="@drawable/search_bar_icon"
+                            android:drawablePadding="10dp"
+                            android:hint="Search your note"
+                            android:imeOptions="actionSearch"
+                            android:importantForAutofill="no"
+                            android:inputType="textFilter" />
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -74,11 +76,12 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:clipToPadding="false"
-            tools:listitem="@layout/note_list_item"
             android:transitionGroup="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:listitem="@layout/note_list_item" />
 
         <LinearLayout
+            android:id="@+id/noDataFoundLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -122,20 +125,21 @@
                 android:id="@+id/addNoteFloatingActButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#FFB637"
                 android:elevation="0dp"
-                android:src="@drawable/ic_baseline_add_24"
+                android:src="@drawable/pencil"
+                app:backgroundTint="#FFB637"
                 app:borderWidth="0dp"
                 app:fabSize="normal"
                 app:useCompatPadding="false" />
 
             <TextView
+                android:id="@+id/addNoteButtonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingStart="0dp"
+                android:paddingStart="5dp"
                 android:paddingEnd="20dp"
-                android:text="Add Note"
+                android:text="@string/write"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
                 android:textColor="@color/black" />
 
