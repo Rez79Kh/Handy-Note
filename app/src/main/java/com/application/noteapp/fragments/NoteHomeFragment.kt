@@ -1,11 +1,13 @@
 package com.application.noteapp.fragments
 
+import android.animation.Animator
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewAnimationUtils
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
@@ -73,7 +75,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
 
         deleteOnSwipe()
 
-        binding.searchBar.addTextChangedListener(object : TextWatcher {
+        binding.searchBarEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
@@ -107,7 +109,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
             }
         }
 
-        binding.searchBar.setOnEditorActionListener { view, actionId, _ ->
+        binding.searchBarEditText.setOnEditorActionListener { view, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 view.clearFocus()
                 requireView().hideKeyboard()
@@ -117,6 +119,59 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
 
         }
 
+        searchBarHandler()
+
+    }
+
+    private fun searchBarHandler() {
+        binding.searchButton.setOnClickListener {
+            binding.homePageTitle.visibility = View.GONE
+            binding.closeSearchBarView.visibility = View.INVISIBLE
+            binding.openSearchBarView.visibility = View.VISIBLE
+            binding.searchBarEditText.setText("")
+            val circularReveal = ViewAnimationUtils.createCircularReveal(
+                binding.openSearchBarView,
+                (binding.searchButton.right + binding.searchButton.left) / 2,
+                (binding.searchButton.top + binding.searchButton.bottom) / 2,
+                0f,
+                binding.searchView.width.toFloat()
+            )
+            circularReveal.duration = 300
+            circularReveal.start()
+
+            binding.searchBarEditText.requestFocus()
+        }
+
+        binding.closeSearchButton.setOnClickListener {
+            binding.homePageTitle.visibility = View.VISIBLE
+
+
+            val circularReveal = ViewAnimationUtils.createCircularReveal(
+                binding.openSearchBarView,
+                (binding.searchButton.right + binding.searchButton.left) / 2,
+                (binding.searchButton.top + binding.searchButton.bottom) / 2,
+                binding.searchView.width.toFloat(),
+                0f
+            )
+            circularReveal.duration = 300
+            circularReveal.start()
+            circularReveal.addListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(p0: Animator?) = Unit
+
+                override fun onAnimationEnd(p0: Animator?) {
+                    binding.openSearchBarView.visibility = View.INVISIBLE
+                    binding.closeSearchBarView.visibility = View.VISIBLE
+                    binding.searchBarEditText.setText("")
+                    circularReveal.removeAllListeners()
+                }
+
+                override fun onAnimationCancel(p0: Animator?) = Unit
+
+                override fun onAnimationRepeat(p0: Animator?) = Unit
+
+
+            })
+        }
     }
 
     private fun deleteOnSwipe() {
@@ -126,11 +181,11 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
                 val note = notesAdapter.currentList[position]
                 var is_undoPressed = false
                 viewModel.deleteNote(note)
-                binding.searchBar.apply {
+                binding.searchBarEditText.apply {
                     hideKeyboard()
                     clearFocus()
                 }
-                if (binding.searchBar.text.toString().isEmpty()) {
+                if (binding.searchBarEditText.text.toString().isEmpty()) {
                     observeData()
                 }
                 val snackbar =
