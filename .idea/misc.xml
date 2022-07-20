@@ -3,17 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/drawable/add_title_bg.xml" value="0.213" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/drawable/bottom_sheet_bar.xml" value="0.109" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/drawable/floating_action_button_bg.xml" value="0.1905" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.2715" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/drawable/search_bar_bg.xml" value="0.2" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/layout/activity_main.xml" value="0.20833333333333334" />
+        <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/layout/color_item.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/layout/color_picker_bottom_sheet.xml" value="0.23052536231884058" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/layout/fragment_add_or_update_note.xml" value="0.264" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/layout/fragment_note_home.xml" value="0.264" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/layout/note_list_item.xml" value="0.264" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/layout/search_bar.xml" value="0.264" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/layout/search_bar_bg.xml" value="0.23052536231884058" />
+        <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/layout/tools_bottom_sheet.xml" value="0.27447916666666666" />
       </map>
     </option>
   </component>

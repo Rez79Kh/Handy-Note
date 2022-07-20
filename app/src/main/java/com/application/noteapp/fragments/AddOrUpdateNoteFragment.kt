@@ -1,21 +1,28 @@
 package com.application.noteapp.fragments
 
+import android.content.Context
 import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
+import android.view.ViewTreeObserver
+import android.view.Window
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.application.noteapp.R
 import com.application.noteapp.activities.MainActivity
-import com.application.noteapp.databinding.ToolsBottomSheetBinding
 import com.application.noteapp.databinding.FragmentAddOrUpdateNoteBinding
+import com.application.noteapp.databinding.ToolsBottomSheetBinding
 import com.application.noteapp.model.Note
 import com.application.noteapp.util.hideKeyboard
 import com.application.noteapp.viewmodel.NoteViewModel
@@ -35,7 +42,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     val viewModel: NoteViewModel by activityViewModels()
     val currentDate = SimpleDateFormat.getInstance().format(Date())
     var note: Note? = null
-    var color: Int = -1
+    var color: Int = Color.parseColor("#f7f7ff")
     lateinit var result: String
     val job = CoroutineScope(Dispatchers.Main)
     val args: AddOrUpdateNoteFragmentArgs by navArgs()
@@ -72,10 +79,6 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             navigator.popBackStack()
         }
 
-        binding.saveButton.setOnClickListener {
-            saveNote()
-        }
-
         try {
             binding.noteContentEditText.setOnFocusChangeListener { _, focused ->
                 if (focused) {
@@ -88,6 +91,8 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         } catch (ex: Exception) {
             Log.d("Exception", ex.toString())
         }
+
+        initNote()
 
         binding.toolsFloatingActButton.setOnClickListener {
             val bottomsheetDialog =
@@ -111,29 +116,50 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                             activity.window.statusBarColor = color
                         }
                         bottomSheetBinding.bottomSheetCard.setCardBackgroundColor(color)
+                        bottomsheetDialog.dismiss()
                     }
                 }
-                bottomSheetCard.setBackgroundColor(color)
+                bottomSheetCard.setCardBackgroundColor(color)
+
+                saveNoteButton.setOnClickListener {
+                    if (!binding.noteTitleEditText.text.toString()
+                            .isEmpty() && !binding.noteContentEditText.text.toString().isEmpty()
+                    ) {
+                        bottomsheetDialog.dismiss()
+                        saveNote()
+                    }
+                }
+
+                deleteNoteButton.setOnClickListener{
+                    val note2 = args.note
+                    if(note2!=null){
+                        viewModel.deleteNote(note2!!)
+                        bottomsheetDialog.dismiss()
+                        navigator.popBackStack()
+                    }
+                }
+
+
             }
             bottomSheetView.post {
                 bottomsheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
 
-        initNote()
+
 
     }
 
-    private fun initNote(){
+    private fun initNote() {
         val note = args.note
         val title = binding.noteTitleEditText
         val content = binding.noteContentEditText
         val date = binding.noteEditedOnDate
 
-        if(note!=null){
+        if (note != null) {
             title.setText(note.title)
             content.renderMD(note.content)
-            date.text = getString(R.string.edited_on,note.date)
+            date.text = getString(R.string.edited_on, note.date)
             color = note.color
             binding.apply {
                 job.launch {
@@ -144,38 +170,34 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 markDownStyleBar.setBackgroundColor(color)
             }
             activity?.window?.statusBarColor = note.color
-        }
-        else{
+        } else {
             binding.noteEditedOnDate.text = getString(R.string.edited_on, currentDate)
         }
     }
 
     fun saveNote() {
-        if (!binding.noteTitleEditText.text.toString()
-                .isEmpty() && !binding.noteContentEditText.text.toString().isEmpty()
-        ) {
-            note = args.note
-            when (note) {
-                null -> {
-                    viewModel.insertNote(
-                        Note(
-                            0,
-                            binding.noteTitleEditText.text.toString(),
-                            binding.noteContentEditText.text.toString(),
-                            currentDate, color
-                        )
+        note = args.note
+        when (note) {
+            null -> {
+                viewModel.insertNote(
+                    Note(
+                        0,
+                        binding.noteTitleEditText.text.toString(),
+                        binding.noteContentEditText.text.toString(),
+                        currentDate, color
                     )
-                    result = "Note Saved"
-                    setFragmentResult("key", bundleOf("bundleKey" to result))
+                )
+                result = "Note Saved"
+                setFragmentResult("key", bundleOf("bundleKey" to result))
 
-                    navigator.navigate(AddOrUpdateNoteFragmentDirections.actionAddOrUpdateNoteFragmentToNoteHomeFragment())
-                }
-                else -> {
-                    updateNote()
-                    navigator.popBackStack()
-                }
+                navigator.navigate(AddOrUpdateNoteFragmentDirections.actionAddOrUpdateNoteFragmentToNoteHomeFragment())
+            }
+            else -> {
+                updateNote()
+                navigator.popBackStack()
             }
         }
+
     }
 
     private fun updateNote() {

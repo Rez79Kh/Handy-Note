@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">NoteApp</string>
-    <string name="edited_on">"Edited On: %1$s"</string>
+    <string name="edited_on">"%1$s"</string>
     <string name="write">Write</string>
 </resources>

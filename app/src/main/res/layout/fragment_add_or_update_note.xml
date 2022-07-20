@@ -7,9 +7,10 @@
     </data>
 
     <RelativeLayout
+        android:id="@+id/addOrUpdateNoteFragmentParent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/addOrUpdateNoteFragmentParent"
+        android:background="#f7f7ff"
         tools:context=".fragments.AddOrUpdateNoteFragment">
 
         <RelativeLayout
@@ -25,7 +26,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="15dp"
-                android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
                 android:paddingTop="5dp"
@@ -38,6 +38,10 @@
                 android:id="@+id/noteEditedOnDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_baseline_calendar_today_24"
+                android:drawablePadding="6dp"
+                android:drawableTint="@color/black"
+                android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="8dp"
@@ -52,18 +56,6 @@
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 android:textStyle="bold" />
-
-
-            <ImageView
-                android:id="@+id/saveButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="15dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@drawable/ic_baseline_save_24" />
 
 
         </RelativeLayout>
@@ -96,7 +88,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="20dp"
                         android:layout_marginBottom="10dp"
-                        android:background="@null"
+                        android:background="@drawable/add_title_bg"
                         android:hint="Note Title"
                         android:importantForAutofill="no"
                         android:inputType="none"
@@ -105,12 +97,14 @@
                     <com.yahiaangelo.markdownedittext.MarkdownEditText
                         android:id="@+id/noteContentEditText"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="22dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="22dp"
-                        android:background="@null"
-                        android:hint="Note"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/add_title_bg"
+                        android:gravity="top"
+                        android:hint="Note Body"
                         android:importantForAutofill="no"
                         android:inputType="none"
                         android:padding="10dp"
@@ -129,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_margin="15dp"
-                android:backgroundTint="#FFB637"
+                android:backgroundTint="#f9c80e"
                 android:src="@drawable/options" />
 
 

@@ -11,6 +11,7 @@
         android:id="@+id/noteHomeFragmentParent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#f7f7ff"
         tools:context=".fragments.NoteHomeFragment">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -26,6 +27,7 @@
                 android:layout_height="wrap_content"
                 app:contentInsetEnd="0dp"
                 app:contentInsetLeft="0dp"
+                android:background="#f7f7ff"
                 app:contentInsetRight="0dp"
                 app:contentInsetStart="0dp"
                 app:layout_scrollFlags="scroll|enterAlways">
@@ -47,7 +49,7 @@
                             android:layout_height="match_parent"
                             android:drawablePadding="10dp"
                             android:gravity="center_vertical"
-                            android:text="Reza's Note"
+                            android:text="My Notes"
                             android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold"
@@ -161,7 +163,7 @@
             android:layout_margin="15dp"
             android:animateLayoutChanges="true"
             android:background="@drawable/floating_action_button_bg"
-            android:backgroundTint="#FFB637"
+            android:backgroundTint="#f9c80e"
             android:clickable="true"
             android:clipToPadding="false"
             android:focusable="true"
@@ -174,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:elevation="0dp"
                 android:src="@drawable/pencil"
-                app:backgroundTint="#FFB637"
+                app:backgroundTint="#f9c80e"
                 app:borderWidth="0dp"
                 app:fabSize="normal"
                 app:useCompatPadding="false" />

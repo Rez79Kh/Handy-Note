@@ -58,7 +58,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
             delay(10)
             activity.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            activity.window.statusBarColor = Color.parseColor("#9E9D9D")
+            activity.window.statusBarColor = Color.parseColor("#f7f7ff")
         }
 
         binding.addNoteButton.setOnClickListener {
