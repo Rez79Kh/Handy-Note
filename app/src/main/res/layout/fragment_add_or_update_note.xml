@@ -38,14 +38,14 @@
                 android:id="@+id/noteEditedOnDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_baseline_calendar_today_24"
-                android:drawablePadding="6dp"
-                android:drawableTint="@color/black"
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="4dp"
+                android:drawableStart="@drawable/ic_baseline_calendar_today_24"
+                android:drawablePadding="6dp"
+                android:drawableTint="@color/black"
                 android:ellipsize="end"
                 android:paddingStart="13dp"
                 android:paddingTop="5dp"
@@ -59,6 +59,44 @@
 
 
         </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/chooseFontLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:background="#FFEB3B"
+            android:elevation="1dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/font" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Choose a Font"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
 
         <FrameLayout

@@ -1,24 +1,19 @@
 package com.application.noteapp.fragments
 
-import android.content.Context
 import android.graphics.Color
-import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
 import android.view.View
-import android.view.ViewTreeObserver
-import android.view.Window
-import android.widget.Toast
+import android.widget.LinearLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.RecyclerView
 import com.application.noteapp.R
 import com.application.noteapp.activities.MainActivity
 import com.application.noteapp.databinding.FragmentAddOrUpdateNoteBinding
@@ -46,6 +41,18 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     lateinit var result: String
     val job = CoroutineScope(Dispatchers.Main)
     val args: AddOrUpdateNoteFragmentArgs by navArgs()
+
+    val fonts: IntArray = intArrayOf(
+        R.font.amazing_wednesday,
+        R.font.evoley_notes,
+        R.font.hey_tiny,
+        R.font.honey_notes_regular,
+        R.font.nunito,
+        R.font.open_sans,
+        R.font.roboto,
+        R.font.roboto,
+        R.font.summary_notes_regular
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +84,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         binding.backButton.setOnClickListener {
             requireView().hideKeyboard()
             navigator.popBackStack()
+
         }
 
         try {
@@ -130,13 +138,17 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     }
                 }
 
-                deleteNoteButton.setOnClickListener{
+                deleteNoteButton.setOnClickListener {
                     val note2 = args.note
-                    if(note2!=null){
+                    if (note2 != null) {
                         viewModel.deleteNote(note2!!)
                         bottomsheetDialog.dismiss()
                         navigator.popBackStack()
                     }
+                }
+
+                changeFontButton.setOnClickListener {
+                    showChooseFontDialog(view)
                 }
 
 
@@ -147,7 +159,21 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         }
 
 
+    }
 
+    private fun showChooseFontDialog(view:View) {
+
+        binding.chooseFontLayout.visibility = View.VISIBLE;
+        binding.chooseFontLayout.alpha = 0.0f;
+        binding.chooseFontLayout.layoutParams.width = view.width/2
+
+//            binding.chooseFontLayout.x = view.x
+
+        // Start the animation
+        binding.chooseFontLayout.animate()
+            .translationX(view.x/2)
+            .alpha(1.0f)
+            .setListener(null);
     }
 
     private fun initNote() {
