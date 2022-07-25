@@ -1,10 +1,14 @@
 package com.application.noteapp.fragments
 
 import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.fonts.SystemFonts
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.LinearLayout
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
@@ -13,11 +17,16 @@ import androidx.fragment.app.setFragmentResult
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.application.noteapp.R
 import com.application.noteapp.activities.MainActivity
+import com.application.noteapp.adapters.FontsAdapter
+import com.application.noteapp.adapters.NotesAdapter
+import com.application.noteapp.databinding.FontsBottomSheetBinding
 import com.application.noteapp.databinding.FragmentAddOrUpdateNoteBinding
-import com.application.noteapp.databinding.ToolsBottomSheetBinding
+import com.application.noteapp.model.Font
 import com.application.noteapp.model.Note
 import com.application.noteapp.util.hideKeyboard
 import com.application.noteapp.viewmodel.NoteViewModel
@@ -30,10 +39,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     lateinit var binding: FragmentAddOrUpdateNoteBinding
     lateinit var navigator: NavController
+    lateinit var fontAdapter: FontsAdapter
     val viewModel: NoteViewModel by activityViewModels()
     val currentDate = SimpleDateFormat.getInstance().format(Date())
     var note: Note? = null
@@ -41,18 +54,10 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     lateinit var result: String
     val job = CoroutineScope(Dispatchers.Main)
     val args: AddOrUpdateNoteFragmentArgs by navArgs()
+    var is_color_picker_showing: Boolean = false
 
-    val fonts: IntArray = intArrayOf(
-        R.font.amazing_wednesday,
-        R.font.evoley_notes,
-        R.font.hey_tiny,
-        R.font.honey_notes_regular,
-        R.font.nunito,
-        R.font.open_sans,
-        R.font.roboto,
-        R.font.roboto,
-        R.font.summary_notes_regular
-    )
+    val fontFields = R.font::class.java.fields
+    val fonts: ArrayList<Font> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +76,9 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddOrUpdateNoteBinding.bind(view)
+
+        // Read Fonts file
+        getAvailableFonts()
 
         val activity = activity as MainActivity
 
@@ -102,78 +110,144 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
 
         initNote()
 
-        binding.toolsFloatingActButton.setOnClickListener {
-            val bottomsheetDialog =
-                BottomSheetDialog(requireContext(), R.style.BottomSheetDialogTheme)
-            val bottomSheetView = layoutInflater.inflate(R.layout.tools_bottom_sheet, null)
-            with(bottomsheetDialog) {
-                setContentView(bottomSheetView)
-                show()
-            }
-            val bottomSheetBinding = ToolsBottomSheetBinding.bind(bottomSheetView)
+        handleActionButtons()
 
-            bottomSheetBinding.apply {
-                colorPicker.apply {
-                    setSelectedColor(color)
-                    setOnColorSelectedListener { selectedColor ->
-                        color = selectedColor
-                        binding.apply {
-                            addOrUpdateNoteFragmentParent.setBackgroundColor(color)
-                            FragmentAddOrUpdateToolbar.setBackgroundColor(color)
-                            markDownStyleBar.setBackgroundColor(color)
-                            activity.window.statusBarColor = color
-                        }
-                        bottomSheetBinding.bottomSheetCard.setCardBackgroundColor(color)
-                        bottomsheetDialog.dismiss()
-                    }
+        binding.closeColorPickerButton.setOnClickListener {
+            binding.colorPickerLayout.animate().translationX(200f).duration = 350
+            is_color_picker_showing = false
+        }
+
+        binding.colorPicker.apply {
+            setSelectedColor(color)
+            setOnColorSelectedListener { selectedColor ->
+                color = selectedColor
+                binding.apply {
+                    addOrUpdateNoteFragmentParent.setBackgroundColor(color)
+                    FragmentAddOrUpdateToolbar.setBackgroundColor(color)
+                    markDownStyleBar.setBackgroundColor(color)
+                    activity.window.statusBarColor = color
                 }
-                bottomSheetCard.setCardBackgroundColor(color)
-
-                saveNoteButton.setOnClickListener {
-                    if (!binding.noteTitleEditText.text.toString()
-                            .isEmpty() && !binding.noteContentEditText.text.toString().isEmpty()
-                    ) {
-                        bottomsheetDialog.dismiss()
-                        saveNote()
-                    }
-                }
-
-                deleteNoteButton.setOnClickListener {
-                    val note2 = args.note
-                    if (note2 != null) {
-                        viewModel.deleteNote(note2!!)
-                        bottomsheetDialog.dismiss()
-                        navigator.popBackStack()
-                    }
-                }
-
-                changeFontButton.setOnClickListener {
-                    showChooseFontDialog(view)
-                }
-
-
-            }
-            bottomSheetView.post {
-                bottomsheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
 
 
     }
 
-    private fun showChooseFontDialog(view:View) {
+    private fun getAvailableFonts() {
+        for (font in fontFields) {
+            fonts.add(
+                Font(
+                    font.toString().substring(font.toString().lastIndexOf(".") + 1),
+                    font.getInt(null)
+                )
+            )
+        }
+    }
 
-        binding.chooseFontLayout.visibility = View.VISIBLE;
-        binding.chooseFontLayout.alpha = 0.0f;
-        binding.chooseFontLayout.layoutParams.width = view.width/2
+    private fun handleActionButtons() {
+        binding.toolsFloatingActButtonLayout.apply {
+            toolsFab.animate().rotationBy(180f)
 
-//            binding.chooseFontLayout.x = view.x
+            toolsFab.setOnClickListener {
+                if (toolsFab.rotation == 180f) showActionButtons()
+                else hideActionButtons()
+            }
 
-        // Start the animation
-        binding.chooseFontLayout.animate()
-            .translationX(view.x/2)
-            .alpha(1.0f)
-            .setListener(null);
+            saveNoteFab.setOnClickListener {
+                if (!binding.noteTitleEditText.text.toString()
+                        .isEmpty() && !binding.noteContentEditText.text.toString().isEmpty()
+                ) {
+                    hideActionButtons()
+                    saveNote()
+                } else {
+                    // Your note is empty
+                }
+            }
+
+            deleteNoteFab.setOnClickListener {
+                val note2 = args.note
+                if (note2 != null) {
+                    viewModel.deleteNote(note2)
+                    hideActionButtons()
+                    navigator.popBackStack()
+                } else {
+                    // Your note is empty
+                }
+            }
+
+            copyNoteFab.setOnClickListener {
+                // Copy note text
+            }
+
+            changeFontFab.setOnClickListener {
+                hideActionButtons()
+                // show change font layout
+                val bottomSheetDialog =
+                    BottomSheetDialog(requireContext(), R.style.BottomSheetDialogTheme)
+                val bottomSheetView = layoutInflater.inflate(R.layout.fonts_bottom_sheet, null)
+                with(bottomSheetDialog) {
+                    setContentView(bottomSheetView)
+                    show()
+                }
+                val bottomSheetBinding = FontsBottomSheetBinding.bind(bottomSheetView)
+
+                bottomSheetBinding.apply {
+                    fontList.layoutManager = LinearLayoutManager(context)
+                    fontAdapter = FontsAdapter(fonts)
+                    fontList.adapter = fontAdapter
+
+                    fontAdapter.onItemClick = { font ->
+                        val typeface = ResourcesCompat.getFont(bottomSheetView.context, font.id)
+                        binding.noteTitleEditText.typeface = typeface
+                        binding.noteContentEditText.typeface = typeface
+                        bottomSheetDialog.dismiss()
+                    }
+                    bottomSheetCard.setBackgroundColor(color)
+
+                }
+                bottomSheetView.post {
+                    bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                }
+            }
+
+            colorPickerFab.setOnClickListener {
+                // Show color picker layout
+                hideActionButtons()
+                if (!is_color_picker_showing) {
+                    binding.colorPickerLayout.animate().translationX(0f).duration = 350
+                    is_color_picker_showing = true
+                }
+            }
+
+            shareNoteFab.setOnClickListener {
+                // Share Note
+            }
+
+        }
+    }
+
+    private fun showActionButtons() {
+        binding.toolsFloatingActButtonLayout.apply {
+            toolsFab.animate().rotationBy(-180f)
+            saveNoteFab.animate().translationY(-180f).translationX(-150f)
+            deleteNoteFab.animate().translationY(-180f).translationX(0f)
+            copyNoteFab.animate().translationY(-180f).translationX(150f)
+            changeFontFab.animate().translationY(-330f).translationX(-100f)
+            colorPickerFab.animate().translationY(-330f).translationX(100f)
+            shareNoteFab.animate().translationY(-460f)
+        }
+    }
+
+    private fun hideActionButtons() {
+        binding.toolsFloatingActButtonLayout.apply {
+            toolsFab.animate().rotationBy(180f)
+            saveNoteFab.animate().translationY(0f).translationX(0f)
+            deleteNoteFab.animate().translationY(0f).translationX(0f)
+            copyNoteFab.animate().translationY(0f).translationX(0f)
+            changeFontFab.animate().translationY(0f).translationX(0f)
+            colorPickerFab.animate().translationY(0f).translationX(0f)
+            shareNoteFab.animate().translationY(0f)
+        }
     }
 
     private fun initNote() {
@@ -215,7 +289,6 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 )
                 result = "Note Saved"
                 setFragmentResult("key", bundleOf("bundleKey" to result))
-
                 navigator.navigate(AddOrUpdateNoteFragmentDirections.actionAddOrUpdateNoteFragmentToNoteHomeFragment())
             }
             else -> {

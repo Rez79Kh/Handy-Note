@@ -79,8 +79,4 @@ class NotesAdapter : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DiffUtilCal
         }
     }
 
-    private fun navigate(note:Note,parent:MaterialCardView,it:View){
-
-    }
-
 }
