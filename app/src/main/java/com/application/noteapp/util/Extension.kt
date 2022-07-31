@@ -1,6 +1,7 @@
 package com.application.noteapp.util
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.ViewCompat
@@ -17,16 +18,19 @@ fun View.hideKeyboard() =
         InputMethodManager.HIDE_NOT_ALWAYS
     )
 
-fun getAvailableFonts() : ArrayList<Font>{
+fun getAvailableFonts(): ArrayList<Font> {
     val fontFields = R.font::class.java.fields
     val fonts: ArrayList<Font> = ArrayList()
     for (font in fontFields) {
-        fonts.add(
-            Font(
-                font.toString().substring(font.toString().lastIndexOf(".") + 1),
-                font.getInt(null)
+        Log.e("font",font.toString())
+        if (!font.toString().contains("bold") && !font.toString().contains("italic") && !font.toString().contains("regular")) {
+            fonts.add(
+                Font(
+                    font.toString().substring(font.toString().lastIndexOf(".") + 1),
+                    font.getInt(null)
+                )
             )
-        )
+        }
     }
     return fonts
 }

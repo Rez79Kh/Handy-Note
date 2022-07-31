@@ -168,10 +168,6 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 }
             }
 
-            copyNoteFab.setOnClickListener {
-                // Copy note text
-            }
-
             changeFontFab.setOnClickListener {
                 hideActionButtons()
                 // show change font layout
@@ -213,7 +209,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 }
             }
 
-            shareNoteFab.setOnClickListener {
+            sendCopyOfNoteFab.setOnClickListener {
                 // Share Note
             }
 
@@ -223,12 +219,11 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     private fun showActionButtons() {
         binding.toolsFloatingActButtonLayout.apply {
             toolsFab.animate().rotationBy(-180f)
-            saveNoteFab.animate().translationY(-180f).translationX(-150f)
-            deleteNoteFab.animate().translationY(-180f).translationX(0f)
-            copyNoteFab.animate().translationY(-180f).translationX(150f)
-            changeFontFab.animate().translationY(-330f).translationX(-100f)
-            colorPickerFab.animate().translationY(-330f).translationX(100f)
-            shareNoteFab.animate().translationY(-460f)
+            saveNoteFab.animate().translationY(-180f).translationX(-80f)
+            deleteNoteFab.animate().translationY(-180f).translationX(80f)
+            changeFontFab.animate().translationY(-330f).translationX(-80f)
+            colorPickerFab.animate().translationY(-330f).translationX(80f)
+            sendCopyOfNoteFab.animate().translationY(-460f)
         }
     }
 
@@ -237,10 +232,9 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             toolsFab.animate().rotationBy(180f)
             saveNoteFab.animate().translationY(0f).translationX(0f)
             deleteNoteFab.animate().translationY(0f).translationX(0f)
-            copyNoteFab.animate().translationY(0f).translationX(0f)
             changeFontFab.animate().translationY(0f).translationX(0f)
             colorPickerFab.animate().translationY(0f).translationX(0f)
-            shareNoteFab.animate().translationY(0f)
+            sendCopyOfNoteFab.animate().translationY(0f)
         }
     }
 
