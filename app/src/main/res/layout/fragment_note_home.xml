@@ -25,9 +25,9 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#f7f7ff"
                 app:contentInsetEnd="0dp"
                 app:contentInsetLeft="0dp"
-                android:background="#f7f7ff"
                 app:contentInsetRight="0dp"
                 app:contentInsetStart="0dp"
                 app:layout_scrollFlags="scroll|enterAlways">
@@ -155,44 +155,19 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/addNoteButton"
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addNoteFloatingActButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="15dp"
-            android:animateLayoutChanges="true"
-            android:background="@drawable/floating_action_button_bg"
-            android:backgroundTint="#f9c80e"
-            android:clickable="true"
-            android:clipToPadding="false"
-            android:focusable="true"
-            android:gravity="end|bottom"
-            android:orientation="horizontal">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/addNoteFloatingActButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:elevation="0dp"
-                android:src="@drawable/pencil"
-                app:backgroundTint="#f9c80e"
-                app:borderWidth="0dp"
-                app:fabSize="normal"
-                app:useCompatPadding="false" />
-
-            <TextView
-                android:id="@+id/addNoteButtonText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingStart="5dp"
-                android:paddingEnd="20dp"
-                android:text="@string/write"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Button"
-                android:textColor="@color/black" />
-
-        </LinearLayout>
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/pencil"
+            app:backgroundTint="#f9c80e"
+            app:borderWidth="0dp"
+            app:fabSize="normal"
+            app:useCompatPadding="false" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

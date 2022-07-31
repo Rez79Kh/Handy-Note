@@ -3,9 +3,11 @@ package com.application.noteapp.fragments
 import android.animation.Animator
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.WindowManager
@@ -51,7 +53,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentNoteHomeBinding.bind(view)
         val navigator = Navigation.findNavController(view)
-        var activity = activity as MainActivity
+        val activity = activity as MainActivity
         requireView().hideKeyboard()
 
         CoroutineScope(Dispatchers.Main).launch {
@@ -59,11 +61,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
             activity.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             activity.window.statusBarColor = Color.parseColor("#f7f7ff")
-        }
-
-        binding.addNoteButton.setOnClickListener {
-            binding.appBar.visibility = View.INVISIBLE
-            navigator.navigate(NoteHomeFragmentDirections.actionNoteHomeFragmentToAddOrUpdateNoteFragment())
         }
 
         binding.addNoteFloatingActButton.setOnClickListener {
@@ -100,14 +97,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
 
             }
         })
-
-        binding.notesRecyclerView.setOnScrollChangeListener { _, scrollX, scrollY, _, oldScrollY ->
-            when {
-                scrollY > oldScrollY -> binding.addNoteButtonText.isVisible = false
-                scrollX == scrollY -> binding.addNoteButtonText.isVisible = true
-                else -> binding.addNoteButtonText.isVisible = true
-            }
-        }
 
         binding.searchBarEditText.setOnEditorActionListener { view, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -208,7 +197,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
                         }
                         ).apply {
                             animationMode = Snackbar.ANIMATION_MODE_FADE
-                            setAnchorView(R.id.addNoteButton)
                         }
                 snackbar.setActionTextColor(
                     ContextCompat.getColor(

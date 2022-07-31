@@ -28,6 +28,7 @@ import com.application.noteapp.databinding.FontsBottomSheetBinding
 import com.application.noteapp.databinding.FragmentAddOrUpdateNoteBinding
 import com.application.noteapp.model.Font
 import com.application.noteapp.model.Note
+import com.application.noteapp.util.getAvailableFonts
 import com.application.noteapp.util.hideKeyboard
 import com.application.noteapp.viewmodel.NoteViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -56,8 +57,9 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     val args: AddOrUpdateNoteFragmentArgs by navArgs()
     var is_color_picker_showing: Boolean = false
 
-    val fontFields = R.font::class.java.fields
-    val fonts: ArrayList<Font> = ArrayList()
+    var selectedFontId:Int = R.font.roboto
+
+    var fonts: ArrayList<Font> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,8 +79,10 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddOrUpdateNoteBinding.bind(view)
 
+        if(note!=null) selectedFontId = note!!.fontId
+
         // Read Fonts file
-        getAvailableFonts()
+        fonts = getAvailableFonts()
 
         val activity = activity as MainActivity
 
@@ -131,17 +135,6 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         }
 
 
-    }
-
-    private fun getAvailableFonts() {
-        for (font in fontFields) {
-            fonts.add(
-                Font(
-                    font.toString().substring(font.toString().lastIndexOf(".") + 1),
-                    font.getInt(null)
-                )
-            )
-        }
     }
 
     private fun handleActionButtons() {
@@ -200,6 +193,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                         val typeface = ResourcesCompat.getFont(bottomSheetView.context, font.id)
                         binding.noteTitleEditText.typeface = typeface
                         binding.noteContentEditText.typeface = typeface
+                        selectedFontId = font.id
                         bottomSheetDialog.dismiss()
                     }
                     bottomSheetCard.setBackgroundColor(color)
@@ -259,6 +253,12 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         if (note != null) {
             title.setText(note.title)
             content.renderMD(note.content)
+
+            // set font
+            val typeface = ResourcesCompat.getFont(requireView().context, note.fontId)
+            title.typeface = typeface
+            content.typeface = typeface
+
             date.text = getString(R.string.edited_on, note.date)
             color = note.color
             binding.apply {
@@ -275,7 +275,8 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         }
     }
 
-    fun saveNote() {
+    private fun saveNote() {
+        Log.e("selectedFontId",selectedFontId.toString())
         note = args.note
         when (note) {
             null -> {
@@ -284,7 +285,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                         0,
                         binding.noteTitleEditText.text.toString(),
                         binding.noteContentEditText.text.toString(),
-                        currentDate, color
+                        currentDate, color,selectedFontId
                     )
                 )
                 result = "Note Saved"
@@ -307,7 +308,8 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     binding.noteTitleEditText.text.toString(),
                     binding.noteContentEditText.getMD(),
                     currentDate,
-                    color
+                    color,
+                    note!!.fontId
                 )
             )
         }

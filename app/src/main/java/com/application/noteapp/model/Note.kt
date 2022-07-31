@@ -12,4 +12,5 @@ data class Note(
     val content:String,
     val date:String,
     val color:Int = -1,
+    val fontId:Int,
 ):Serializable

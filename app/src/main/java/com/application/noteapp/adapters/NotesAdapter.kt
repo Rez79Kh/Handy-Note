@@ -3,6 +3,7 @@ package com.application.noteapp.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.ListAdapter
@@ -60,7 +61,11 @@ class NotesAdapter : ListAdapter<Note, NotesAdapter.NotesViewHolder>(DiffUtilCal
                 date.text = note.date
                 parent.setCardBackgroundColor(note.color)
 
-                itemView.setOnClickListener{
+                val typeface = ResourcesCompat.getFont(parent.context, note.fontId)
+                title.typeface = typeface
+                content.typeface = typeface
+
+                parent.setOnClickListener{
                     val action = NoteHomeFragmentDirections.actionNoteHomeFragmentToAddOrUpdateNoteFragment().setNote(note)
                     val extras = FragmentNavigatorExtras(parent to "recyclerView_${note.id}")
                     it.hideKeyboard()
