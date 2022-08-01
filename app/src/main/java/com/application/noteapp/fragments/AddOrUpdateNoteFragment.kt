@@ -1,9 +1,11 @@
 package com.application.noteapp.fragments
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.fonts.SystemFonts
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
@@ -211,8 +213,17 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
 
             sendCopyOfNoteFab.setOnClickListener {
                 // Share Note
+                if(binding.noteTitleEditText.text.toString().isNotEmpty() && binding.noteContentEditText.text.toString().isNotEmpty()) {
+                    val intent = Intent(Intent.ACTION_SEND)
+                    intent.type = "text/plain"
+                    var text = binding.noteTitleEditText.text.toString() + "\n" + binding.noteContentEditText.text.toString()
+                    intent.putExtra(Intent.EXTRA_TEXT, text)
+                    startActivity(Intent.createChooser(intent,"Send A Copy To..."))
+                }
+                else{
+                    // show message that your text is empty
+                }
             }
-
         }
     }
 
