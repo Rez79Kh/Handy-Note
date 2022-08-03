@@ -6,9 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.application.noteapp.database.NoteDatabase
 import com.application.noteapp.databinding.ActivityMainBinding
+import com.application.noteapp.receivers.NotificationReceiver
 import com.application.noteapp.repository.NoteRepository
 import com.application.noteapp.viewmodel.NoteViewModel
 import com.application.noteapp.viewmodel.NoteViewModelFactory
+
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding

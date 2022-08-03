@@ -13,4 +13,6 @@ data class Note(
     val date:String,
     val color:Int = -1,
     val fontId:Int,
+    var alarm_set:Boolean,
+    var alarm_date:String
 ):Serializable

@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class DeleteWithSwipe : ItemTouchHelper.SimpleCallback(
-    ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+    0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
 ) {
     override fun onMove(
         recyclerView: RecyclerView,

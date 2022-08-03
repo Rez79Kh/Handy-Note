@@ -22,7 +22,6 @@ fun getAvailableFonts(): ArrayList<Font> {
     val fontFields = R.font::class.java.fields
     val fonts: ArrayList<Font> = ArrayList()
     for (font in fontFields) {
-        Log.e("font",font.toString())
         if (!font.toString().contains("bold") && !font.toString().contains("italic") && !font.toString().contains("regular")) {
             fonts.add(
                 Font(

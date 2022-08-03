@@ -1,15 +1,16 @@
 package com.application.noteapp.fragments
 
+import android.app.*
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Typeface
-import android.graphics.fonts.SystemFonts
+import android.os.Build
 import android.os.Bundle
-import android.text.Html
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.ListView
+import android.widget.Button
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
@@ -20,21 +21,21 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.application.noteapp.R
 import com.application.noteapp.activities.MainActivity
 import com.application.noteapp.adapters.FontsAdapter
-import com.application.noteapp.adapters.NotesAdapter
 import com.application.noteapp.databinding.FontsBottomSheetBinding
 import com.application.noteapp.databinding.FragmentAddOrUpdateNoteBinding
 import com.application.noteapp.model.Font
 import com.application.noteapp.model.Note
+import com.application.noteapp.receivers.NotificationReceiver
 import com.application.noteapp.util.getAvailableFonts
 import com.application.noteapp.util.hideKeyboard
 import com.application.noteapp.viewmodel.NoteViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,9 +43,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     lateinit var binding: FragmentAddOrUpdateNoteBinding
@@ -59,9 +58,11 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     val args: AddOrUpdateNoteFragmentArgs by navArgs()
     var is_color_picker_showing: Boolean = false
 
-    var selectedFontId:Int = R.font.roboto
+    var selectedFontId: Int = R.font.roboto
 
     var fonts: ArrayList<Font> = ArrayList()
+
+    lateinit var alarmDate:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,8 +81,9 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddOrUpdateNoteBinding.bind(view)
+        note = args.note
 
-        if(note!=null) selectedFontId = note!!.fontId
+        setUpNotificationChannel()
 
         // Read Fonts file
         fonts = getAvailableFonts()
@@ -136,7 +138,135 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             }
         }
 
+        binding.notificationButton.setOnClickListener {
+            if (note != null) {
+                if(!note!!.alarm_set) showDatePicker()
+                else{
+                    MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                        .setIcon(R.drawable.warning)
+                        .setTitle("Warning")
+                        .setMessage("Alarm already set on ${note!!.alarm_date} , Do you want to cancel it?")
+                        .setPositiveButton("YES") { dialog, which ->
+                            // cancel alarm
+                            note!!.alarm_set = false
+                            note!!.alarm_date = ""
+                            viewModel.updateAlarmState(note!!.id,false,"")
+                            cancelAlarm()
+                        }
+                        .setNegativeButton("NO") { dialog, which ->
 
+                        }
+                        .show()
+                }
+            } else {
+                MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                    .setIcon(R.drawable.warning)
+                    .setTitle("Attention")
+                    .setMessage("You should create a note at first.")
+                    .setPositiveButton("OK") { dialog, which ->
+
+                    }
+                    .show()
+            }
+
+        }
+
+
+    }
+
+    private fun showDatePicker() {
+        val day: Int
+        val month: Int
+        val year: Int
+        var hour: Int
+        var minute: Int
+        var selectedDay: Int
+        var selectedMonth: Int
+        var selectedYear: Int
+        var selectedHour: Int
+        var selectedMinute: Int
+
+        val calendar: Calendar = Calendar.getInstance()
+        day = calendar.get(Calendar.DAY_OF_MONTH)
+        month = calendar.get(Calendar.MONTH)
+        year = calendar.get(Calendar.YEAR)
+        val datePickerDialog =
+            DatePickerDialog(requireContext(), { view, year, month, day ->
+                selectedDay = day
+                selectedYear = year
+                selectedMonth = month
+                val calendar: Calendar = Calendar.getInstance()
+                hour = calendar.get(Calendar.HOUR)
+                minute = calendar.get(Calendar.MINUTE)
+                val timePickerDialog = TimePickerDialog(
+                    view.context, { _, hour, minute ->
+                        selectedHour = hour
+                        selectedMinute = minute
+                        val selectedCalendar: Calendar = Calendar.getInstance()
+                        selectedCalendar.set(
+                            selectedYear,
+                            selectedMonth,
+                            selectedDay,
+                            selectedHour,
+                            selectedMinute
+                        )
+                        setAlarm(selectedCalendar)
+                    }, hour, minute,
+                    DateFormat.is24HourFormat(view.context)
+                )
+                timePickerDialog.setButton(TimePickerDialog.BUTTON_POSITIVE, "Done") { _, _ -> }
+                timePickerDialog.show()
+
+            }, year, month, day)
+//        datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, "Done") { _, _ -> }
+        datePickerDialog.show()
+    }
+
+    private fun cancelAlarm(){
+        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(requireContext(), NotificationReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            requireContext(),
+            note!!.id,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        alarmManager.cancel(pendingIntent);
+    }
+
+    private fun setAlarm(cal: Calendar) {
+        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(requireContext(), NotificationReceiver::class.java)
+        val title = binding.noteTitleEditText.text.toString()
+        val content = binding.noteContentEditText.text.toString()
+        intent.putExtra("title", title)
+        intent.putExtra("content", content)
+        intent.putExtra("note_id", note!!.id)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            requireContext(),
+            note!!.id,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        alarmManager.set(AlarmManager.RTC_WAKEUP, cal.timeInMillis, pendingIntent)
+
+        val temp:List<String> = cal.time.toString().split(" ")
+        alarmDate = temp[0] +" " + temp[1]+" " + temp[2]+" " + temp[3]+" " + temp[5]
+
+        MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+            .setIcon(R.drawable.bell)
+            .setTitle("Successful")
+            .setMessage("Alarm successfully set on $alarmDate .")
+            .setPositiveButton("OK") { dialog, which ->
+                // Respond to positive button press
+            }
+            .show()
+
+        note!!.alarm_set = true
+        note!!.alarm_date = alarmDate
+        viewModel.updateAlarmState(note!!.id,true,alarmDate)
     }
 
     private fun handleActionButtons() {
@@ -149,8 +279,9 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             }
 
             saveNoteFab.setOnClickListener {
-                if (!binding.noteTitleEditText.text.toString()
-                        .isEmpty() && !binding.noteContentEditText.text.toString().isEmpty()
+                if (binding.noteTitleEditText.text.toString()
+                        .isNotEmpty() && binding.noteContentEditText.text.toString()
+                        .isNotEmpty()
                 ) {
                     hideActionButtons()
                     saveNote()
@@ -213,17 +344,35 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
 
             sendCopyOfNoteFab.setOnClickListener {
                 // Share Note
-                if(binding.noteTitleEditText.text.toString().isNotEmpty() && binding.noteContentEditText.text.toString().isNotEmpty()) {
+                if (binding.noteTitleEditText.text.toString()
+                        .isNotEmpty() && binding.noteContentEditText.text.toString().isNotEmpty()
+                ) {
                     val intent = Intent(Intent.ACTION_SEND)
                     intent.type = "text/plain"
-                    var text = binding.noteTitleEditText.text.toString() + "\n" + binding.noteContentEditText.text.toString()
+                    val text =
+                        binding.noteTitleEditText.text.toString() + "\n" + binding.noteContentEditText.text.toString()
                     intent.putExtra(Intent.EXTRA_TEXT, text)
-                    startActivity(Intent.createChooser(intent,"Send A Copy To..."))
-                }
-                else{
+                    startActivity(Intent.createChooser(intent, "Send A Copy To..."))
+                } else {
                     // show message that your text is empty
                 }
             }
+        }
+    }
+
+    private fun setUpNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "note_app_reminder_channel"
+            val desc = "channel for note app"
+            val priority = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel("note_app", name, priority)
+            channel.description = desc
+            val notificationManager =
+                requireContext().getSystemService(NotificationManager::class.java)
+
+            notificationManager!!.createNotificationChannel(channel)
+
+            Log.e("done", "done")
         }
     }
 
@@ -281,7 +430,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     }
 
     private fun saveNote() {
-        Log.e("selectedFontId",selectedFontId.toString())
+        Log.e("selectedFontId", selectedFontId.toString())
         note = args.note
         when (note) {
             null -> {
@@ -290,7 +439,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                         0,
                         binding.noteTitleEditText.text.toString(),
                         binding.noteContentEditText.text.toString(),
-                        currentDate, color,selectedFontId
+                        currentDate, color, selectedFontId, false,""
                     )
                 )
                 result = "Note Saved"
@@ -314,7 +463,9 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     binding.noteContentEditText.getMD(),
                     currentDate,
                     color,
-                    note!!.fontId
+                    note!!.fontId,
+                    note!!.alarm_set,
+                    note!!.alarm_date
                 )
             )
         }

@@ -24,5 +24,8 @@ interface DAO{
     @Query("Delete from note")
     suspend fun deleteAllNotes()
 
+    @Query("Update note Set alarm_set = :state , alarm_date = :date where id = :note_id")
+    fun updateAlarmState(note_id:Int,state:Boolean,date:String)
+
 
 }

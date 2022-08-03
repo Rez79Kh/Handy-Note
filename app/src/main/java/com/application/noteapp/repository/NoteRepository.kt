@@ -16,5 +16,6 @@ class NoteRepository(private val database:NoteDatabase) {
 
     fun findNote(string: String) = database.getNoteDao().findNote(string)
 
+    fun updateAlarmState(note_id:Int,value:Boolean,date:String) = database.getNoteDao().updateAlarmState(note_id,value,date)
 
 }

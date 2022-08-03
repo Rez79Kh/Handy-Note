@@ -32,4 +32,8 @@ class NoteViewModel(private val noteRepository: NoteRepository) : ViewModel() {
         noteRepository.updateNote(note)
     }
 
+    fun updateAlarmState(note_id:Int,value:Boolean,date:String) = viewModelScope.launch {
+        noteRepository.updateAlarmState(note_id,value,date)
+    }
+
 }

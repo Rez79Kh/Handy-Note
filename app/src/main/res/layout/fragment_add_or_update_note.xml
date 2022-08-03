@@ -59,18 +59,18 @@
                 android:textStyle="bold" />
 
             <ImageButton
-                android:id="@+id/setNotificationButton"
+                android:id="@+id/notificationButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="15dp"
-                android:paddingTop="5dp"
+                android:background="@drawable/ic_baseline_notifications_active_24"
                 android:paddingStart="5dp"
+                android:paddingTop="5dp"
                 android:paddingEnd="5dp"
-                android:paddingBottom="5dp"
-                android:layout_centerVertical="true"
-                android:background="@drawable/ic_baseline_notifications_active_24"/>
+                android:paddingBottom="5dp" />
 
 
         </RelativeLayout>
