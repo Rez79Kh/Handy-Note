@@ -187,10 +187,10 @@ class NotesAdapter(
 
                 if (is_all_selected) {
                     noteCheck.visibility = View.VISIBLE
-                    parent.setBackgroundColor(Color.YELLOW)
+                    parent.setCardBackgroundColor(Color.YELLOW)
                 } else {
                     noteCheck.visibility = View.GONE
-                    parent.setBackgroundColor(Color.TRANSPARENT)
+                    parent.setCardBackgroundColor(note.color)
                 }
             }
 
@@ -201,11 +201,11 @@ class NotesAdapter(
     private fun clickItem(holder: NotesAdapter.NotesViewHolder) {
         if (holder.noteCheck.visibility == View.GONE) {
             holder.noteCheck.visibility = View.VISIBLE
-            holder.parent.setBackgroundColor(Color.YELLOW)
+            holder.parent.setCardBackgroundColor(Color.YELLOW)
             selectedNotes.add(getItem(holder.position))
         } else {
             holder.noteCheck.visibility = View.GONE
-            holder.parent.setBackgroundColor(Color.TRANSPARENT)
+            holder.parent.setCardBackgroundColor(getItem(holder.position).color)
             selectedNotes.remove(getItem(holder.position))
         }
 
