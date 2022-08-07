@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menuDeleteNote"
+        app:showAsAction="always"
+        android:icon="@drawable/delete"
+        android:title="Delete" />
+    <item
+        android:id="@+id/menuSelectAllNote"
+        app:showAsAction="always"
+        android:icon="@drawable/select_all"
+        android:title="Select All" />
+</menu>

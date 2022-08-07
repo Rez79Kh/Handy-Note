@@ -3,11 +3,9 @@ package com.application.noteapp.fragments
 import android.animation.Animator
 import android.content.res.Configuration
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.WindowManager
@@ -16,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +23,7 @@ import com.application.noteapp.R
 import com.application.noteapp.activities.MainActivity
 import com.application.noteapp.adapters.NotesAdapter
 import com.application.noteapp.databinding.FragmentNoteHomeBinding
+import com.application.noteapp.model.Note
 import com.application.noteapp.util.DeleteWithSwipe
 import com.application.noteapp.util.hideKeyboard
 import com.application.noteapp.viewmodel.NoteViewModel
@@ -36,10 +36,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
-class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
+class NoteHomeFragment : Fragment(R.layout.fragment_note_home) ,NotesAdapter.EventListener {
+    private val countNotesText :MutableLiveData<String> = MutableLiveData()
     val viewModel: NoteViewModel by activityViewModels()
     lateinit var binding: FragmentNoteHomeBinding
     lateinit var notesAdapter: NotesAdapter
+    private lateinit var deleteButtonListener:NotesAdapter.EventListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +57,8 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
         val navigator = Navigation.findNavController(view)
         val activity = activity as MainActivity
         requireView().hideKeyboard()
+
+        deleteButtonListener = this
 
         CoroutineScope(Dispatchers.Main).launch {
             delay(10)
@@ -231,7 +235,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
             layoutManager =
                 StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL)
             setHasFixedSize(true)
-            notesAdapter = NotesAdapter()
+            notesAdapter = NotesAdapter(countNotesText,viewLifecycleOwner,deleteButtonListener)
             notesAdapter.stateRestorationPolicy =
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             adapter = notesAdapter
@@ -243,5 +247,14 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) {
 
         }
         observeData()
+    }
+
+    override fun onEvent(notes: ArrayList<Note>,all_selected:Boolean) {
+        if(all_selected)
+            viewModel.deleteAllNotes()
+        else{
+            for(note in notes)
+                viewModel.deleteNote(note)
+        }
     }
 }
