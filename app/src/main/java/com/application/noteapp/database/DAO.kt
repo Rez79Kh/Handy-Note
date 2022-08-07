@@ -27,5 +27,9 @@ interface DAO{
     @Query("Update note Set alarm_set = :state , alarm_date = :date where id = :note_id")
     fun updateAlarmState(note_id:Int,state:Boolean,date:String)
 
+    @Query("Update note Set is_locked = :state where id = :note_id")
+    suspend fun updateNoteLockState(note_id:Int, state:Boolean)
 
+    @Query("Update note Set is_locked = :state")
+    suspend fun updateAllNoteLockState(state:Boolean)
 }

@@ -18,4 +18,8 @@ class NoteRepository(private val database:NoteDatabase) {
 
     fun updateAlarmState(note_id:Int,value:Boolean,date:String) = database.getNoteDao().updateAlarmState(note_id,value,date)
 
+    suspend fun updateNoteLockState(note_id:Int, state:Boolean) = database.getNoteDao().updateNoteLockState(note_id,state)
+
+    suspend fun updateAllNoteLockState(state:Boolean) = database.getNoteDao().updateAllNoteLockState(state)
+
 }

@@ -41,7 +41,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) ,NotesAdapter.Eve
     val viewModel: NoteViewModel by activityViewModels()
     lateinit var binding: FragmentNoteHomeBinding
     lateinit var notesAdapter: NotesAdapter
-    private lateinit var deleteButtonListener:NotesAdapter.EventListener
+    private lateinit var adapterListener:NotesAdapter.EventListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +58,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) ,NotesAdapter.Eve
         val activity = activity as MainActivity
         requireView().hideKeyboard()
 
-        deleteButtonListener = this
+        adapterListener = this
 
         CoroutineScope(Dispatchers.Main).launch {
             delay(10)
@@ -235,7 +235,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) ,NotesAdapter.Eve
             layoutManager =
                 StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL)
             setHasFixedSize(true)
-            notesAdapter = NotesAdapter(countNotesText,viewLifecycleOwner,deleteButtonListener)
+            notesAdapter = NotesAdapter(countNotesText,viewLifecycleOwner,adapterListener)
             notesAdapter.stateRestorationPolicy =
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             adapter = notesAdapter
@@ -249,12 +249,36 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) ,NotesAdapter.Eve
         observeData()
     }
 
-    override fun onEvent(notes: ArrayList<Note>,all_selected:Boolean) {
-        if(all_selected)
-            viewModel.deleteAllNotes()
-        else{
-            for(note in notes)
-                viewModel.deleteNote(note)
+    override fun onEvent(notes: ArrayList<Note>,all_selected:Boolean,request:Int) {
+        if(request==1) {
+            // delete request
+            if (all_selected)
+                viewModel.deleteAllNotes()
+            else {
+                for (note in notes)
+                    viewModel.deleteNote(note)
+            }
+        }
+        else if(request==2){
+            // lock request
+            if(all_selected){
+                viewModel.updateAllNoteLockState(true)
+            }
+            else{
+                for(note in notes)
+                    viewModel.updateNoteLockState(note.id,true)
+            }
+        }
+        else if(request == 3){
+            // unlock request
+            if(all_selected){
+                viewModel.updateAllNoteLockState(false)
+            }
+            else{
+                for(note in notes){
+                    viewModel.updateNoteLockState(note.id,false)
+                }
+            }
         }
     }
 }

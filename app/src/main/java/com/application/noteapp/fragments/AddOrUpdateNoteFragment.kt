@@ -439,7 +439,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                         0,
                         binding.noteTitleEditText.text.toString(),
                         binding.noteContentEditText.text.toString(),
-                        currentDate, color, selectedFontId, false,""
+                        currentDate, color, selectedFontId, alarm_set = false, alarm_date = "", is_locked = false
                     )
                 )
                 result = "Note Saved"
@@ -465,7 +465,8 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     color,
                     note!!.fontId,
                     note!!.alarm_set,
-                    note!!.alarm_date
+                    note!!.alarm_date,
+                    note!!.is_locked
                 )
             )
         }

@@ -65,20 +65,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
-                        android:visibility="gone"
-                        android:src="@drawable/ic_baseline_check_circle_24"/>
+                        android:src="@drawable/ic_baseline_check_circle_24"
+                        android:visibility="gone" />
 
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/noteItemTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_below="@id/checkNote"
                         android:layout_marginStart="4dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginEnd="4dp"
                         android:ellipsize="end"
                         android:padding="5dp"
-                        android:layout_below="@id/checkNote"
                         android:text="Title"
                         android:textAlignment="textStart"
                         android:textColor="@color/black"
@@ -94,24 +94,40 @@
                         android:layout_marginEnd="5dp"
                         android:background="?android:attr/listDivider" />
 
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/noteItemContent"
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/divider"
                         android:layout_marginStart="4dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="3dp"
-                        android:ellipsize="end"
-                        android:maxLines="12"
-                        android:padding="5dp"
-                        android:text="Some Text"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:textStyle="normal" />
+                        android:layout_marginEnd="4dp">
+
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/noteItemContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="5dp"
+                            android:ellipsize="end"
+                            android:maxLines="12"
+                            android:padding="5dp"
+                            android:text="Some Text"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="normal" />
+
+                        <ImageView
+                            android:id="@+id/lockNoteIcon"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:src="@drawable/lock"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
 
 
                 </RelativeLayout>

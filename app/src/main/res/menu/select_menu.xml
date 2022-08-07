@@ -11,4 +11,14 @@
         app:showAsAction="always"
         android:icon="@drawable/select_all"
         android:title="Select All" />
+    <item
+        android:id="@+id/menuLockNote"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/lock"
+        android:title="Lock" />
+    <item
+        android:id="@+id/menuUnlockNote"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/font"
+        android:title="Unlock"/>
 </menu>

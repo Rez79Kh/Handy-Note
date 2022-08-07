@@ -1,7 +1,6 @@
 package com.application.noteapp.viewmodel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.application.noteapp.model.Note
@@ -35,6 +34,14 @@ class NoteViewModel(private val noteRepository: NoteRepository) : ViewModel() {
 
     fun updateAlarmState(note_id:Int,value:Boolean,date:String) = viewModelScope.launch {
         noteRepository.updateAlarmState(note_id,value,date)
+    }
+
+    fun updateNoteLockState(note_id:Int, state:Boolean) = viewModelScope.launch {
+        noteRepository.updateNoteLockState(note_id,state)
+    }
+
+    fun updateAllNoteLockState(state:Boolean) = viewModelScope.launch {
+        noteRepository.updateAllNoteLockState(state)
     }
 
 }
