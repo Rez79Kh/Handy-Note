@@ -74,6 +74,8 @@ dependencies {
     implementation "io.noties.markwon:core:4.6.2"
     implementation "io.noties.markwon:ext-strikethrough:4.6.2"
     implementation "io.noties.markwon:ext-tasklist:4.6.2"
+    // Load Gif
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
 
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'
