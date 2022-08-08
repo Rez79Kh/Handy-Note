@@ -3,13 +3,16 @@ package com.application.noteapp.fragments
 import android.animation.Animator
 import android.content.res.Configuration
 import android.graphics.Color
+import androidx.biometric.BiometricPrompt
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
+import androidx.biometric.BiometricManager.Authenticators.*
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -35,13 +38,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import androidx.biometric.BiometricPrompt.PromptInfo
+import java.util.concurrent.Executor
 
-class NoteHomeFragment : Fragment(R.layout.fragment_note_home) ,NotesAdapter.EventListener {
-    private val countNotesText :MutableLiveData<String> = MutableLiveData()
+class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.EventListener {
+    private val countNotesText: MutableLiveData<String> = MutableLiveData()
     val viewModel: NoteViewModel by activityViewModels()
     lateinit var binding: FragmentNoteHomeBinding
     lateinit var notesAdapter: NotesAdapter
-    private lateinit var adapterListener:NotesAdapter.EventListener
+    private lateinit var adapterListener: NotesAdapter.EventListener
+
+    lateinit var executor: Executor
+    lateinit var biometricPrompt: BiometricPrompt
+    lateinit var promptInfo: PromptInfo
+
+    var allNotesToUnlock:Boolean = false
+    var notesToUnlock:ArrayList<Note> = ArrayList()
+    var notesToUnlockPositions:ArrayList<Int> = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +71,8 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) ,NotesAdapter.Eve
         val navigator = Navigation.findNavController(view)
         val activity = activity as MainActivity
         requireView().hideKeyboard()
+
+        initAuthentication()
 
         adapterListener = this
 
@@ -114,6 +130,51 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) ,NotesAdapter.Eve
 
         searchBarHandler()
 
+    }
+
+    private fun initAuthentication() {
+        executor = ContextCompat.getMainExecutor(requireContext())
+        biometricPrompt = BiometricPrompt(this@NoteHomeFragment,executor,object : BiometricPrompt.AuthenticationCallback(){
+            override fun onAuthenticationFailed() {
+                super.onAuthenticationFailed()
+                Log.e("Authentication Failed","Authentication Failed")
+            }
+
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                Log.e("Authentication result",result.toString())
+                Log.e("Authentication Success","Authentication Success")
+
+                Log.e("notesToUnlock",notesToUnlock.toString())
+                Log.e("noteToUnlockPositions",notesToUnlockPositions.toString())
+                if (allNotesToUnlock) {
+                    viewModel.updateAllNoteLockState(false)
+                } else {
+                    for (note in notesToUnlock) {
+                        note.is_locked = false
+                        viewModel.updateNoteLockState(note.id, false)
+                    }
+                    for(pos in notesToUnlockPositions){
+                        notesAdapter.notifyItemChanged(pos)
+                    }
+                }
+                notesToUnlock.clear()
+                notesToUnlockPositions.clear()
+                allNotesToUnlock = false
+            }
+
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                super.onAuthenticationError(errorCode, errString)
+                Log.e("Authentication ErrorCode",errorCode.toString())
+                Log.e("Authentication ErrorString",errString.toString())
+            }
+        })
+
+        promptInfo = PromptInfo.Builder()
+            .setTitle("Access Authentication")
+            .setDescription("Scan your fingerprint.")
+            .setAllowedAuthenticators(BIOMETRIC_STRONG or DEVICE_CREDENTIAL or BIOMETRIC_WEAK)
+            .build()
     }
 
     private fun searchBarHandler() {
@@ -235,7 +296,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) ,NotesAdapter.Eve
             layoutManager =
                 StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL)
             setHasFixedSize(true)
-            notesAdapter = NotesAdapter(countNotesText,viewLifecycleOwner,adapterListener)
+            notesAdapter = NotesAdapter(countNotesText, viewLifecycleOwner, adapterListener)
             notesAdapter.stateRestorationPolicy =
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             adapter = notesAdapter
@@ -249,35 +310,35 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home) ,NotesAdapter.Eve
         observeData()
     }
 
-    override fun onEvent(notes: ArrayList<Note>,all_selected:Boolean,request:Int) {
-        if(request==1) {
-            // delete request
-            if (all_selected)
-                viewModel.deleteAllNotes()
-            else {
-                for (note in notes)
-                    viewModel.deleteNote(note)
-            }
-        }
-        else if(request==2){
-            // lock request
-            if(all_selected){
-                viewModel.updateAllNoteLockState(true)
-            }
-            else{
-                for(note in notes)
-                    viewModel.updateNoteLockState(note.id,true)
-            }
-        }
-        else if(request == 3){
-            // unlock request
-            if(all_selected){
-                viewModel.updateAllNoteLockState(false)
-            }
-            else{
-                for(note in notes){
-                    viewModel.updateNoteLockState(note.id,false)
+    override fun menuOnClick(notes: ArrayList<Note>,notesPositions: ArrayList<Int>, all_selected: Boolean, request: Int) {
+        when (request) {
+            1 -> {
+                // delete request
+                if (all_selected)
+                    viewModel.deleteAllNotes()
+                else {
+                    for (note in notes)
+                        viewModel.deleteNote(note)
                 }
+            }
+            2 -> {
+                // lock request
+                if (all_selected) {
+                    viewModel.updateAllNoteLockState(true)
+                } else {
+                    for (note in notes)
+                        viewModel.updateNoteLockState(note.id, true)
+                }
+            }
+            3 -> {
+                // unlock request
+                allNotesToUnlock= all_selected
+                notesToUnlock.clear()
+                notesToUnlockPositions.clear()
+                notesToUnlock.addAll(notes)
+                notesToUnlockPositions.addAll(notesPositions)
+
+                biometricPrompt.authenticate(promptInfo)
             }
         }
     }

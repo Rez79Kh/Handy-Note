@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menuDeleteNote"
-        app:showAsAction="always"
         android:icon="@drawable/delete"
-        android:title="Delete" />
+        android:title="Delete"
+        app:showAsAction="always" />
     <item
         android:id="@+id/menuSelectAllNote"
-        app:showAsAction="always"
         android:icon="@drawable/select_all"
-        android:title="Select All" />
+        android:title="Select All"
+        app:showAsAction="always" />
     <item
         android:id="@+id/menuLockNote"
-        app:showAsAction="ifRoom"
         android:icon="@drawable/lock"
-        android:title="Lock" />
+        android:title="Lock"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menuUnlockNote"
-        app:showAsAction="ifRoom"
         android:icon="@drawable/font"
-        android:title="Unlock"/>
+        android:title="Unlock"
+        app:showAsAction="ifRoom" />
 </menu>

@@ -62,7 +62,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
 
     var fonts: ArrayList<Font> = ArrayList()
 
-    lateinit var alarmDate:String
+    lateinit var alarmDate: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,8 +140,8 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
 
         binding.notificationButton.setOnClickListener {
             if (note != null) {
-                if(!note!!.alarm_set) showDatePicker()
-                else{
+                if (!note!!.alarm_set) showDatePicker()
+                else {
                     MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
                         .setIcon(R.drawable.warning)
                         .setTitle("Warning")
@@ -150,7 +150,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                             // cancel alarm
                             note!!.alarm_set = false
                             note!!.alarm_date = ""
-                            viewModel.updateAlarmState(note!!.id,false,"")
+                            viewModel.updateAlarmState(note!!.id, false, "")
                             cancelAlarm()
                         }
                         .setNegativeButton("NO") { dialog, which ->
@@ -222,7 +222,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         datePickerDialog.show()
     }
 
-    private fun cancelAlarm(){
+    private fun cancelAlarm() {
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(), NotificationReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
@@ -252,8 +252,8 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         )
         alarmManager.set(AlarmManager.RTC_WAKEUP, cal.timeInMillis, pendingIntent)
 
-        val temp:List<String> = cal.time.toString().split(" ")
-        alarmDate = temp[0] +" " + temp[1]+" " + temp[2]+" " + temp[3]+" " + temp[5]
+        val temp: List<String> = cal.time.toString().split(" ")
+        alarmDate = temp[0] + " " + temp[1] + " " + temp[2] + " " + temp[3] + " " + temp[5]
 
         MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
             .setIcon(R.drawable.bell)
@@ -266,7 +266,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
 
         note!!.alarm_set = true
         note!!.alarm_date = alarmDate
-        viewModel.updateAlarmState(note!!.id,true,alarmDate)
+        viewModel.updateAlarmState(note!!.id, true, alarmDate)
     }
 
     private fun handleActionButtons() {
@@ -439,7 +439,12 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                         0,
                         binding.noteTitleEditText.text.toString(),
                         binding.noteContentEditText.text.toString(),
-                        currentDate, color, selectedFontId, alarm_set = false, alarm_date = "", is_locked = false
+                        currentDate,
+                        color,
+                        selectedFontId,
+                        alarm_set = false,
+                        alarm_date = "",
+                        is_locked = false
                     )
                 )
                 result = "Note Saved"

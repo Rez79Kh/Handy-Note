@@ -1,6 +1,7 @@
 package com.application.noteapp.adapters
 
 import android.graphics.Color
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -35,6 +36,7 @@ class NotesAdapter(
 ) :
     ListAdapter<Note, NotesAdapter.NotesViewHolder>(DiffUtilCallback()) {
     val selectedNotes: ArrayList<Note> = ArrayList()
+    val selectedNotePositions: ArrayList<Int> = ArrayList()
     var is_menu_visible: Boolean = false
     var is_all_selected: Boolean = false
 
@@ -62,7 +64,7 @@ class NotesAdapter(
 
     interface EventListener {
         // request == 1 -> delete , request == 2 -> lock , request ==3 -> unlock
-        fun onEvent(notes: ArrayList<Note>, all_selected: Boolean, request: Int)
+        fun menuOnClick(notes: ArrayList<Note>,notesPositions: ArrayList<Int>, all_selected: Boolean, request: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
@@ -136,17 +138,17 @@ class NotesAdapter(
 
     }
 
-    private fun isAllNotesLocked(selectedNotes: ArrayList<Note>):Boolean {
-        for(note in selectedNotes){
-            if(!note.is_locked)
+    private fun isAllNotesLocked(selectedNotes: ArrayList<Note>): Boolean {
+        for (note in selectedNotes) {
+            if (!note.is_locked)
                 return false
         }
         return true
     }
 
-    private fun isAllNotesUnlocked(selectedNotes: ArrayList<Note>):Boolean {
-        for(note in selectedNotes){
-            if(note.is_locked)
+    private fun isAllNotesUnlocked(selectedNotes: ArrayList<Note>): Boolean {
+        for (note in selectedNotes) {
+            if (note.is_locked)
                 return false
         }
         return true
@@ -166,188 +168,208 @@ class NotesAdapter(
             holder.noteCheck.visibility = View.VISIBLE
             holder.parent.setCardBackgroundColor(Color.YELLOW)
             selectedNotes.add(getItem(holder.position))
+            selectedNotePositions.add(holder.position)
         } else {
             holder.noteCheck.visibility = View.GONE
             holder.parent.setCardBackgroundColor(getItem(holder.position).color)
             selectedNotes.remove(getItem(holder.position))
+            selectedNotePositions.remove(holder.position)
         }
 
         countNotesText.value = selectedNotes.size.toString()
     }
 
-    private fun holdNoteHandler (holder: NotesAdapter.NotesViewHolder) = object : View.OnLongClickListener {
-        override fun onLongClick(view: View?): Boolean {
-            if (!is_menu_visible) {
-                val callback = object : ActionMode.Callback {
-                    override fun onCreateActionMode(
-                        actionMode: ActionMode?,
-                        menu: Menu?
-                    ): Boolean {
-                        val menuInflater = actionMode?.menuInflater
-                        menuInflater?.inflate(R.menu.select_menu, menu)
-                        return true
-                    }
+    private fun holdNoteHandler(holder: NotesAdapter.NotesViewHolder) =
+        object : View.OnLongClickListener {
+            override fun onLongClick(view: View?): Boolean {
+                if (!is_menu_visible) {
+                    val callback = object : ActionMode.Callback {
+                        override fun onCreateActionMode(
+                            actionMode: ActionMode?,
+                            menu: Menu?
+                        ): Boolean {
+                            val menuInflater = actionMode?.menuInflater
+                            menuInflater?.inflate(R.menu.select_menu, menu)
+                            return true
+                        }
 
-                    override fun onPrepareActionMode(
-                        actionMode: ActionMode?,
-                        menu: Menu?
-                    ): Boolean {
-                        if(!is_menu_visible) {
-                            is_menu_visible = true
-                            clickItem(holder)
+                        override fun onPrepareActionMode(
+                            actionMode: ActionMode?,
+                            menu: Menu?
+                        ): Boolean {
+                            if (!is_menu_visible) {
+                                is_menu_visible = true
+                                clickItem(holder)
 
-                            countNotesText.observe(holder.binding.lifecycleOwner!!) { value ->
-                                actionMode!!.title = "Selected $value"
+                                countNotesText.observe(holder.binding.lifecycleOwner!!) { value ->
+                                    actionMode!!.title = "Selected $value"
+                                }
                             }
+                            return true
+
                         }
-                        return true
 
-                    }
+                        override fun onActionItemClicked(
+                            actionMode: ActionMode?,
+                            menuItem: MenuItem?
+                        ): Boolean {
+                            val id: Int = menuItem!!.itemId
+                            when (id) {
+                                R.id.menuDeleteNote -> {
+                                    if (selectedNotes.size > 0) {
+                                        MaterialAlertDialogBuilder(
+                                            view!!.context,
+                                            R.style.AlertDialogTheme
+                                        )
+                                            .setIcon(R.drawable.warning)
+                                            .setTitle("Warning")
+                                            .setMessage("All selected notes will be deleted , Are you sure?")
+                                            .setPositiveButton("YES") { dialog, which ->
+                                                is_menu_visible = false
+                                                adapterListener?.menuOnClick(
+                                                    selectedNotes,
+                                                    selectedNotePositions,
+                                                    is_all_selected,
+                                                    1
+                                                )
+                                                selectedNotes.clear()
+                                                selectedNotePositions.clear()
+                                                actionMode?.finish()
+                                            }
+                                            .setNegativeButton("NO") { dialog, which ->
+                                                is_menu_visible = true
+                                            }
+                                            .show()
+                                    }
+                                } // delete selected notes , if size == 0 show no note available
+                                R.id.menuSelectAllNote -> {
+                                    if (selectedNotes.size == currentList.size) {
+                                        is_all_selected = false
+                                        selectedNotes.clear()
+                                        selectedNotePositions.clear()
+                                    } else {
+                                        is_all_selected = true
+                                        selectedNotes.clear()
+                                        selectedNotePositions.clear()
+                                        // add all
+                                        for (el in currentList) {
+                                            selectedNotes.add(el)
+                                        }
+                                        for(index in 0 until currentList.size){
+                                            selectedNotePositions.add(index)
+                                        }
+                                    }
+                                    countNotesText.value = selectedNotes.size.toString()
+                                    notifyDataSetChanged()
+                                }// select all note
 
-                    override fun onActionItemClicked(
-                        actionMode: ActionMode?,
-                        menuItem: MenuItem?
-                    ): Boolean {
-                        val id: Int = menuItem!!.itemId
-                        when (id) {
-                            R.id.menuDeleteNote -> {
-                                if (selectedNotes.size > 0) {
-                                    MaterialAlertDialogBuilder(view!!.context, R.style.AlertDialogTheme)
-                                        .setIcon(R.drawable.warning)
-                                        .setTitle("Warning")
-                                        .setMessage("All selected notes will be deleted , Are you sure?")
-                                        .setPositiveButton("YES") { dialog, which ->
-                                            is_menu_visible = false
-                                            adapterListener?.onEvent(
-                                                selectedNotes,
-                                                is_all_selected,
-                                                1
+                                R.id.menuLockNote -> {
+                                    if (selectedNotes.size > 0) {
+                                        if (isAllNotesLocked(selectedNotes)) {
+                                            MaterialAlertDialogBuilder(
+                                                view!!.context,
+                                                R.style.AlertDialogTheme
                                             )
-                                            selectedNotes.clear()
-                                            actionMode?.finish()
+                                                .setIcon(R.drawable.warning)
+                                                .setTitle("Warning")
+                                                .setMessage("All selected notes are currently locked!")
+                                                .setNeutralButton("OK") { dialog, which ->
+                                                    is_menu_visible = true
+
+                                                }
+                                                .show()
+                                        } else {
+                                            MaterialAlertDialogBuilder(
+                                                view!!.context,
+                                                R.style.AlertDialogTheme
+                                            )
+                                                .setIcon(R.drawable.warning)
+                                                .setTitle("Warning")
+                                                .setMessage("All selected notes that are not locked will be locked , Are you sure?")
+                                                .setPositiveButton("YES") { dialog, which ->
+                                                    is_menu_visible = false
+                                                    adapterListener?.menuOnClick(
+                                                        selectedNotes,
+                                                        selectedNotePositions,
+                                                        is_all_selected,
+                                                        2
+                                                    )
+                                                    selectedNotes.clear()
+                                                    selectedNotePositions.clear()
+                                                    actionMode?.finish()
+                                                }
+                                                .setNegativeButton("NO") { dialog, which ->
+                                                    is_menu_visible = true
+                                                }
+                                                .show()
                                         }
-                                        .setNegativeButton("NO") { dialog, which ->
-                                            is_menu_visible = true
+
+                                    }
+
+                                }// lock selected notes
+
+                                R.id.menuUnlockNote -> {
+                                    if (selectedNotes.size > 0) {
+                                        if (isAllNotesUnlocked(selectedNotes)) {
+                                            MaterialAlertDialogBuilder(
+                                                view!!.context,
+                                                R.style.AlertDialogTheme
+                                            )
+                                                .setIcon(R.drawable.warning)
+                                                .setTitle("Warning")
+                                                .setMessage("All selected notes are currently unlocked!")
+                                                .setNeutralButton("OK") { dialog, which ->
+                                                    is_menu_visible = true
+                                                }
+                                                .show()
+                                        } else {
+                                            MaterialAlertDialogBuilder(
+                                                view!!.context,
+                                                R.style.AlertDialogTheme
+                                            )
+                                                .setIcon(R.drawable.warning)
+                                                .setTitle("Warning")
+                                                .setMessage("All selected notes that are locked will be unlocked , Are you sure?")
+                                                .setPositiveButton("YES") { dialog, which ->
+                                                    is_menu_visible = false
+                                                    adapterListener?.menuOnClick(
+                                                        selectedNotes,
+                                                        selectedNotePositions,
+                                                        is_all_selected,
+                                                        3
+                                                    )
+                                                    selectedNotes.clear()
+                                                    selectedNotePositions.clear()
+                                                    actionMode?.finish()
+                                                }
+                                                .setNegativeButton("NO") { dialog, which ->
+                                                    is_menu_visible = true
+                                                }
+                                                .show()
                                         }
-                                        .show()
-                                }
-                            } // delete selected notes , if size == 0 show no note available
-                            R.id.menuSelectAllNote -> {
-                                if (selectedNotes.size == currentList.size) {
-                                    is_all_selected = false
-                                    selectedNotes.clear()
-                                } else {
-                                    is_all_selected = true
-                                    selectedNotes.clear()
-                                    // add all
-                                    for (el in currentList)
-                                        selectedNotes.add(el)
-                                }
-                                countNotesText.value = selectedNotes.size.toString()
-                                notifyDataSetChanged()
-                            }// select all note
 
-                            R.id.menuLockNote -> {
-                                if (selectedNotes.size > 0) {
-                                    if(isAllNotesLocked(selectedNotes)){
-                                        MaterialAlertDialogBuilder(
-                                            view!!.context,
-                                            R.style.AlertDialogTheme
-                                        )
-                                            .setIcon(R.drawable.warning)
-                                            .setTitle("Warning")
-                                            .setMessage("All selected notes are currently locked!")
-                                            .setNeutralButton("OK") { dialog, which ->
-                                                is_menu_visible = true
-
-                                            }
-                                            .show()
                                     }
-                                    else {
-                                        MaterialAlertDialogBuilder(
-                                            view!!.context,
-                                            R.style.AlertDialogTheme
-                                        )
-                                            .setIcon(R.drawable.warning)
-                                            .setTitle("Warning")
-                                            .setMessage("All selected notes that are not locked will be locked , Are you sure?")
-                                            .setPositiveButton("YES") { dialog, which ->
-                                                is_menu_visible = false
-                                                adapterListener?.onEvent(
-                                                    selectedNotes,
-                                                    is_all_selected,
-                                                    2
-                                                )
-                                                selectedNotes.clear()
-                                                actionMode?.finish()
-                                            }
-                                            .setNegativeButton("NO") { dialog, which ->
-                                                is_menu_visible = true
-                                            }
-                                            .show()
-                                    }
-
-                                }
-
-                            }// lock selected notes
-
-                            R.id.menuUnlockNote -> {
-                                if (selectedNotes.size > 0) {
-                                    if(isAllNotesUnlocked(selectedNotes)){
-                                        MaterialAlertDialogBuilder(
-                                            view!!.context,
-                                            R.style.AlertDialogTheme
-                                        )
-                                            .setIcon(R.drawable.warning)
-                                            .setTitle("Warning")
-                                            .setMessage("All selected notes are currently unlocked!")
-                                            .setNeutralButton("OK") { dialog, which ->
-                                                is_menu_visible = true
-                                            }
-                                            .show()
-                                    }
-                                    else{
-                                        MaterialAlertDialogBuilder(view!!.context, R.style.AlertDialogTheme)
-                                            .setIcon(R.drawable.warning)
-                                            .setTitle("Warning")
-                                            .setMessage("All selected notes that are locked will be unlocked , Are you sure?")
-                                            .setPositiveButton("YES") { dialog, which ->
-                                                is_menu_visible = false
-                                                adapterListener?.onEvent(
-                                                    selectedNotes,
-                                                    is_all_selected,
-                                                    3
-                                                )
-                                                selectedNotes.clear()
-                                                actionMode?.finish()
-                                            }
-                                            .setNegativeButton("NO") { dialog, which ->
-                                                is_menu_visible = true
-                                            }
-                                            .show()
-                                    }
-
-                                }
-                            }// unlock selected notes
+                                }// unlock selected notes
+                            }
+                            return true
                         }
-                        return true
-                    }
 
-                    override fun onDestroyActionMode(actionMode: ActionMode?) {
-                        is_menu_visible = false
-                        is_all_selected = false
-                        selectedNotes.clear()
-                        notifyDataSetChanged()
-                    }
+                        override fun onDestroyActionMode(actionMode: ActionMode?) {
+                            is_menu_visible = false
+                            is_all_selected = false
+                            selectedNotes.clear()
+                            selectedNotePositions.clear()
+                            notifyDataSetChanged()
+                        }
 
+                    }
+                    val c = view?.context as AppCompatActivity
+                    c.startActionMode(callback)
+                } else {
+                    clickItem(holder)
                 }
-                val c = view?.context as AppCompatActivity
-                c.startActionMode(callback)
-            } else {
-                clickItem(holder)
+                return true
             }
-            return true
-        }
 
-    }
+        }
 }
