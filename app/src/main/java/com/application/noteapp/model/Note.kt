@@ -15,5 +15,6 @@ data class Note(
     val fontId:Int,
     var alarm_set:Boolean,
     var alarm_date:String,
-    var is_locked:Boolean
+    var is_locked:Boolean,
+    var is_favorite:Boolean
 ):Serializable

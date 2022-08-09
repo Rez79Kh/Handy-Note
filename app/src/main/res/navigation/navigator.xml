@@ -14,6 +14,7 @@
             android:id="@+id/action_noteHomeFragment_to_addOrUpdateNoteFragment"
             app:destination="@id/addOrUpdateNoteFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/addOrUpdateNoteFragment"
         android:name="com.application.noteapp.fragments.AddOrUpdateNoteFragment"
@@ -28,4 +29,6 @@
             android:defaultValue="@null"
             app:nullable="true"/>
     </fragment>
+
+
 </navigation>

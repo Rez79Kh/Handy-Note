@@ -59,14 +59,28 @@
                 android:textStyle="bold" />
 
             <ImageButton
+                android:id="@+id/favoriteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/favorite_disable"
+                android:paddingStart="5dp"
+                android:paddingTop="5dp"
+                android:layout_toStartOf="@id/notificationButton"
+                android:paddingEnd="5dp"
+                android:paddingBottom="5dp" />
+
+            <ImageButton
                 android:id="@+id/notificationButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="4dp"
-                android:layout_marginEnd="15dp"
-                android:background="@drawable/ic_baseline_notifications_active_24"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/alarm_disable"
                 android:paddingStart="5dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="5dp"

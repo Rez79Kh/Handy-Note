@@ -54,10 +54,12 @@
         <entry key="app/src/main/res/layout/font_list_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fonts_bottom_sheet.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_add_or_update_note.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/fragment_note_home.xml" value="0.2453125" />
+        <entry key="app/src/main/res/layout/fragment_note_home.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_notifications_manager.xml" value="0.35885416666666664" />
         <entry key="app/src/main/res/layout/note_list_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/splash_screen.xml" value="0.3578125" />
         <entry key="app/src/main/res/layout/tools_bottom_sheet.xml" value="0.14629629629629629" />
+        <entry key="app/src/main/res/menu/bottom_navigation_bar.xml" value="0.3015625" />
         <entry key="app/src/main/res/menu/select_menu.xml" value="0.2703125" />
       </map>
     </option>

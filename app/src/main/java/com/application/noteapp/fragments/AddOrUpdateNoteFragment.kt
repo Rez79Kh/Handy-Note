@@ -2,7 +2,6 @@ package com.application.noteapp.fragments
 
 import android.app.*
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
@@ -10,7 +9,6 @@ import android.os.Bundle
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
@@ -34,7 +32,6 @@ import com.application.noteapp.util.hideKeyboard
 import com.application.noteapp.viewmodel.NoteViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.CoroutineScope
@@ -43,7 +40,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     lateinit var binding: FragmentAddOrUpdateNoteBinding
@@ -171,15 +167,38 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
 
         }
 
+        binding.favoriteButton.setOnClickListener {
+            if (note != null) {
+                if (!note!!.is_favorite) {
+                    binding.favoriteButton.setBackgroundResource(R.drawable.favorite_enable)
+                    note!!.is_favorite = true
+                    viewModel.updateNoteFavoriteState(note!!.id, true)
+                } else {
+                    binding.favoriteButton.setBackgroundResource(R.drawable.favorite_disable)
+                    note!!.is_favorite = false
+                    viewModel.updateNoteFavoriteState(note!!.id, false)
+                }
+            } else {
+                MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                    .setIcon(R.drawable.warning)
+                    .setTitle("Attention")
+                    .setMessage("You should create a note at first.")
+                    .setNeutralButton("OK") { dialog, which ->
+
+                    }
+                    .show()
+            }
+        }
+
 
     }
 
     private fun showDatePicker() {
-        val day: Int
-        val month: Int
-        val year: Int
-        var hour: Int
-        var minute: Int
+        val currentDay: Int
+        val currentMonth: Int
+        val currentYear: Int
+        var currentHour: Int
+        var currentMinute: Int
         var selectedDay: Int
         var selectedMonth: Int
         var selectedYear: Int
@@ -187,17 +206,16 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         var selectedMinute: Int
 
         val calendar: Calendar = Calendar.getInstance()
-        day = calendar.get(Calendar.DAY_OF_MONTH)
-        month = calendar.get(Calendar.MONTH)
-        year = calendar.get(Calendar.YEAR)
+        currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+        currentMonth = calendar.get(Calendar.MONTH)
+        currentYear = calendar.get(Calendar.YEAR)
         val datePickerDialog =
             DatePickerDialog(requireContext(), { view, year, month, day ->
                 selectedDay = day
                 selectedYear = year
                 selectedMonth = month
-                val calendar: Calendar = Calendar.getInstance()
-                hour = calendar.get(Calendar.HOUR)
-                minute = calendar.get(Calendar.MINUTE)
+                currentHour = calendar.get(Calendar.HOUR)
+                currentMinute = calendar.get(Calendar.MINUTE)
                 val timePickerDialog = TimePickerDialog(
                     view.context, { _, hour, minute ->
                         selectedHour = hour
@@ -210,19 +228,41 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                             selectedHour,
                             selectedMinute
                         )
-                        setAlarm(selectedCalendar)
-                    }, hour, minute,
+                        if (isValid(selectedCalendar))
+                            setAlarm(selectedCalendar)
+                    }, currentHour, currentMinute,
                     DateFormat.is24HourFormat(view.context)
                 )
+                val simpleDateFormat = SimpleDateFormat("a")
+                val currentTime: String = simpleDateFormat.format(calendar.time)
+                val temp = if (currentTime == "PM") 12 else 0
+                timePickerDialog.updateTime(currentHour + temp, currentMinute)
                 timePickerDialog.setButton(TimePickerDialog.BUTTON_POSITIVE, "Done") { _, _ -> }
                 timePickerDialog.show()
 
-            }, year, month, day)
+            }, currentYear, currentMonth, currentDay)
 //        datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, "Done") { _, _ -> }
         datePickerDialog.show()
     }
 
+    private fun isValid(selectedCalendar: Calendar): Boolean {
+        val calendar: Calendar = Calendar.getInstance()
+        if(selectedCalendar>calendar) {
+            return true
+        }
+        MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+            .setIcon(R.drawable.bell)
+            .setTitle("Warning")
+            .setMessage("Selected Date and Time is invalid.")
+            .setNeutralButton("OK") { dialog, which ->
+
+            }
+            .show()
+        return false
+    }
+
     private fun cancelAlarm() {
+        binding.notificationButton.setBackgroundResource(R.drawable.alarm_disable)
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(), NotificationReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
@@ -259,11 +299,11 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             .setIcon(R.drawable.bell)
             .setTitle("Successful")
             .setMessage("Alarm successfully set on $alarmDate .")
-            .setPositiveButton("OK") { dialog, which ->
-                // Respond to positive button press
+            .setNeutralButton("OK") { dialog, which ->
             }
             .show()
 
+        binding.notificationButton.setBackgroundResource(R.drawable.alarm_enable)
         note!!.alarm_set = true
         note!!.alarm_date = alarmDate
         viewModel.updateAlarmState(note!!.id, true, alarmDate)
@@ -287,6 +327,13 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     saveNote()
                 } else {
                     // Your note is empty
+                    MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                        .setIcon(R.drawable.bell)
+                        .setTitle("Warning")
+                        .setMessage("Can't add note with empty content or title.")
+                        .setNeutralButton("OK") { dialog, which ->
+                        }
+                        .show()
                 }
             }
 
@@ -298,6 +345,13 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     navigator.popBackStack()
                 } else {
                     // Your note is empty
+                    MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                        .setIcon(R.drawable.bell)
+                        .setTitle("Warning")
+                        .setMessage("You should save the note first.")
+                        .setNeutralButton("OK") { dialog, which ->
+                        }
+                        .show()
                 }
             }
 
@@ -354,7 +408,13 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     intent.putExtra(Intent.EXTRA_TEXT, text)
                     startActivity(Intent.createChooser(intent, "Send A Copy To..."))
                 } else {
-                    // show message that your text is empty
+                    MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                        .setIcon(R.drawable.bell)
+                        .setTitle("Warning")
+                        .setMessage("Can't share a note with empty content or title.")
+                        .setNeutralButton("OK") { dialog, which ->
+                        }
+                        .show()
                 }
             }
         }
@@ -371,8 +431,6 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 requireContext().getSystemService(NotificationManager::class.java)
 
             notificationManager!!.createNotificationChannel(channel)
-
-            Log.e("done", "done")
         }
     }
 
@@ -405,13 +463,20 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         val date = binding.noteEditedOnDate
 
         if (note != null) {
+            if (note.alarm_set)
+                binding.notificationButton.setBackgroundResource(R.drawable.alarm_enable)
+            else binding.notificationButton.setBackgroundResource(R.drawable.alarm_disable)
+
+            if (note.is_favorite)
+                binding.favoriteButton.setBackgroundResource(R.drawable.favorite_enable)
+            else binding.favoriteButton.setBackgroundResource(R.drawable.favorite_disable)
             title.setText(note.title)
-            content.renderMD(note.content)
 
             // set font
             val typeface = ResourcesCompat.getFont(requireView().context, note.fontId)
             title.typeface = typeface
             content.typeface = typeface
+            content.renderMD(note.content)
 
             date.text = getString(R.string.edited_on, note.date)
             color = note.color
@@ -425,12 +490,13 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             }
             activity?.window?.statusBarColor = note.color
         } else {
+            binding.notificationButton.setBackgroundResource(R.drawable.alarm_disable)
+            binding.favoriteButton.setBackgroundResource(R.drawable.favorite_disable)
             binding.noteEditedOnDate.text = getString(R.string.edited_on, currentDate)
         }
     }
 
     private fun saveNote() {
-        Log.e("selectedFontId", selectedFontId.toString())
         note = args.note
         when (note) {
             null -> {
@@ -444,7 +510,8 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                         selectedFontId,
                         alarm_set = false,
                         alarm_date = "",
-                        is_locked = false
+                        is_locked = false,
+                        is_favorite = false
                     )
                 )
                 result = "Note Saved"
@@ -471,7 +538,8 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     note!!.fontId,
                     note!!.alarm_set,
                     note!!.alarm_date,
-                    note!!.is_locked
+                    note!!.is_locked,
+                    note!!.is_favorite
                 )
             )
         }

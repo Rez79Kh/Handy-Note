@@ -119,15 +119,123 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/notesRecyclerView"
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:clipToPadding="false"
-            android:transitionGroup="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:listitem="@layout/note_list_item" />
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!--                <com.google.android.material.chip.Chip-->
+                <!--                    android:id="@+id/no_filter"-->
+                <!--                    style="@style/Widget.MaterialComponents.Chip.Choice"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:checked="true"-->
+                <!--                    android:text="No Filter"-->
+                <!--                    android:textColor="@color/black"-->
+                <!--                    android:textSize="16sp"-->
+                <!--                    app:chipBackgroundColor="@color/yellow"-->
+                <!--                    app:chipIcon="@drawable/no_filter"-->
+                <!--                    app:chipIconSize="20sp"-->
+                <!--                    app:chipIconVisible="true"-->
+                <!--                    app:chipStrokeColor="@color/black"-->
+                <!--                    app:chipStrokeWidth="2dp"-->
+                <!--                    app:iconStartPadding="12dp"-->
+                <!--                    app:textEndPadding="12dp" />-->
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/favorite_filter"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="Favorite"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:chipBackgroundColor="#E1E1E1"
+                    app:chipIcon="@drawable/favorite_enable"
+                    app:chipIconSize="20sp"
+                    app:chipIconVisible="true"
+                    app:chipStrokeColor="@color/black"
+                    app:chipStrokeWidth="2dp"
+                    app:iconStartPadding="12dp"
+                    app:textEndPadding="12dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/alarm_filter"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="Alarm"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:chipBackgroundColor="#E1E1E1"
+                    app:chipIcon="@drawable/alarm_disable"
+                    app:chipIconSize="20sp"
+                    app:chipIconVisible="true"
+                    app:chipStrokeColor="@color/black"
+                    app:chipStrokeWidth="2dp"
+                    app:iconStartPadding="12dp"
+                    app:textEndPadding="12dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/locked_filter"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="Locked"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:chipBackgroundColor="#E1E1E1"
+                    app:chipIcon="@drawable/lock"
+                    app:chipIconSize="20sp"
+                    app:chipIconVisible="true"
+                    app:chipStrokeColor="@color/black"
+                    app:chipStrokeWidth="2dp"
+                    app:iconStartPadding="12dp"
+                    app:textEndPadding="12dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/unlocked_filter"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="Unlock"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:chipBackgroundColor="#E1E1E1"
+                    app:chipIcon="@drawable/unlock"
+                    app:chipIconSize="20sp"
+                    app:chipIconVisible="true"
+                    app:chipStrokeColor="@color/black"
+                    app:chipStrokeWidth="2dp"
+                    app:iconStartPadding="12dp"
+                    app:textEndPadding="12dp" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/notesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/chipGroup"
+                android:layout_marginTop="15dp"
+                android:clipToPadding="false"
+                android:transitionGroup="true"
+                tools:listitem="@layout/note_list_item" />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/noDataFoundLayout"
@@ -168,7 +276,6 @@
             app:borderWidth="0dp"
             app:fabSize="normal"
             app:useCompatPadding="false" />
-
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

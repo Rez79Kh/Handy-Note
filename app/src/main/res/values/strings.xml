@@ -2,4 +2,6 @@
     <string name="app_name">NoteApp</string>
     <string name="edited_on">"%1$s"</string>
     <string name="write">Write</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

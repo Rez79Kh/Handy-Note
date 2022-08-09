@@ -45,6 +45,7 @@ class NotesAdapter(
         val title: MaterialTextView = binding.noteItemTitle
         val content: MaterialTextView = binding.noteItemContent
         val noteCheck: ImageView = binding.checkNote
+        val isFavorite: ImageView = binding.isFavorite
         val date: MaterialTextView = binding.noteItemDate
         val parent: MaterialCardView = binding.noteItemCard
         val lock: ImageView = binding.lockNoteIcon
@@ -55,7 +56,6 @@ class NotesAdapter(
                     super.configureVisitor(builder)
                     builder.on(SoftLineBreak::class.java) { visitor, _ ->
                         visitor.forceNewLine()
-
                     }
                 }
             }).build()
@@ -64,7 +64,12 @@ class NotesAdapter(
 
     interface EventListener {
         // request == 1 -> delete , request == 2 -> lock , request ==3 -> unlock
-        fun menuOnClick(notes: ArrayList<Note>,notesPositions: ArrayList<Int>, all_selected: Boolean, request: Int)
+        fun menuOnClick(
+            notes: ArrayList<Note>,
+            notesPositions: ArrayList<Int>,
+            all_selected: Boolean,
+            request: Int
+        )
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
@@ -84,6 +89,13 @@ class NotesAdapter(
                 val typeface = ResourcesCompat.getFont(parent.context, note.fontId)
                 title.typeface = typeface
 
+                if(note.is_favorite) {
+                    isFavorite.visibility = View.VISIBLE
+                }
+                else {
+                    isFavorite.visibility = View.GONE
+                }
+
                 if (note.is_locked) {
                     content.visibility = View.INVISIBLE
                     markDown.setMarkdown(content, note.content)
@@ -92,11 +104,67 @@ class NotesAdapter(
                     parent.setOnClickListener {
                         if (is_menu_visible) {
                             clickItem(holder)
+                        } else {
+                            // clicks on a locked note -> unlock
+                            MaterialAlertDialogBuilder(
+                                itemView.context,
+                                R.style.AlertDialogTheme
+                            )
+                                .setIcon(R.drawable.warning)
+                                .setTitle("Warning")
+                                .setMessage("Do you want to unlock the note?")
+                                .setPositiveButton("YES") { dialog, which ->
+                                    is_all_selected = false
+                                    selectedNotes.clear()
+                                    selectedNotePositions.clear()
+                                    selectedNotes.add(getItem(position))
+                                    selectedNotePositions.add(position)
+                                    adapterListener?.menuOnClick(
+                                        selectedNotes,
+                                        selectedNotePositions,
+                                        is_all_selected,
+                                        3
+                                    )
+                                    selectedNotes.clear()
+                                    selectedNotePositions.clear()
+                                }
+                                .setNegativeButton("NO") { dialog, which ->
+
+                                }
+                                .show()
                         }
                     }
                     content.setOnClickListener {
                         if (is_menu_visible) {
                             clickItem(holder)
+                        } else {
+                            // clicks on a locked note -> unlock
+                            MaterialAlertDialogBuilder(
+                                itemView.context,
+                                R.style.AlertDialogTheme
+                            )
+                                .setIcon(R.drawable.warning)
+                                .setTitle("Warning")
+                                .setMessage("Do you want to unlock the note?")
+                                .setPositiveButton("YES") { dialog, which ->
+                                    is_all_selected = false
+                                    selectedNotes.clear()
+                                    selectedNotePositions.clear()
+                                    selectedNotes.add(getItem(position))
+                                    selectedNotePositions.add(position)
+                                    adapterListener?.menuOnClick(
+                                        selectedNotes,
+                                        selectedNotePositions,
+                                        is_all_selected,
+                                        3
+                                    )
+                                    selectedNotes.clear()
+                                    selectedNotePositions.clear()
+                                }
+                                .setNegativeButton("NO") { dialog, which ->
+
+                                }
+                                .show()
                         }
                     }
                 } else {
@@ -255,7 +323,7 @@ class NotesAdapter(
                                         for (el in currentList) {
                                             selectedNotes.add(el)
                                         }
-                                        for(index in 0 until currentList.size){
+                                        for (index in 0 until currentList.size) {
                                             selectedNotePositions.add(index)
                                         }
                                     }
