@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NoteApp</string>
     <string name="choose_a_font">Choose a Font</string>
     <string name="font_name">Font Name</string>
     <string name="note_title">Note Title</string>

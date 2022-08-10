@@ -4,21 +4,21 @@
     <item
         android:id="@+id/menuDeleteNote"
         android:icon="@drawable/delete"
-        android:title="Delete"
+        android:title="@string/delete"
         app:showAsAction="always" />
     <item
         android:id="@+id/menuSelectAllNote"
         android:icon="@drawable/select_all"
-        android:title="Select All"
+        android:title="@string/select_all"
         app:showAsAction="always" />
     <item
         android:id="@+id/menuLockNote"
         android:icon="@drawable/lock"
-        android:title="Lock"
+        android:title="@string/lock"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menuUnlockNote"
         android:icon="@drawable/font"
-        android:title="Unlock"
+        android:title="@string/unlock"
         app:showAsAction="ifRoom" />
 </menu>

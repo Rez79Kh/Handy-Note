@@ -14,9 +14,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.application.noteapp.R
 import com.application.noteapp.databinding.NoteListItemBinding
+import com.application.noteapp.fragments.AddOrUpdateNoteFragment
 import com.application.noteapp.fragments.NoteHomeFragmentDirections
 import com.application.noteapp.model.Note
 import com.application.noteapp.util.DiffUtilCallback
+import com.application.noteapp.util.FormatNumber
+import com.application.noteapp.util.getCurrentPhoneLanguage
 import com.application.noteapp.util.hideKeyboard
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -85,12 +88,11 @@ class NotesAdapter(
             holder.apply {
                 parent.transitionName = "recyclerView_${note.id}"
                 title.text = note.title
-                date.text = note.date
+                if(getCurrentPhoneLanguage()=="fa") date.text = FormatNumber().convertToPersian(note.date)
+                else date.text = note.date
                 parent.setCardBackgroundColor(note.color)
                 val typeface = ResourcesCompat.getFont(parent.context, note.fontId)
                 title.typeface = typeface
-
-//                notifyItemChanged(position)
 
                 if(note.is_favorite) {
                     isFavorite.visibility = View.VISIBLE
@@ -100,12 +102,10 @@ class NotesAdapter(
                 }
 
                 if(note.alarm_set){
-                    Log.e("vis","vis")
                     hasAlarm.visibility = View.VISIBLE
                 }
                 else {
                     hasAlarm.visibility = View.GONE
-                    Log.e("gone","gone")
                 }
 
                 if (note.is_locked) {

@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="10dp"
-                android:text="Choose a Font"
+                android:text="@string/choose_a_font"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 

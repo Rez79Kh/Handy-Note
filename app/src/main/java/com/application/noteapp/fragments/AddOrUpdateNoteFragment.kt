@@ -3,6 +3,7 @@ package com.application.noteapp.fragments
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.ConfigurationCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
@@ -27,7 +29,9 @@ import com.application.noteapp.databinding.FragmentAddOrUpdateNoteBinding
 import com.application.noteapp.model.Font
 import com.application.noteapp.model.Note
 import com.application.noteapp.receivers.NotificationReceiver
+import com.application.noteapp.util.FormatNumber
 import com.application.noteapp.util.getAvailableFonts
+import com.application.noteapp.util.getCurrentPhoneLanguage
 import com.application.noteapp.util.hideKeyboard
 import com.application.noteapp.viewmodel.NoteViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -60,6 +64,8 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
 
     lateinit var alarmDate: String
 
+    val currentLang: String = getCurrentPhoneLanguage()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -78,6 +84,12 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAddOrUpdateNoteBinding.bind(view)
         note = args.note
+
+
+        if (currentLang == "fa") {
+            binding.colorPickerLayout.translationX = -200f
+            binding.backButton.rotation = 180f
+        } else binding.colorPickerLayout.translationX = 200f
 
         setUpNotificationChannel()
 
@@ -117,8 +129,12 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         handleActionButtons()
 
         binding.closeColorPickerButton.setOnClickListener {
-            binding.colorPickerLayout.animate().translationX(200f).duration = 350
-            is_color_picker_showing = false
+            if (currentLang == "fa") {
+                binding.colorPickerLayout.animate().translationX(-200f).duration = 350
+            } else {
+                binding.colorPickerLayout.animate().translationX(200f).duration = 350
+                is_color_picker_showing = false
+            }
         }
 
         binding.colorPicker.apply {
@@ -247,7 +263,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
 
     private fun isValid(selectedCalendar: Calendar): Boolean {
         val calendar: Calendar = Calendar.getInstance()
-        if(selectedCalendar>calendar) {
+        if (selectedCalendar > calendar) {
             return true
         }
         MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
@@ -478,7 +494,9 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             content.typeface = typeface
             content.renderMD(note.content)
 
-            date.text = getString(R.string.edited_on, note.date)
+            if(currentLang=="fa") date.text = FormatNumber().convertToPersian(note.date)
+            else date.text = note.date
+
             color = note.color
             binding.apply {
                 job.launch {
@@ -492,7 +510,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         } else {
             binding.notificationButton.setBackgroundResource(R.drawable.alarm_disable)
             binding.favoriteButton.setBackgroundResource(R.drawable.favorite_disable)
-            binding.noteEditedOnDate.text = getString(R.string.edited_on, currentDate)
+            binding.noteEditedOnDate.text = currentDate
         }
     }
 

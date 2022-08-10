@@ -1,9 +1,11 @@
 package com.application.noteapp.util
 
 import android.content.Context
+import android.content.res.Resources
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.core.os.ConfigurationCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.application.noteapp.R
@@ -33,3 +35,6 @@ fun getAvailableFonts(): ArrayList<Font> {
     }
     return fonts
 }
+
+fun getCurrentPhoneLanguage() = ConfigurationCompat.getLocales(Resources.getSystem().configuration).get(0).toString()
+    .substringBefore("_")

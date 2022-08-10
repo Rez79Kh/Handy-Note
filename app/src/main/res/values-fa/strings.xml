@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">یادداشت</string>
+    <string name="choose_a_font">یک فونت انتخاب کنید</string>
+    <string name="font_name">نام فونت</string>
+    <string name="note_title">عنوان یادداشت</string>
+    <string name="note_content">متن یادداشت</string>
+    <string name="my_notes">یادداشت های من</string>
+    <string name="search_notes">جستجوی یادداشت</string>
+    <string name="favorite">موردعلاقه</string>
+    <string name="alarm">هشدار</string>
+    <string name="lock">قفل</string>
+    <string name="unlock">باز</string>
+    <string name="there_are_currently_no_notes">درحال حاضر یادداشتی وجود ندارد</string>
+    <string name="title">عنوان</string>
+    <string name="content">متن</string>
+    <string name="delete">حذف</string>
+    <string name="select_all">انتخاب همه</string>
+
+</resources>

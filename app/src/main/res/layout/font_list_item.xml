@@ -31,7 +31,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_gravity="center_vertical"
-            android:text="font Name"
+            android:text="@string/font_name"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="14sp" />

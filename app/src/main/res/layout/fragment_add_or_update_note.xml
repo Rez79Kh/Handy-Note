@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -20,75 +20,87 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp">
 
-
             <ImageView
                 android:id="@+id/backButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="15dp"
                 android:clickable="true"
                 android:focusable="true"
+                android:paddingStart="5dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="5dp"
-                android:paddingStart="5dp"
                 android:paddingBottom="5dp"
                 android:src="@drawable/ic_baseline_arrow_back_ios_24" />
 
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/noteEditedOnDate"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="4dp"
-                android:drawableStart="@drawable/ic_baseline_calendar_today_24"
-                android:drawablePadding="6dp"
-                android:drawableTint="@color/black"
-                android:ellipsize="end"
-                android:paddingStart="13dp"
-                android:paddingTop="5dp"
-                android:paddingEnd="13dp"
-                android:paddingBottom="5dp"
-                android:text="@string/edited_on"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/favoriteButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/favorite_disable"
-                android:paddingStart="5dp"
-                android:paddingTop="5dp"
-                android:layout_toStartOf="@id/notificationButton"
-                android:paddingEnd="5dp"
-                android:paddingBottom="5dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_calendar_today_24"
+                    android:padding="3dp"/>
 
-            <ImageButton
-                android:id="@+id/notificationButton"
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/noteEditedOnDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingStart="13dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="13dp"
+                    android:paddingBottom="5dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/alarm_disable"
-                android:paddingStart="5dp"
-                android:paddingTop="5dp"
-                android:paddingEnd="5dp"
-                android:paddingBottom="5dp" />
+                android:layout_marginEnd="15dp">
+
+                <ImageButton
+                    android:id="@+id/favoriteButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@drawable/favorite_disable"
+                    android:paddingStart="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="5dp"
+                    android:paddingBottom="5dp" />
+
+                <ImageButton
+                    android:id="@+id/notificationButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:background="@drawable/alarm_disable"
+                    android:paddingStart="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="5dp"
+                    android:paddingBottom="5dp" />
+
+            </LinearLayout>
 
 
         </RelativeLayout>
-
 
 
         <FrameLayout
@@ -119,7 +131,7 @@
                         android:layout_marginEnd="20dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/add_title_bg"
-                        android:hint="Note Title"
+                        android:hint="@string/note_title"
                         android:importantForAutofill="no"
                         android:inputType="none"
                         android:textSize="22sp" />
@@ -134,7 +146,7 @@
                         android:layout_marginBottom="20dp"
                         android:background="@drawable/add_title_bg"
                         android:gravity="top"
-                        android:hint="Note Body"
+                        android:hint="@string/note_content"
                         android:importantForAutofill="no"
                         android:inputType="none"
                         android:padding="10dp"
@@ -150,10 +162,9 @@
                 android:id="@+id/colorPickerLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:translationX="100dp"
+                android:layout_gravity="end"
                 android:background="@drawable/color_picker_bar"
-                android:layout_gravity="end">
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -164,23 +175,22 @@
                         android:id="@+id/closeColorPickerButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/ic_baseline_close_24"/>
+                        android:background="@drawable/ic_baseline_close_24" />
 
-                <com.thebluealliance.spectrum.SpectrumPalette
-                    android:id="@+id/colorPicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    app:spectrum_autoPadding="true"
-                    app:spectrum_colors="@array/color_picker_colors"
-                    app:spectrum_columnCount="1"
-                    app:spectrum_outlineWidth="1.0dp"/>
+                    <com.thebluealliance.spectrum.SpectrumPalette
+                        android:id="@+id/colorPicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        app:spectrum_autoPadding="true"
+                        app:spectrum_colors="@array/color_picker_colors"
+                        app:spectrum_columnCount="1"
+                        app:spectrum_outlineWidth="1.0dp" />
 
                 </LinearLayout>
 
             </androidx.core.widget.NestedScrollView>
-
 
 
             <include
