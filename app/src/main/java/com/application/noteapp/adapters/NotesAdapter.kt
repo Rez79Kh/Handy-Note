@@ -46,6 +46,7 @@ class NotesAdapter(
         val content: MaterialTextView = binding.noteItemContent
         val noteCheck: ImageView = binding.checkNote
         val isFavorite: ImageView = binding.isFavorite
+        val hasAlarm: ImageView = binding.hasAlarm
         val date: MaterialTextView = binding.noteItemDate
         val parent: MaterialCardView = binding.noteItemCard
         val lock: ImageView = binding.lockNoteIcon
@@ -89,11 +90,22 @@ class NotesAdapter(
                 val typeface = ResourcesCompat.getFont(parent.context, note.fontId)
                 title.typeface = typeface
 
+//                notifyItemChanged(position)
+
                 if(note.is_favorite) {
                     isFavorite.visibility = View.VISIBLE
                 }
                 else {
                     isFavorite.visibility = View.GONE
+                }
+
+                if(note.alarm_set){
+                    Log.e("vis","vis")
+                    hasAlarm.visibility = View.VISIBLE
+                }
+                else {
+                    hasAlarm.visibility = View.GONE
+                    Log.e("gone","gone")
                 }
 
                 if (note.is_locked) {

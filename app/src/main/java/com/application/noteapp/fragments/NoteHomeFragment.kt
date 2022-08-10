@@ -819,6 +819,17 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
         viewModel.getAllNotes().observe(viewLifecycleOwner) { notesList ->
             binding.noDataFoundLayout.isVisible = notesList.isEmpty()
             notesAdapter.submitList(notesList)
+            // for update alarm icon on notes in homepage
+            for(i in notesAdapter.currentList.indices){
+                for(note in notesList){
+                    if(notesAdapter.currentList[i].id == note.id) {
+                        if (note.alarm_set != notesAdapter.currentList[i].alarm_set) {
+                            notesAdapter.notifyItemChanged(i)
+                        }
+                        break
+                    }
+                }
+            }
         }
     }
 
