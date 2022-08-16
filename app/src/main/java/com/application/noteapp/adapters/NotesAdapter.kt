@@ -1,5 +1,6 @@
 package com.application.noteapp.adapters
 
+import android.content.Context
 import android.graphics.Color
 import android.util.Log
 import android.view.*
@@ -35,7 +36,8 @@ import kotlin.collections.ArrayList
 class NotesAdapter(
     private val countNotesText: MutableLiveData<String>,
     private val lifecycleOwner: LifecycleOwner,
-    private var adapterListener: EventListener? = null
+    private var adapterListener: EventListener? = null,
+    private val context:Context
 ) :
     ListAdapter<Note, NotesAdapter.NotesViewHolder>(DiffUtilCallback()) {
     val selectedNotes: ArrayList<Note> = ArrayList()
@@ -88,7 +90,7 @@ class NotesAdapter(
             holder.apply {
                 parent.transitionName = "recyclerView_${note.id}"
                 title.text = note.title
-                if(getCurrentPhoneLanguage()=="fa") date.text = FormatNumber().convertToPersian(note.date)
+                if(getCurrentPhoneLanguage()=="fa") date.text = FormatNumber.convertToPersian(note.date)
                 else date.text = note.date
                 parent.setCardBackgroundColor(note.color)
                 val typeface = ResourcesCompat.getFont(parent.context, note.fontId)
@@ -123,9 +125,9 @@ class NotesAdapter(
                                 R.style.AlertDialogTheme
                             )
                                 .setIcon(R.drawable.warning)
-                                .setTitle("Warning")
-                                .setMessage("Do you want to unlock the note?")
-                                .setPositiveButton("YES") { dialog, which ->
+                                .setTitle(R.string.warning)
+                                .setMessage(R.string.want_unlock_note)
+                                .setPositiveButton(R.string.yes) { dialog, which ->
                                     is_all_selected = false
                                     selectedNotes.clear()
                                     selectedNotePositions.clear()
@@ -140,7 +142,7 @@ class NotesAdapter(
                                     selectedNotes.clear()
                                     selectedNotePositions.clear()
                                 }
-                                .setNegativeButton("NO") { dialog, which ->
+                                .setNegativeButton(R.string.no) { dialog, which ->
 
                                 }
                                 .show()
@@ -156,9 +158,9 @@ class NotesAdapter(
                                 R.style.AlertDialogTheme
                             )
                                 .setIcon(R.drawable.warning)
-                                .setTitle("Warning")
-                                .setMessage("Do you want to unlock the note?")
-                                .setPositiveButton("YES") { dialog, which ->
+                                .setTitle(R.string.warning)
+                                .setMessage(R.string.want_unlock_note)
+                                .setPositiveButton(R.string.yes) { dialog, which ->
                                     is_all_selected = false
                                     selectedNotes.clear()
                                     selectedNotePositions.clear()
@@ -173,7 +175,7 @@ class NotesAdapter(
                                     selectedNotes.clear()
                                     selectedNotePositions.clear()
                                 }
-                                .setNegativeButton("NO") { dialog, which ->
+                                .setNegativeButton(R.string.no) { dialog, which ->
 
                                 }
                                 .show()
@@ -282,7 +284,7 @@ class NotesAdapter(
                                 clickItem(holder)
 
                                 countNotesText.observe(holder.binding.lifecycleOwner!!) { value ->
-                                    actionMode!!.title = "Selected $value"
+                                    actionMode!!.title = context.resources.getString(R.string.selected,FormatNumber.convertToPersian(value))
                                 }
                             }
                             return true
@@ -302,9 +304,9 @@ class NotesAdapter(
                                             R.style.AlertDialogTheme
                                         )
                                             .setIcon(R.drawable.warning)
-                                            .setTitle("Warning")
-                                            .setMessage("All selected notes will be deleted , Are you sure?")
-                                            .setPositiveButton("YES") { dialog, which ->
+                                            .setTitle(R.string.warning)
+                                            .setMessage(R.string.want_delete_all_notes)
+                                            .setPositiveButton(R.string.yes) { dialog, which ->
                                                 is_menu_visible = false
                                                 adapterListener?.menuOnClick(
                                                     selectedNotes,
@@ -316,7 +318,7 @@ class NotesAdapter(
                                                 selectedNotePositions.clear()
                                                 actionMode?.finish()
                                             }
-                                            .setNegativeButton("NO") { dialog, which ->
+                                            .setNegativeButton(R.string.no) { dialog, which ->
                                                 is_menu_visible = true
                                             }
                                             .show()
@@ -351,9 +353,9 @@ class NotesAdapter(
                                                 R.style.AlertDialogTheme
                                             )
                                                 .setIcon(R.drawable.warning)
-                                                .setTitle("Warning")
-                                                .setMessage("All selected notes are currently locked!")
-                                                .setNeutralButton("OK") { dialog, which ->
+                                                .setTitle(R.string.warning)
+                                                .setMessage(R.string.all_locked)
+                                                .setNeutralButton(R.string.ok) { dialog, which ->
                                                     is_menu_visible = true
 
                                                 }
@@ -364,9 +366,9 @@ class NotesAdapter(
                                                 R.style.AlertDialogTheme
                                             )
                                                 .setIcon(R.drawable.warning)
-                                                .setTitle("Warning")
-                                                .setMessage("All selected notes that are not locked will be locked , Are you sure?")
-                                                .setPositiveButton("YES") { dialog, which ->
+                                                .setTitle(R.string.warning)
+                                                .setMessage(R.string.want_lock_notes)
+                                                .setPositiveButton(R.string.yes) { dialog, which ->
                                                     is_menu_visible = false
                                                     adapterListener?.menuOnClick(
                                                         selectedNotes,
@@ -378,7 +380,7 @@ class NotesAdapter(
                                                     selectedNotePositions.clear()
                                                     actionMode?.finish()
                                                 }
-                                                .setNegativeButton("NO") { dialog, which ->
+                                                .setNegativeButton(R.string.no) { dialog, which ->
                                                     is_menu_visible = true
                                                 }
                                                 .show()
@@ -396,9 +398,9 @@ class NotesAdapter(
                                                 R.style.AlertDialogTheme
                                             )
                                                 .setIcon(R.drawable.warning)
-                                                .setTitle("Warning")
-                                                .setMessage("All selected notes are currently unlocked!")
-                                                .setNeutralButton("OK") { dialog, which ->
+                                                .setTitle(R.string.warning)
+                                                .setMessage(R.string.all_unlocked)
+                                                .setNeutralButton(R.string.ok) { dialog, which ->
                                                     is_menu_visible = true
                                                 }
                                                 .show()
@@ -408,9 +410,9 @@ class NotesAdapter(
                                                 R.style.AlertDialogTheme
                                             )
                                                 .setIcon(R.drawable.warning)
-                                                .setTitle("Warning")
-                                                .setMessage("All selected notes that are locked will be unlocked , Are you sure?")
-                                                .setPositiveButton("YES") { dialog, which ->
+                                                .setTitle(R.string.warning)
+                                                .setMessage(R.string.want_unlock_selected_notes)
+                                                .setPositiveButton(R.string.yes) { dialog, which ->
                                                     is_menu_visible = false
                                                     adapterListener?.menuOnClick(
                                                         selectedNotes,
@@ -422,7 +424,7 @@ class NotesAdapter(
                                                     selectedNotePositions.clear()
                                                     actionMode?.finish()
                                                 }
-                                                .setNegativeButton("NO") { dialog, which ->
+                                                .setNegativeButton(R.string.no) { dialog, which ->
                                                     is_menu_visible = true
                                                 }
                                                 .show()

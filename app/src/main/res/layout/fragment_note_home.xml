@@ -11,21 +11,20 @@
         android:id="@+id/noteHomeFragmentParent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#f7f7ff"
+        android:background="@color/app_background"
         tools:context=".fragments.NoteHomeFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
+            android:background="@color/app_toolbar"
             app:liftOnScroll="true">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#f7f7ff"
                 app:contentInsetEnd="0dp"
                 app:contentInsetLeft="0dp"
                 app:contentInsetRight="0dp"
@@ -136,15 +135,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroup"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/home_toolbar">
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/favorite_filter"
@@ -152,15 +150,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="false"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:text="@string/favorite"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    app:chipBackgroundColor="#E1E1E1"
+                    app:chipBackgroundColor="@color/app_grey"
                     app:chipIcon="@drawable/favorite_enable"
                     app:chipIconSize="20sp"
+                    app:chipIconTint="@color/app_yellow"
                     app:chipIconVisible="true"
-                    app:chipStrokeColor="@color/black"
-                    app:chipStrokeWidth="2dp"
                     app:iconStartPadding="12dp"
                     app:textEndPadding="12dp" />
 
@@ -170,15 +168,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="false"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:text="@string/alarm"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    app:chipBackgroundColor="#E1E1E1"
-                    app:chipIcon="@drawable/alarm_disable"
+                    app:chipBackgroundColor="@color/app_grey"
+                    app:chipIcon="@drawable/alarm_enable"
                     app:chipIconSize="20sp"
+                    app:chipIconTint="@color/app_red"
                     app:chipIconVisible="true"
-                    app:chipStrokeColor="@color/black"
-                    app:chipStrokeWidth="2dp"
                     app:iconStartPadding="12dp"
                     app:textEndPadding="12dp" />
 
@@ -188,15 +186,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="false"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:text="@string/lock"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    app:chipBackgroundColor="#E1E1E1"
+                    app:chipBackgroundColor="@color/app_grey"
                     app:chipIcon="@drawable/lock"
                     app:chipIconSize="20sp"
                     app:chipIconVisible="true"
-                    app:chipStrokeColor="@color/black"
-                    app:chipStrokeWidth="2dp"
                     app:iconStartPadding="12dp"
                     app:textEndPadding="12dp" />
 
@@ -206,15 +203,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="false"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
                     android:text="@string/unlock"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    app:chipBackgroundColor="#E1E1E1"
+                    app:chipBackgroundColor="@color/app_grey"
                     app:chipIcon="@drawable/unlock"
                     app:chipIconSize="20sp"
                     app:chipIconVisible="true"
-                    app:chipStrokeColor="@color/black"
-                    app:chipStrokeWidth="2dp"
                     app:iconStartPadding="12dp"
                     app:textEndPadding="12dp" />
 

@@ -81,7 +81,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
             delay(10)
             activity.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            activity.window.statusBarColor = Color.parseColor("#f7f7ff")
+            activity.window.statusBarColor = resources.getColor(R.color.app_toolbar)
         }
 
         binding.addNoteFloatingActButton.setOnClickListener {
@@ -150,25 +150,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                 binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.yellow
+                        R.color.chip_select
                     )
                 )
                 binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.yellow
+                        R.color.chip_select
                     )
                 )
                 binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.yellow
+                        R.color.chip_select
                     )
                 )
                 binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.yellow
+                        R.color.chip_select
                     )
                 )
                 viewModel.getNotesWithAlarmAndFavoriteFilter()
@@ -186,25 +186,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                     binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.yellow
+                            R.color.chip_select
                         )
                     )
                     binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.yellow
+                            R.color.chip_select
                         )
                     )
                     binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.yellow
+                            R.color.chip_select
                         )
                     )
                     binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.grey
+                            R.color.app_grey
                         )
                     )
                     viewModel.getNotesWithAlarmFilter()
@@ -220,25 +220,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                     binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.grey
+                            R.color.app_grey
                         )
                     )
                     binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.yellow
+                            R.color.chip_select
                         )
                     )
                     binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.yellow
+                            R.color.chip_select
                         )
                     )
                     binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.yellow
+                            R.color.chip_select
                         )
                     )
                     viewModel.getNotesWithFavoriteFilter()
@@ -255,25 +255,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                     binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.yellow
+                            R.color.chip_select
                         )
                     )
                     binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.yellow
+                            R.color.chip_select
                         )
                     )
                     binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.grey
+                            R.color.app_grey
                         )
                     )
                     binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.yellow
+                            R.color.chip_select
                         )
                     )
                     viewModel.getNotesWithAlarmAndLockAndFavoriteFilter()
@@ -289,25 +289,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                     binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.yellow
+                            R.color.chip_select
                         )
                     )
                     binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.grey
+                            R.color.app_grey
                         )
                     )
                     binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.yellow
+                            R.color.chip_select
                         )
                     )
                     binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
-                            R.color.yellow
+                            R.color.chip_select
                         )
                     )
                     viewModel.getNotesWithAlarmAndUnlockAndFavoriteFilter()
@@ -321,25 +321,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                         binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.grey
+                                R.color.app_grey
                             )
                         )
                         binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.yellow
+                                R.color.chip_select
                             )
                         )
                         binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.yellow
+                                R.color.chip_select
                             )
                         )
                         binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.grey
+                                R.color.app_grey
                             )
                         )
                         viewModel.getAllNotes()
@@ -352,25 +352,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                         binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.yellow
+                                R.color.chip_select
                             )
                         )
                         binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.yellow
+                                R.color.chip_select
                             )
                         )
                         binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.grey
+                                R.color.app_grey
                             )
                         )
                         binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.grey
+                                R.color.app_grey
                             )
                         )
                         viewModel.getNotesWithAlarmAndLockFilter()
@@ -383,25 +383,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                         binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.grey
+                                R.color.app_grey
                             )
                         )
                         binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.yellow
+                                R.color.chip_select
                             )
                         )
                         binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.grey
+                                R.color.app_grey
                             )
                         )
                         binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.yellow
+                                R.color.chip_select
                             )
                         )
                         viewModel.getNotesWithLockAndFavoriteFilter()
@@ -414,25 +414,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                         binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.yellow
+                                R.color.chip_select
                             )
                         )
                         binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.grey
+                                R.color.app_grey
                             )
                         )
                         binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.yellow
+                                R.color.chip_select
                             )
                         )
                         binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.grey
+                                R.color.app_grey
                             )
                         )
                         viewModel.getNotesWithAlarmAndUnLockFilter()
@@ -445,25 +445,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                         binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.grey
+                                R.color.app_grey
                             )
                         )
                         binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.grey
+                                R.color.app_grey
                             )
                         )
                         binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.yellow
+                                R.color.chip_select
                             )
                         )
                         binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.yellow
+                                R.color.chip_select
                             )
                         )
                         viewModel.getNotesWithUnlockAndFavoriteFilter()
@@ -476,25 +476,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                         binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.yellow
+                                R.color.chip_select
                             )
                         )
                         binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.grey
+                                R.color.app_grey
                             )
                         )
                         binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.grey
+                                R.color.app_grey
                             )
                         )
                         binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.yellow
+                                R.color.chip_select
                             )
                         )
                         viewModel.getNotesWithAlarmAndFavoriteFilter()
@@ -508,25 +508,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                             binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.yellow
+                                    R.color.chip_select
                                 )
                             )
                             binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             viewModel.getNotesWithLockFilter()
@@ -539,25 +539,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                             binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.yellow
+                                    R.color.chip_select
                                 )
                             )
                             binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             viewModel.getNotesWithUnlockFilter()
@@ -570,25 +570,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                             binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.yellow
+                                    R.color.chip_select
                                 )
                             )
                             viewModel.getNotesWithFavoriteFilter()
@@ -601,25 +601,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                             binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.yellow
+                                    R.color.chip_select
                                 )
                             )
                             binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             viewModel.getNotesWithAlarmFilter()
@@ -632,25 +632,25 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                             binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             binding.lockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             binding.unlockedFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             binding.favoriteFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
-                                    R.color.grey
+                                    R.color.app_grey
                                 )
                             )
                             viewModel.getAllNotes()
@@ -707,8 +707,8 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
             })
 
         promptInfo = PromptInfo.Builder()
-            .setTitle("Access Authentication")
-            .setDescription("Scan your fingerprint.")
+            .setTitle(getString(R.string.access_authentication))
+            .setDescription(getString(R.string.scan_fingerprint))
             .setAllowedAuthenticators(BIOMETRIC_STRONG or DEVICE_CREDENTIAL or BIOMETRIC_WEAK)
             .build()
     }
@@ -781,7 +781,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                     observeData()
                 }
                 val snackbar =
-                    Snackbar.make(requireView(), "The Note Was Deleted", Snackbar.LENGTH_LONG)
+                    Snackbar.make(requireView(), R.string.note_deleted, Snackbar.LENGTH_LONG)
                         .addCallback(object :
                             BaseTransientBottomBar.BaseCallback<Snackbar>() {
                             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
@@ -789,7 +789,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                             }
 
                             override fun onShown(transientBottomBar: Snackbar?) {
-                                transientBottomBar?.setAction("UNDO") {
+                                transientBottomBar?.setAction(R.string.undo) {
                                     viewModel.insertNote(note)
                                     isUndoPressed = true
                                     binding.noDataFoundLayout.isVisible = false
@@ -845,7 +845,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
             layoutManager =
                 StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL)
             setHasFixedSize(true)
-            notesAdapter = NotesAdapter(countNotesText, viewLifecycleOwner, adapterListener)
+            notesAdapter = NotesAdapter(countNotesText, viewLifecycleOwner, adapterListener,context)
             notesAdapter.stateRestorationPolicy =
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             adapter = notesAdapter

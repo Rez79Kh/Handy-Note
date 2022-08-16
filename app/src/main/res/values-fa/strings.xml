@@ -16,5 +16,29 @@
     <string name="content">متن</string>
     <string name="delete">حذف</string>
     <string name="select_all">انتخاب همه</string>
-
+    <string name="access_authentication">دسترسی به احراز هویت</string>
+    <string name="scan_fingerprint">اثر انگشت خود را اسکن کنید</string>
+    <string name="note_deleted">یادداشت حذف شد</string>
+    <string name="undo">لغو</string>
+    <string name="warning">توجه</string>
+    <string name="yes">بله</string>
+    <string name="no">خیر</string>
+    <string name="ok">متوجه شدم</string>
+    <string name="done">تمام</string>
+    <string name="successful">موفقیت آمیز</string>
+    <string name="invalid_date">تاریخ و زمان انتخاب شده نامعتبر است .</string>
+    <string name="cancel_alarm">هشدار قبلاً روی %1$s تنظیم شده است، آیا می‌خواهید آن را لغو کنید؟</string>
+    <string name="set_alarm">هشدار با موفقیت برای %1$s تنظیم شد .</string>
+    <string name="cant_add_empty_note">نمی توان یادداشت با عنوان یا محتوای خالی اضافه کرد .</string>
+    <string name="create_note_first">ابتدا باید یک یادداشت ایجاد کنید</string>
+    <string name="save_note_first">ابتدا باید یادداشت را ذخیره کنید .</string>
+    <string name="cant_share_empty_note">نمی توان یادداشتی با عنوان یا محتوای خالی به اشتراک گذاشت .</string>
+    <string name="send_copy_to">ارسال یک کپی به …</string>
+    <string name="want_unlock_note">آیا می خواهید قفل یادداشت را باز کنید؟</string>
+    <string name="want_delete_all_notes">همه یادداشت های انتخاب شده حذف خواهند شد، آیا مطمئن هستید؟</string>
+    <string name="all_locked">همه یادداشت های انتخاب شده در حال حاضر قفل هستند .</string>
+    <string name="all_unlocked">همه یادداشت های انتخاب شده در حال حاضر باز هستند .</string>
+    <string name="want_lock_notes">همه ی یادداشت های انتخاب شده که قفل نیستند قفل خواهند شد، آیا مطمئن هستید؟</string>
+    <string name="want_unlock_selected_notes">همه یادداشت‌های انتخاب شده که قفل هستند باز می‌شوند، آیا مطمئن هستید؟</string>
+    <string name="selected">%1$s انتخاب شده</string>
 </resources>

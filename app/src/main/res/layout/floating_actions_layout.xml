@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="16dp"
-            android:backgroundTint="#f9c80e"
+            android:backgroundTint="@color/app_yellow"
             android:src="@drawable/share"
             app:fabSize="mini"
             app:rippleColor="@color/grey" />
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="16dp"
-            android:backgroundTint="#f9c80e"
+            android:backgroundTint="@color/app_yellow"
             android:src="@drawable/font"
             app:fabSize="mini"
             app:rippleColor="@color/grey" />
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="16dp"
-            android:backgroundTint="#f9c80e"
+            android:backgroundTint="@color/app_yellow"
             android:src="@drawable/delete"
             app:fabSize="mini"
             app:rippleColor="@color/grey" />
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="16dp"
-            android:backgroundTint="#f9c80e"
+            android:backgroundTint="@color/app_yellow"
             android:src="@drawable/save"
             app:fabSize="mini"
             app:rippleColor="@color/grey" />
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="16dp"
-            android:backgroundTint="#f9c80e"
+            android:backgroundTint="@color/app_yellow"
             android:src="@drawable/color_palette"
             app:fabSize="mini"
             app:rippleColor="@color/grey" />
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="16dp"
-            android:backgroundTint="#f9c80e"
+            android:backgroundTint="@color/app_yellow"
             android:src="@drawable/options"
             app:backgroundTint="@color/white"
             app:rippleColor="@color/grey" />

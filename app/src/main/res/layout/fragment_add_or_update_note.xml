@@ -11,14 +11,13 @@
         android:id="@+id/addOrUpdateNoteFragmentParent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#f7f7ff"
+        android:background="@color/app_background"
         tools:context=".fragments.AddOrUpdateNoteFragment">
 
         <RelativeLayout
             android:id="@+id/FragmentAddOrUpdateToolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/backButton"
@@ -29,8 +28,8 @@
                 android:layout_marginStart="15dp"
                 android:clickable="true"
                 android:focusable="true"
+                android:paddingTop="10dp"
                 android:paddingStart="5dp"
-                android:paddingTop="5dp"
                 android:paddingEnd="5dp"
                 android:paddingBottom="5dp"
                 android:src="@drawable/ic_baseline_arrow_back_ios_24" />
@@ -40,15 +39,16 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginStart="4dp"
-                android:layout_marginTop="8dp"
+                android:background="@drawable/edit_date_bar"
                 android:layout_marginEnd="4dp"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_baseline_calendar_today_24"
-                    android:padding="3dp"/>
+                    android:src="@drawable/calender"
+                    app:tint="@color/black"
+                    android:padding="5dp"/>
 
 
                 <com.google.android.material.textview.MaterialTextView
@@ -82,7 +82,7 @@
                     android:layout_marginEnd="15dp"
                     android:background="@drawable/favorite_disable"
                     android:paddingStart="5dp"
-                    android:paddingTop="5dp"
+                    android:paddingTop="10dp"
                     android:paddingEnd="5dp"
                     android:paddingBottom="5dp" />
 
@@ -93,7 +93,7 @@
                     android:layout_marginStart="4dp"
                     android:background="@drawable/alarm_disable"
                     android:paddingStart="5dp"
-                    android:paddingTop="5dp"
+                    android:paddingTop="10dp"
                     android:paddingEnd="5dp"
                     android:paddingBottom="5dp" />
 

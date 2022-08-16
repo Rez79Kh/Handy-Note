@@ -86,7 +86,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
                                 android:layout_marginEnd="5dp"
-                                android:src="@drawable/ic_baseline_notifications_active_24"
+                                android:background="@drawable/alarm_enable"
+                                android:backgroundTint="#ed7d31"
                                 android:visibility="gone" />
 
                             <ImageView
@@ -95,7 +96,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
                                 android:layout_marginEnd="5dp"
-                                android:src="@drawable/favorite_enable"
+                                android:backgroundTint="@color/app_yellow"
+                                android:background="@drawable/favorite_enable"
                                 android:visibility="gone" />
 
                         </LinearLayout>
