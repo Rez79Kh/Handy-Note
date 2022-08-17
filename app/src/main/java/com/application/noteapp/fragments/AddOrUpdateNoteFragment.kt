@@ -4,15 +4,14 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.os.ConfigurationCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
@@ -50,14 +49,14 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     lateinit var binding: FragmentAddOrUpdateNoteBinding
     lateinit var navigator: NavController
     lateinit var fontAdapter: FontsAdapter
-    val viewModel: NoteViewModel by activityViewModels()
-    val currentDate = SimpleDateFormat.getInstance().format(Date())
+    private val viewModel: NoteViewModel by activityViewModels()
+    private val currentDate:String = SimpleDateFormat.getInstance().format(Date())
     var note: Note? = null
-    var color: Int = Color.parseColor("#f7f7ff")
+    var color: Int = Color.parseColor("#eaf4f4")
     lateinit var result: String
-    val job = CoroutineScope(Dispatchers.Main)
-    val args: AddOrUpdateNoteFragmentArgs by navArgs()
-    var is_color_picker_showing: Boolean = false
+    private val job = CoroutineScope(Dispatchers.Main)
+    private val args: AddOrUpdateNoteFragmentArgs by navArgs()
+    private var isColorPickerShowing: Boolean = false
 
     var selectedFontId: Int = R.font.roboto
 
@@ -65,7 +64,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
 
     lateinit var alarmDate: String
 
-    val currentLang: String = getCurrentPhoneLanguage()
+    private val currentLang: String = getCurrentPhoneLanguage()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +78,12 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         sharedElementEnterTransition = anim
         sharedElementReturnTransition = anim
 
+        requireActivity().onBackPressedDispatcher.addCallback(this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    checkChanges()
+                }
+            })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -86,7 +91,6 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         binding = FragmentAddOrUpdateNoteBinding.bind(view)
         note = args.note
         activity?.window!!.statusBarColor = resources.getColor(R.color.app_background)
-
 
         if (currentLang == "fa") {
             binding.colorPickerLayout.translationX = -200f
@@ -108,9 +112,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         navigator = Navigation.findNavController(view)
 
         binding.backButton.setOnClickListener {
-            requireView().hideKeyboard()
-            navigator.popBackStack()
-
+            checkChanges()
         }
 
         try {
@@ -120,7 +122,6 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     binding.markDownStyleBar.visibility = View.VISIBLE
                     binding.noteContentEditText.setStylesBar(binding.styleBar)
                 } else binding.markDownStyleBar.visibility = View.GONE
-
             }
         } catch (ex: Exception) {
             Log.d("Exception", ex.toString())
@@ -131,9 +132,10 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         handleActionButtons()
 
         binding.closeColorPickerButton.setOnClickListener {
-            if (currentLang == "fa") binding.colorPickerLayout.animate().translationX(-200f).duration = 350
+            if (currentLang == "fa") binding.colorPickerLayout.animate()
+                .translationX(-200f).duration = 350
             else binding.colorPickerLayout.animate().translationX(200f).duration = 350
-            is_color_picker_showing = false
+            isColorPickerShowing = false
         }
 
         binding.colorPicker.apply {
@@ -156,7 +158,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
                         .setIcon(R.drawable.warning)
                         .setTitle(R.string.warning)
-                        .setMessage(getString(R.string.cancel_alarm,note!!.alarm_date))
+                        .setMessage(getString(R.string.cancel_alarm, note!!.alarm_date))
                         .setPositiveButton(R.string.yes) { dialog, which ->
                             // cancel alarm
                             cancelAlarm()
@@ -183,12 +185,14 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             if (note != null) {
                 if (!note!!.is_favorite) {
                     binding.favoriteButton.setBackgroundResource(R.drawable.favorite_enable)
-                    binding.favoriteButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.app_yellow))
+                    binding.favoriteButton.backgroundTintList =
+                        ColorStateList.valueOf(resources.getColor(R.color.app_yellow))
                     note!!.is_favorite = true
                     viewModel.updateNoteFavoriteState(note!!.id, true)
                 } else {
                     binding.favoriteButton.setBackgroundResource(R.drawable.favorite_disable)
-                    binding.favoriteButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.black))
+                    binding.favoriteButton.backgroundTintList =
+                        ColorStateList.valueOf(resources.getColor(R.color.black))
                     note!!.is_favorite = false
                     viewModel.updateNoteFavoriteState(note!!.id, false)
                 }
@@ -204,7 +208,46 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             }
         }
 
+    }
 
+    private fun checkChanges() {
+        requireView().hideKeyboard()
+        val newTitle = binding.noteTitleEditText.text.toString()
+        val newContent = binding.noteContentEditText.text.toString()
+        val newColor = color
+        if (note != null) {
+            if (note!!.title != newTitle || note!!.content != newContent || note!!.color != newColor) {
+                MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                    .setIcon(R.drawable.warning)
+                    .setTitle(R.string.warning)
+                    .setMessage(R.string.unsaved_changes)
+                    .setPositiveButton(R.string.yes) { dialog, which ->
+                        navigator.popBackStack()
+                    }
+                    .setNegativeButton(R.string.no) { dialog, which ->
+
+                    }
+                    .show()
+            } else {
+                navigator.popBackStack()
+            }
+        } else {
+            if (newTitle.isNotEmpty() || newContent.isNotEmpty()) {
+                MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                    .setIcon(R.drawable.warning)
+                    .setTitle(R.string.warning)
+                    .setMessage(R.string.unsaved_changes)
+                    .setPositiveButton(R.string.yes) { dialog, which ->
+                        navigator.popBackStack()
+                    }
+                    .setNegativeButton(R.string.no) { dialog, which ->
+
+                    }
+                    .show()
+            } else {
+                navigator.popBackStack()
+            }
+        }
     }
 
     private fun showDatePicker() {
@@ -249,9 +292,12 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 )
                 val simpleDateFormat = SimpleDateFormat("a")
                 val currentTime: String = simpleDateFormat.format(calendar.time)
-                val temp = if (currentTime == "PM" || currentTime =="بعدازظهر") 12 else 0
+                val temp = if (currentTime == "PM" || currentTime == "بعدازظهر") 12 else 0
                 timePickerDialog.updateTime(currentHour + temp, currentMinute)
-                timePickerDialog.setButton(TimePickerDialog.BUTTON_POSITIVE, getString(R.string.done)) { _, _ -> }
+                timePickerDialog.setButton(
+                    TimePickerDialog.BUTTON_POSITIVE,
+                    getString(R.string.done)
+                ) { _, _ -> }
                 timePickerDialog.show()
 
             }, currentYear, currentMonth, currentDay)
@@ -279,7 +325,8 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         note!!.alarm_date = ""
         viewModel.updateAlarmState(note!!.id, false, "")
         binding.notificationButton.setBackgroundResource(R.drawable.alarm_disable)
-        binding.notificationButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.black))
+        binding.notificationButton.backgroundTintList =
+            ColorStateList.valueOf(resources.getColor(R.color.black))
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(), NotificationReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
@@ -315,13 +362,14 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
             .setIcon(R.drawable.bell)
             .setTitle(R.string.successful)
-            .setMessage(getString(R.string.set_alarm,alarmDate))
+            .setMessage(getString(R.string.set_alarm, alarmDate))
             .setNeutralButton(R.string.ok) { dialog, which ->
             }
             .show()
 
         binding.notificationButton.setBackgroundResource(R.drawable.alarm_enable)
-        binding.notificationButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.app_red))
+        binding.notificationButton.backgroundTintList =
+            ColorStateList.valueOf(resources.getColor(R.color.app_red))
         note!!.alarm_set = true
         note!!.alarm_date = alarmDate
         viewModel.updateAlarmState(note!!.id, true, alarmDate)
@@ -356,11 +404,24 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             }
 
             deleteNoteFab.setOnClickListener {
+                hideActionButtons()
                 val note2 = args.note
                 if (note2 != null) {
-                    viewModel.deleteNote(note2)
-                    hideActionButtons()
-                    navigator.popBackStack()
+                    MaterialAlertDialogBuilder(
+                        requireContext(),
+                        R.style.AlertDialogTheme
+                    )
+                        .setIcon(R.drawable.warning)
+                        .setTitle(R.string.warning)
+                        .setMessage(R.string.want_delete_note)
+                        .setPositiveButton(R.string.yes) { dialog, which ->
+                            viewModel.deleteNote(note2)
+                            navigator.popBackStack()
+                        }
+                        .setNegativeButton(R.string.no) { dialog, which ->
+                        }
+                        .show()
+
                 } else {
                     // Your note is empty
                     MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
@@ -408,9 +469,9 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             colorPickerFab.setOnClickListener {
                 // Show color picker layout
                 hideActionButtons()
-                if (!is_color_picker_showing) {
+                if (!isColorPickerShowing) {
                     binding.colorPickerLayout.animate().translationX(0f).duration = 350
-                    is_color_picker_showing = true
+                    isColorPickerShowing = true
                 }
             }
 
@@ -483,20 +544,22 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         if (note != null) {
             if (note.alarm_set) {
                 binding.notificationButton.setBackgroundResource(R.drawable.alarm_enable)
-                binding.notificationButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.app_red))
-            }
-            else {
+                binding.notificationButton.backgroundTintList =
+                    ColorStateList.valueOf(resources.getColor(R.color.app_red))
+            } else {
                 binding.notificationButton.setBackgroundResource(R.drawable.alarm_disable)
-                binding.notificationButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.black))
+                binding.notificationButton.backgroundTintList =
+                    ColorStateList.valueOf(resources.getColor(R.color.black))
             }
 
             if (note.is_favorite) {
                 binding.favoriteButton.setBackgroundResource(R.drawable.favorite_enable)
-                binding.favoriteButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.app_yellow))
-            }
-            else {
+                binding.favoriteButton.backgroundTintList =
+                    ColorStateList.valueOf(resources.getColor(R.color.app_yellow))
+            } else {
                 binding.favoriteButton.setBackgroundResource(R.drawable.favorite_disable)
-                binding.favoriteButton.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.black))
+                binding.favoriteButton.backgroundTintList =
+                    ColorStateList.valueOf(resources.getColor(R.color.black))
             }
             title.setText(note.title)
 
@@ -506,7 +569,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             content.typeface = typeface
             content.renderMD(note.content)
 
-            if(currentLang=="fa") date.text = FormatNumber.convertToPersian(note.date)
+            if (currentLang == "fa") date.text = FormatNumber.convertToPersian(note.date)
             else date.text = note.date
 
             color = note.color

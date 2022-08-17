@@ -3,7 +3,6 @@ package com.application.noteapp.fragments
 import android.animation.Animator
 import android.content.res.ColorStateList
 import android.content.res.Configuration
-import android.graphics.Color
 import androidx.biometric.BiometricPrompt
 import android.os.Bundle
 import android.text.Editable
@@ -13,6 +12,7 @@ import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
+import androidx.activity.OnBackPressedCallback
 import androidx.biometric.BiometricManager.Authenticators.*
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -40,6 +40,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import androidx.biometric.BiometricPrompt.PromptInfo
+import com.application.noteapp.util.deviceHasSecurity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.concurrent.Executor
 
 class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.EventListener {
@@ -57,12 +59,37 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
     var notesToUnlock: ArrayList<Note> = ArrayList()
     var notesToUnlockPositions: ArrayList<Int> = ArrayList()
 
+    var appFlag = AppFlag.START
+
+    enum class AppFlag{
+        START,
+        PAUSE,
+        RESUME
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         exitTransition = MaterialElevationScale(false).apply { duration = 300 }
         enterTransition = MaterialElevationScale(true).apply { duration = 300 }
+
+        requireActivity().onBackPressedDispatcher.addCallback(this,object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                requireView().hideKeyboard()
+                MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                    .setIcon(R.drawable.warning)
+                    .setTitle(R.string.warning)
+                    .setMessage(R.string.want_close_app)
+                    .setPositiveButton(R.string.yes) { dialog, which ->
+                        requireActivity().finish()
+                    }
+                    .setNegativeButton(R.string.no) { dialog, which ->
+
+                    }
+                    .show()
+            }
+
+        })
 
     }
 
@@ -90,6 +117,9 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
         }
 
         initRecyclerView()
+
+        appFlag = AppFlag.START
+        handleDeviceSecurity()
 
         deleteOnSwipe()
 
@@ -133,6 +163,30 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
 
         chipFilterHandler()
 
+    }
+
+    private fun handleDeviceSecurity() {
+        if(!deviceHasSecurity(requireContext())){
+            Log.e("deviceHasSecurity","false")
+            // no password , pin , ... is set on the phone
+            viewModel.updateAllNoteLockState(false)
+            notesAdapter.submitList(viewModel.getAllNotes().value)
+        }
+        else Log.e("deviceHasSecurity","true")
+    }
+
+    override fun onResume() {
+        if(appFlag == AppFlag.PAUSE) {
+            Log.e("onResume","onResume")
+            handleDeviceSecurity()
+        }
+        super.onResume()
+    }
+
+    override fun onPause() {
+        Log.e("onPause","onPause")
+        appFlag = AppFlag.PAUSE
+        super.onPause()
     }
 
     private fun chipFilterHandler() {
@@ -817,6 +871,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
 
     private fun observeData() {
         viewModel.getAllNotes().observe(viewLifecycleOwner) { notesList ->
+            Log.e("heree","heree")
             binding.noDataFoundLayout.isVisible = notesList.isEmpty()
             notesAdapter.submitList(notesList)
             // for update alarm icon on notes in homepage

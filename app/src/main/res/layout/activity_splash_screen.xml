@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/app_toolbar"
     tools:context=".activities.SplashScreenActivity">
 
     <pl.droidsonroids.gif.GifImageView
@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:adjustViewBounds="false"
-        android:background="@color/white"
-        android:src="@drawable/splash" />
+        android:background="@color/app_toolbar"
+        android:src="@drawable/new_splash" />
 
 </RelativeLayout>

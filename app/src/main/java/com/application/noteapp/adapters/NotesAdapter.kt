@@ -18,10 +18,7 @@ import com.application.noteapp.databinding.NoteListItemBinding
 import com.application.noteapp.fragments.AddOrUpdateNoteFragment
 import com.application.noteapp.fragments.NoteHomeFragmentDirections
 import com.application.noteapp.model.Note
-import com.application.noteapp.util.DiffUtilCallback
-import com.application.noteapp.util.FormatNumber
-import com.application.noteapp.util.getCurrentPhoneLanguage
-import com.application.noteapp.util.hideKeyboard
+import com.application.noteapp.util.*
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textview.MaterialTextView
@@ -37,7 +34,7 @@ class NotesAdapter(
     private val countNotesText: MutableLiveData<String>,
     private val lifecycleOwner: LifecycleOwner,
     private var adapterListener: EventListener? = null,
-    private val context:Context
+    private val context: Context
 ) :
     ListAdapter<Note, NotesAdapter.NotesViewHolder>(DiffUtilCallback()) {
     val selectedNotes: ArrayList<Note> = ArrayList()
@@ -90,23 +87,22 @@ class NotesAdapter(
             holder.apply {
                 parent.transitionName = "recyclerView_${note.id}"
                 title.text = note.title
-                if(getCurrentPhoneLanguage()=="fa") date.text = FormatNumber.convertToPersian(note.date)
+                if (getCurrentPhoneLanguage() == "fa") date.text =
+                    FormatNumber.convertToPersian(note.date)
                 else date.text = note.date
                 parent.setCardBackgroundColor(note.color)
                 val typeface = ResourcesCompat.getFont(parent.context, note.fontId)
                 title.typeface = typeface
 
-                if(note.is_favorite) {
+                if (note.is_favorite) {
                     isFavorite.visibility = View.VISIBLE
-                }
-                else {
+                } else {
                     isFavorite.visibility = View.GONE
                 }
 
-                if(note.alarm_set){
+                if (note.alarm_set) {
                     hasAlarm.visibility = View.VISIBLE
-                }
-                else {
+                } else {
                     hasAlarm.visibility = View.GONE
                 }
 
@@ -210,7 +206,7 @@ class NotesAdapter(
 
                 if (is_all_selected) {
                     noteCheck.visibility = View.VISIBLE
-                    parent.setCardBackgroundColor(Color.YELLOW)
+                    parent.setCardBackgroundColor(context.resources.getColor(R.color.app_yellow))
                 } else {
                     noteCheck.visibility = View.GONE
                     parent.setCardBackgroundColor(note.color)
@@ -248,7 +244,7 @@ class NotesAdapter(
     private fun clickItem(holder: NotesAdapter.NotesViewHolder) {
         if (holder.noteCheck.visibility == View.GONE) {
             holder.noteCheck.visibility = View.VISIBLE
-            holder.parent.setCardBackgroundColor(Color.YELLOW)
+            holder.parent.setCardBackgroundColor(context.resources.getColor(R.color.app_yellow))
             selectedNotes.add(getItem(holder.position))
             selectedNotePositions.add(holder.position)
         } else {
@@ -284,7 +280,10 @@ class NotesAdapter(
                                 clickItem(holder)
 
                                 countNotesText.observe(holder.binding.lifecycleOwner!!) { value ->
-                                    actionMode!!.title = context.resources.getString(R.string.selected,FormatNumber.convertToPersian(value))
+                                    actionMode!!.title = context.resources.getString(
+                                        R.string.selected,
+                                        FormatNumber.convertToPersian(value)
+                                    )
                                 }
                             }
                             return true
@@ -346,46 +345,61 @@ class NotesAdapter(
                                 }// select all note
 
                                 R.id.menuLockNote -> {
-                                    if (selectedNotes.size > 0) {
-                                        if (isAllNotesLocked(selectedNotes)) {
-                                            MaterialAlertDialogBuilder(
-                                                view!!.context,
-                                                R.style.AlertDialogTheme
-                                            )
-                                                .setIcon(R.drawable.warning)
-                                                .setTitle(R.string.warning)
-                                                .setMessage(R.string.all_locked)
-                                                .setNeutralButton(R.string.ok) { dialog, which ->
-                                                    is_menu_visible = true
+                                    if (deviceHasSecurity(context)) {
+                                        if (selectedNotes.size > 0) {
+                                            if (isAllNotesLocked(selectedNotes)) {
+                                                MaterialAlertDialogBuilder(
+                                                    view!!.context,
+                                                    R.style.AlertDialogTheme
+                                                )
+                                                    .setIcon(R.drawable.warning)
+                                                    .setTitle(R.string.warning)
+                                                    .setMessage(R.string.all_locked)
+                                                    .setNeutralButton(R.string.ok) { dialog, which ->
+                                                        is_menu_visible = true
 
-                                                }
-                                                .show()
-                                        } else {
-                                            MaterialAlertDialogBuilder(
-                                                view!!.context,
-                                                R.style.AlertDialogTheme
-                                            )
-                                                .setIcon(R.drawable.warning)
-                                                .setTitle(R.string.warning)
-                                                .setMessage(R.string.want_lock_notes)
-                                                .setPositiveButton(R.string.yes) { dialog, which ->
-                                                    is_menu_visible = false
-                                                    adapterListener?.menuOnClick(
-                                                        selectedNotes,
-                                                        selectedNotePositions,
-                                                        is_all_selected,
-                                                        2
-                                                    )
-                                                    selectedNotes.clear()
-                                                    selectedNotePositions.clear()
-                                                    actionMode?.finish()
-                                                }
-                                                .setNegativeButton(R.string.no) { dialog, which ->
-                                                    is_menu_visible = true
-                                                }
-                                                .show()
+                                                    }
+                                                    .show()
+                                            } else {
+                                                MaterialAlertDialogBuilder(
+                                                    view!!.context,
+                                                    R.style.AlertDialogTheme
+                                                )
+                                                    .setIcon(R.drawable.warning)
+                                                    .setTitle(R.string.warning)
+                                                    .setMessage(R.string.want_lock_notes)
+                                                    .setPositiveButton(R.string.yes) { dialog, which ->
+                                                        is_menu_visible = false
+                                                        adapterListener?.menuOnClick(
+                                                            selectedNotes,
+                                                            selectedNotePositions,
+                                                            is_all_selected,
+                                                            2
+                                                        )
+                                                        selectedNotes.clear()
+                                                        selectedNotePositions.clear()
+                                                        actionMode?.finish()
+                                                    }
+                                                    .setNegativeButton(R.string.no) { dialog, which ->
+                                                        is_menu_visible = true
+                                                    }
+                                                    .show()
+                                            }
+
                                         }
+                                    }
+                                    else{
+                                        MaterialAlertDialogBuilder(
+                                            view!!.context,
+                                            R.style.AlertDialogTheme
+                                        )
+                                            .setIcon(R.drawable.warning)
+                                            .setTitle(R.string.warning)
+                                            .setMessage(R.string.no_password_already_set)
+                                            .setNeutralButton(R.string.ok) { dialog, which ->
 
+                                            }
+                                            .show()
                                     }
 
                                 }// lock selected notes

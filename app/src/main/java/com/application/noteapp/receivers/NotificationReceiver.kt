@@ -32,7 +32,7 @@ class NotificationReceiver:BroadcastReceiver() {
         val pendingIntent = PendingIntent.getActivity(context,note_id,i,PendingIntent.FLAG_UPDATE_CURRENT)
 
         val builder = Notification.Builder(context,channelID)
-            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(title)
             .setContentText(content)
             .setAutoCancel(true)

@@ -40,4 +40,8 @@
     <string name="want_lock_notes">All selected notes that are not locked will be locked , Are you sure?</string>
     <string name="want_unlock_selected_notes">All selected notes that are locked will be unlocked , Are you sure?</string>
     <string name="selected">Selected %1$s</string>
+    <string name="unsaved_changes">Any unsaved changes will be lost , Are you sure?</string>
+    <string name="want_close_app">Are you sure you want to close the app?</string>
+    <string name="want_delete_note">Are you sure you want to delete the note?</string>
+    <string name="no_password_already_set">This cannot be done because there is no password on your phone , you need to set a password on your phone first .</string>
 </resources>
