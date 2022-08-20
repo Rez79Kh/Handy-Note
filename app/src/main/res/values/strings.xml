@@ -44,4 +44,5 @@
     <string name="want_close_app">Are you sure you want to close the app?</string>
     <string name="want_delete_note">Are you sure you want to delete the note?</string>
     <string name="no_password_already_set">This cannot be done because there is no password on your phone , you need to set a password on your phone first .</string>
+    <string name="font">Font %1$s</string>
 </resources>

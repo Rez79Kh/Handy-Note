@@ -31,6 +31,7 @@ class FontsAdapter(private val fontsList: List<Font>) :RecyclerView.Adapter<Font
         val font = fontsList[position]
         holder.apply {
             name.text = font.name
+            name.typeface = ResourcesCompat.getFont(itemView.context, font.id)
             itemView.setOnClickListener {
                 onItemClick?.invoke(fontsList[adapterPosition])
             }

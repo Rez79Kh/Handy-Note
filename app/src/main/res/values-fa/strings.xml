@@ -45,4 +45,5 @@
     <string name="want_close_app">آیا مطمئن هستید که می خواهید برنامه را ببندید؟</string>
     <string name="want_delete_note">آیا مطمئن هستید که می خواهید یادداشت را حذف کنید؟</string>
     <string name="no_password_already_set">نمی توان این کار را انجام داد زیرا هیچ رمزی بر روی گوشی شما وجود ندارد ابتدا باید بر روی گوشی خود رمز بگذارید .</string>
+    <string name="font">فونت %1$s</string>
 </resources>

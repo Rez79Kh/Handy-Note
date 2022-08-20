@@ -100,7 +100,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         setUpNotificationChannel()
 
         // Read Fonts file
-        fonts = getAvailableFonts()
+        fonts = getAvailableFonts(requireContext())
 
         val activity = activity as MainActivity
 

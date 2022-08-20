@@ -4,6 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1238009592326139" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/add_title_bg.xml" value="0.2275" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/fragment_add_or_update_note.xml" value="0.264" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/fragment_note_home.xml" value="0.2" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/note_list_item.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/drawable/add_title_bg.xml" value="0.213" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/drawable/bottom_sheet_bar.xml" value="0.109" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/drawable/floating_action_button_bg.xml" value="0.1905" />
