@@ -28,8 +28,8 @@
                 android:layout_marginStart="15dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:paddingTop="10dp"
                 android:paddingStart="5dp"
+                android:paddingTop="10dp"
                 android:paddingEnd="5dp"
                 android:paddingBottom="5dp"
                 android:src="@drawable/ic_baseline_arrow_back_ios_24" />
@@ -39,16 +39,16 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginStart="4dp"
-                android:background="@drawable/edit_date_bar"
                 android:layout_marginEnd="4dp"
+                android:background="@drawable/edit_date_bar"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:padding="5dp"
                     android:src="@drawable/calender"
-                    app:tint="@color/black"
-                    android:padding="5dp"/>
+                    app:tint="@color/black" />
 
 
                 <com.google.android.material.textview.MaterialTextView
@@ -121,7 +121,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-
                     <EditText
                         android:id="@+id/noteTitleEditText"
                         android:layout_width="match_parent"
@@ -131,6 +130,7 @@
                         android:layout_marginEnd="20dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/add_title_bg"
+                        android:gravity="top|start"
                         android:hint="@string/note_title"
                         android:importantForAutofill="no"
                         android:inputType="none"
@@ -215,7 +215,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:padding="5dp" />
+                android:padding="5dp"/>
 
         </LinearLayout>
 

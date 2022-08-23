@@ -3,15 +3,10 @@
     <font
         android:fontStyle="normal"
         android:fontWeight="400"
-        android:font="@font/poppins_regular" />
-
-    <font
-        android:fontStyle="italic"
-        android:fontWeight="400"
-        android:font="@font/poppins_italic" />
+        android:font="@font/kalameh_regular" />
 
     <font
         android:fontStyle="normal"
         android:fontWeight="700"
-        android:font="@font/poppins_bold" />
+        android:font="@font/kalameh_bold" />
 </font-family>

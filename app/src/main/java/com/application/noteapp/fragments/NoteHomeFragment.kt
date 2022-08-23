@@ -858,7 +858,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                 snackbar.setActionTextColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.yellow
+                        R.color.app_yellow
                     )
                 )
                 snackbar.show()

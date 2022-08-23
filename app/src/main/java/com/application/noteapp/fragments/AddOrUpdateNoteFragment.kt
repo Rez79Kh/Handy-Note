@@ -5,15 +5,22 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.Html
+import android.text.Layout
+import android.text.TextWatcher
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
+import androidx.core.text.HtmlCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
@@ -38,12 +45,15 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialContainerTransform
+import com.yahiaangelo.markdownedittext.MarkdownEditText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.text.Normalizer
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     lateinit var binding: FragmentAddOrUpdateNoteBinding
@@ -115,13 +125,16 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             checkChanges()
         }
 
+
+
         try {
             binding.noteContentEditText.setOnFocusChangeListener { _, focused ->
                 if (focused) {
-                    requireView().hideKeyboard()
                     binding.markDownStyleBar.visibility = View.VISIBLE
                     binding.noteContentEditText.setStylesBar(binding.styleBar)
-                } else binding.markDownStyleBar.visibility = View.GONE
+                } else {
+                    binding.markDownStyleBar.visibility = View.GONE
+                }
             }
         } catch (ex: Exception) {
             Log.d("Exception", ex.toString())
@@ -130,6 +143,8 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         initNote()
 
         handleActionButtons()
+
+
 
         binding.closeColorPickerButton.setOnClickListener {
             if (currentLang == "fa") binding.colorPickerLayout.animate()
@@ -207,6 +222,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     .show()
             }
         }
+        binding.styleBar.stylesList = arrayOf(MarkdownEditText.TextStyle.UNORDERED_LIST, MarkdownEditText.TextStyle.TASKS_LIST)
 
     }
 
@@ -267,14 +283,14 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         currentMonth = calendar.get(Calendar.MONTH)
         currentYear = calendar.get(Calendar.YEAR)
         val datePickerDialog =
-            DatePickerDialog(requireContext(), { view, year, month, day ->
+            DatePickerDialog(requireContext(),R.style.datePicker, { view, year, month, day ->
                 selectedDay = day
                 selectedYear = year
                 selectedMonth = month
                 currentHour = calendar.get(Calendar.HOUR)
                 currentMinute = calendar.get(Calendar.MINUTE)
                 val timePickerDialog = TimePickerDialog(
-                    view.context, { _, hour, minute ->
+                    view.context,R.style.datePicker, { _, hour, minute ->
                         selectedHour = hour
                         selectedMinute = minute
                         val selectedCalendar: Calendar = Calendar.getInstance()
@@ -597,7 +613,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     Note(
                         0,
                         binding.noteTitleEditText.text.toString(),
-                        binding.noteContentEditText.text.toString(),
+                        binding.noteContentEditText.getMD(),
                         currentDate,
                         color,
                         selectedFontId,

@@ -3,11 +3,10 @@
     <font
         android:fontStyle="normal"
         android:fontWeight="400"
-        android:font="@font/league_gothic_regular" />
+        android:font="@font/shabnam_regular" />
 
     <font
-        android:fontStyle="italic"
-        android:fontWeight="400"
-        android:font="@font/league_gothic_italic" />
-
+        android:fontStyle="normal"
+        android:fontWeight="700"
+        android:font="@font/shabnam_bold" />
 </font-family>

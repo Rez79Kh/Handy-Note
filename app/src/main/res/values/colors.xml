@@ -18,33 +18,46 @@
     <color name="neg_color_dialog">#FBA76D</color>
     <color name="dialog_text_color">#fafafa</color>
     <color name="ic_launcher_background">#fbd881</color>
-
-    <color name="blue">#0047BD</color>
-    <color name="light_blue">#0288D9</color>
-    <color name="sky_blue">#14AAF5</color>
-    <color name="green">#00AB38</color>
-    <color name="lime_green">#7ECC49</color>
-    <color name="orange">#FFB300</color>
-    <color name="yellow">#FFE63B</color>
-    <color name="purple">#8200AC</color>
-    <color name="light_purple">#CC72F5</color>
-    <color name="red">#DB4035</color>
     <color name="grey">#B8B8B8</color>
+
+    <!--color picker palette-->
+    <color name="sky_blue">#00ADB5</color>
+    <color name="light_yellow">#FCE38A</color>
+    <color name="light_green">#EAFFD0</color>
+    <color name="pink">#F38181</color>
+    <color name="navy_blue">#215DA3</color>
+    <color name="lime_green">#CAFB74</color>
+    <color name="light_purple">#C3AED6</color>
+    <color name="light_dark_green">#52734D</color>
+    <color name="green_blue">#1FAB89</color>
     <color name="charcoal">#808080</color>
+    <color name="blue">#1687A7</color>
+    <color name="yellow">#FFCC48</color>
+    <color name="green">#3CCF4E</color>
+    <color name="red">#E64848</color>
+    <color name="purple">#D358A7</color>
+    <color name="new_grey">#C0D8C0</color>
 
     <array name="color_picker_colors">
-        <item>@color/blue</item>
-        <item>@color/light_blue</item>
+        <item>@color/app_yellow</item>
+        <item>@color/app_red</item>
         <item>@color/sky_blue</item>
-        <item>@color/green</item>
+        <item>@color/light_yellow</item>
+        <item>@color/light_green</item>
+        <item>@color/pink</item>
+        <item>@color/navy_blue</item>
         <item>@color/lime_green</item>
-        <item>@color/orange</item>
-        <item>@color/yellow</item>
-        <item>@color/purple</item>
         <item>@color/light_purple</item>
+        <item>@color/light_dark_green</item>
         <item>@color/red</item>
-        <item>@color/grey</item>
+        <item>@color/green_blue</item>
         <item>@color/charcoal</item>
+        <item>@color/blue</item>
+        <item>@color/yellow</item>
+        <item>@color/green</item>
+        <item>@color/purple</item>
+        <item>@color/new_grey</item>
+
     </array>
     
 </resources>
