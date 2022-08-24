@@ -37,10 +37,9 @@
     <color name="red">#E64848</color>
     <color name="purple">#D358A7</color>
     <color name="new_grey">#C0D8C0</color>
+    <color name="new_yellow">#FFF380</color>
 
     <array name="color_picker_colors">
-        <item>@color/app_yellow</item>
-        <item>@color/app_red</item>
         <item>@color/sky_blue</item>
         <item>@color/light_yellow</item>
         <item>@color/light_green</item>
@@ -53,10 +52,10 @@
         <item>@color/green_blue</item>
         <item>@color/charcoal</item>
         <item>@color/blue</item>
-        <item>@color/yellow</item>
         <item>@color/green</item>
         <item>@color/purple</item>
         <item>@color/new_grey</item>
+        <item>@color/purple_200</item>
 
     </array>
     

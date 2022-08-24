@@ -41,6 +41,7 @@ class NotesAdapter(
     val selectedNotePositions: ArrayList<Int> = ArrayList()
     var is_menu_visible: Boolean = false
     var is_all_selected: Boolean = false
+    val currentLang = getCurrentPhoneLanguage()
 
     inner class NotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding: NoteListItemBinding = NoteListItemBinding.bind(itemView)
@@ -87,7 +88,7 @@ class NotesAdapter(
             holder.apply {
                 parent.transitionName = "recyclerView_${note.id}"
                 title.text = note.title
-                if (getCurrentPhoneLanguage() == "fa") date.text =
+                if (currentLang == "fa") date.text =
                     FormatNumber.convertToPersian(note.date)
                 else date.text = note.date
                 parent.setCardBackgroundColor(note.color)
@@ -278,11 +279,14 @@ class NotesAdapter(
                             if (!is_menu_visible) {
                                 is_menu_visible = true
                                 clickItem(holder)
-
                                 countNotesText.observe(holder.binding.lifecycleOwner!!) { value ->
+                                    var newVal = value
+                                    if(currentLang=="fa"){
+                                        newVal = FormatNumber.convertToPersian(value)
+                                    }
                                     actionMode!!.title = context.resources.getString(
                                         R.string.selected,
-                                        FormatNumber.convertToPersian(value)
+                                        newVal
                                     )
                                 }
                             }

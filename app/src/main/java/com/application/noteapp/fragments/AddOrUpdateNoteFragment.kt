@@ -60,7 +60,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     lateinit var navigator: NavController
     lateinit var fontAdapter: FontsAdapter
     private val viewModel: NoteViewModel by activityViewModels()
-    private val currentDate:String = SimpleDateFormat.getInstance().format(Date())
+    private val currentDate: String = SimpleDateFormat.getInstance().format(Date())
     var note: Note? = null
     var color: Int = Color.parseColor("#eaf4f4")
     lateinit var result: String
@@ -125,8 +125,6 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             checkChanges()
         }
 
-
-
         try {
             binding.noteContentEditText.setOnFocusChangeListener { _, focused ->
                 if (focused) {
@@ -137,14 +135,12 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 }
             }
         } catch (ex: Exception) {
-            Log.d("Exception", ex.toString())
+            Log.d("ExceptionContent", ex.toString())
         }
 
         initNote()
 
         handleActionButtons()
-
-
 
         binding.closeColorPickerButton.setOnClickListener {
             if (currentLang == "fa") binding.colorPickerLayout.animate()
@@ -222,7 +218,12 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     .show()
             }
         }
-        binding.styleBar.stylesList = arrayOf(MarkdownEditText.TextStyle.UNORDERED_LIST, MarkdownEditText.TextStyle.TASKS_LIST)
+        binding.styleBar.stylesList = arrayOf(
+            MarkdownEditText.TextStyle.UNORDERED_LIST,
+            MarkdownEditText.TextStyle.TASKS_LIST
+        )
+//        binding.noteContentEditText.triggerTasksListStyle(false)
+//        binding.noteContentEditText.taskBoxColor = R.color.app_yellow
 
     }
 
@@ -283,14 +284,14 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         currentMonth = calendar.get(Calendar.MONTH)
         currentYear = calendar.get(Calendar.YEAR)
         val datePickerDialog =
-            DatePickerDialog(requireContext(),R.style.datePicker, { view, year, month, day ->
+            DatePickerDialog(requireContext(), R.style.datePicker, { view, year, month, day ->
                 selectedDay = day
                 selectedYear = year
                 selectedMonth = month
                 currentHour = calendar.get(Calendar.HOUR)
                 currentMinute = calendar.get(Calendar.MINUTE)
                 val timePickerDialog = TimePickerDialog(
-                    view.context,R.style.datePicker, { _, hour, minute ->
+                    view.context, R.style.datePicker, { _, hour, minute ->
                         selectedHour = hour
                         selectedMinute = minute
                         val selectedCalendar: Calendar = Calendar.getInstance()
