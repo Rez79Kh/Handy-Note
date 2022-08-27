@@ -68,12 +68,8 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
     // Color Picker
     implementation 'com.thebluealliance:spectrum:0.7.1'
-    // Markdown Edit text
-    implementation "io.github.yahiaangelo.markdownedittext:markdownedittext:1.1.3"
-    // markdown library
-    implementation "io.noties.markwon:core:4.6.2"
-    implementation "io.noties.markwon:ext-strikethrough:4.6.2"
-    implementation "io.noties.markwon:ext-tasklist:4.6.2"
+    // Text Editor for support different styles
+    implementation 'com.github.mthli:Knife:v1.1'
     // Load Gif
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
     // Biometric for authentication

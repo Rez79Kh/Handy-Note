@@ -2,11 +2,19 @@ package com.application.noteapp.adapters
 
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
+import android.text.Editable
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.BulletSpan
 import android.view.*
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.text.HtmlCompat
+import androidx.core.text.htmlEncode
+import androidx.core.text.parseAsHtml
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
@@ -15,19 +23,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.application.noteapp.R
 import com.application.noteapp.databinding.NoteListItemBinding
-import com.application.noteapp.fragments.AddOrUpdateNoteFragment
 import com.application.noteapp.fragments.NoteHomeFragmentDirections
 import com.application.noteapp.model.Note
 import com.application.noteapp.util.*
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textview.MaterialTextView
-import io.noties.markwon.AbstractMarkwonPlugin
-import io.noties.markwon.Markwon
-import io.noties.markwon.MarkwonVisitor
-import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
-import io.noties.markwon.ext.tasklist.TaskListPlugin
-import org.commonmark.node.SoftLineBreak
+import io.github.mthli.knife.KnifeBulletSpan
 import kotlin.collections.ArrayList
 
 class NotesAdapter(
@@ -39,8 +41,8 @@ class NotesAdapter(
     ListAdapter<Note, NotesAdapter.NotesViewHolder>(DiffUtilCallback()) {
     val selectedNotes: ArrayList<Note> = ArrayList()
     val selectedNotePositions: ArrayList<Int> = ArrayList()
-    var is_menu_visible: Boolean = false
-    var is_all_selected: Boolean = false
+    var isMenuVisible: Boolean = false
+    var isAllSelected: Boolean = false
     val currentLang = getCurrentPhoneLanguage()
 
     inner class NotesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -53,16 +55,6 @@ class NotesAdapter(
         val date: MaterialTextView = binding.noteItemDate
         val parent: MaterialCardView = binding.noteItemCard
         val lock: ImageView = binding.lockNoteIcon
-        val markDown = Markwon.builder(itemView.context).usePlugin(StrikethroughPlugin.create())
-            .usePlugin(TaskListPlugin.create(itemView.context))
-            .usePlugin(object : AbstractMarkwonPlugin() {
-                override fun configureVisitor(builder: MarkwonVisitor.Builder) {
-                    super.configureVisitor(builder)
-                    builder.on(SoftLineBreak::class.java) { visitor, _ ->
-                        visitor.forceNewLine()
-                    }
-                }
-            }).build()
 
     }
 
@@ -109,11 +101,16 @@ class NotesAdapter(
 
                 if (note.is_locked) {
                     content.visibility = View.INVISIBLE
-                    markDown.setMarkdown(content, note.content)
+
+                    val builder = SpannableStringBuilder()
+                    builder.append(HtmlCompat.fromHtml(note.content, HtmlCompat.FROM_HTML_MODE_COMPACT))
+                    setUpBulletStyle(builder, builder.length)
+                    content.text = builder
+
                     content.typeface = typeface
                     lock.visibility = View.VISIBLE
                     parent.setOnClickListener {
-                        if (is_menu_visible) {
+                        if (isMenuVisible) {
                             clickItem(holder)
                         } else {
                             // clicks on a locked note -> unlock
@@ -125,7 +122,7 @@ class NotesAdapter(
                                 .setTitle(R.string.warning)
                                 .setMessage(R.string.want_unlock_note)
                                 .setPositiveButton(R.string.yes) { dialog, which ->
-                                    is_all_selected = false
+                                    isAllSelected = false
                                     selectedNotes.clear()
                                     selectedNotePositions.clear()
                                     selectedNotes.add(getItem(position))
@@ -133,7 +130,7 @@ class NotesAdapter(
                                     adapterListener?.menuOnClick(
                                         selectedNotes,
                                         selectedNotePositions,
-                                        is_all_selected,
+                                        isAllSelected,
                                         3
                                     )
                                     selectedNotes.clear()
@@ -146,7 +143,7 @@ class NotesAdapter(
                         }
                     }
                     content.setOnClickListener {
-                        if (is_menu_visible) {
+                        if (isMenuVisible) {
                             clickItem(holder)
                         } else {
                             // clicks on a locked note -> unlock
@@ -158,7 +155,7 @@ class NotesAdapter(
                                 .setTitle(R.string.warning)
                                 .setMessage(R.string.want_unlock_note)
                                 .setPositiveButton(R.string.yes) { dialog, which ->
-                                    is_all_selected = false
+                                    isAllSelected = false
                                     selectedNotes.clear()
                                     selectedNotePositions.clear()
                                     selectedNotes.add(getItem(position))
@@ -166,7 +163,7 @@ class NotesAdapter(
                                     adapterListener?.menuOnClick(
                                         selectedNotes,
                                         selectedNotePositions,
-                                        is_all_selected,
+                                        isAllSelected,
                                         3
                                     )
                                     selectedNotes.clear()
@@ -182,11 +179,16 @@ class NotesAdapter(
                     // just if note is not locked -> show the content
                     content.visibility = View.VISIBLE
                     lock.visibility = View.GONE
-                    markDown.setMarkdown(content, note.content)
+
+                    val builder = SpannableStringBuilder()
+                    builder.append(HtmlCompat.fromHtml(note.content, HtmlCompat.FROM_HTML_MODE_COMPACT))
+                    setUpBulletStyle(builder, builder.length)
+                    content.text = builder
+
                     content.typeface = typeface
 
                     parent.setOnClickListener {
-                        if (is_menu_visible) {
+                        if (isMenuVisible) {
                             clickItem(holder)
                         } else {
                             openNote(note, holder, it)
@@ -194,7 +196,7 @@ class NotesAdapter(
                     }
 
                     content.setOnClickListener {
-                        if (is_menu_visible) {
+                        if (isMenuVisible) {
                             clickItem(holder)
                         } else {
                             openNote(note, holder, it)
@@ -205,7 +207,7 @@ class NotesAdapter(
                 content.setOnLongClickListener(holdNoteHandler(holder))
                 parent.setOnLongClickListener(holdNoteHandler(holder))
 
-                if (is_all_selected) {
+                if (isAllSelected) {
                     noteCheck.visibility = View.VISIBLE
                     parent.setCardBackgroundColor(context.resources.getColor(R.color.app_yellow))
                 } else {
@@ -261,7 +263,7 @@ class NotesAdapter(
     private fun holdNoteHandler(holder: NotesAdapter.NotesViewHolder) =
         object : View.OnLongClickListener {
             override fun onLongClick(view: View?): Boolean {
-                if (!is_menu_visible) {
+                if (!isMenuVisible) {
                     val callback = object : ActionMode.Callback {
                         override fun onCreateActionMode(
                             actionMode: ActionMode?,
@@ -276,8 +278,8 @@ class NotesAdapter(
                             actionMode: ActionMode?,
                             menu: Menu?
                         ): Boolean {
-                            if (!is_menu_visible) {
-                                is_menu_visible = true
+                            if (!isMenuVisible) {
+                                isMenuVisible = true
                                 clickItem(holder)
                                 countNotesText.observe(holder.binding.lifecycleOwner!!) { value ->
                                     var newVal = value
@@ -310,11 +312,11 @@ class NotesAdapter(
                                             .setTitle(R.string.warning)
                                             .setMessage(R.string.want_delete_all_notes)
                                             .setPositiveButton(R.string.yes) { dialog, which ->
-                                                is_menu_visible = false
+                                                isMenuVisible = false
                                                 adapterListener?.menuOnClick(
                                                     selectedNotes,
                                                     selectedNotePositions,
-                                                    is_all_selected,
+                                                    isAllSelected,
                                                     1
                                                 )
                                                 selectedNotes.clear()
@@ -322,18 +324,18 @@ class NotesAdapter(
                                                 actionMode?.finish()
                                             }
                                             .setNegativeButton(R.string.no) { dialog, which ->
-                                                is_menu_visible = true
+                                                isMenuVisible = true
                                             }
                                             .show()
                                     }
                                 } // delete selected notes , if size == 0 show no note available
                                 R.id.menuSelectAllNote -> {
                                     if (selectedNotes.size == currentList.size) {
-                                        is_all_selected = false
+                                        isAllSelected = false
                                         selectedNotes.clear()
                                         selectedNotePositions.clear()
                                     } else {
-                                        is_all_selected = true
+                                        isAllSelected = true
                                         selectedNotes.clear()
                                         selectedNotePositions.clear()
                                         // add all
@@ -360,7 +362,7 @@ class NotesAdapter(
                                                     .setTitle(R.string.warning)
                                                     .setMessage(R.string.all_locked)
                                                     .setNeutralButton(R.string.ok) { dialog, which ->
-                                                        is_menu_visible = true
+                                                        isMenuVisible = true
 
                                                     }
                                                     .show()
@@ -373,11 +375,11 @@ class NotesAdapter(
                                                     .setTitle(R.string.warning)
                                                     .setMessage(R.string.want_lock_notes)
                                                     .setPositiveButton(R.string.yes) { dialog, which ->
-                                                        is_menu_visible = false
+                                                        isMenuVisible = false
                                                         adapterListener?.menuOnClick(
                                                             selectedNotes,
                                                             selectedNotePositions,
-                                                            is_all_selected,
+                                                            isAllSelected,
                                                             2
                                                         )
                                                         selectedNotes.clear()
@@ -385,7 +387,7 @@ class NotesAdapter(
                                                         actionMode?.finish()
                                                     }
                                                     .setNegativeButton(R.string.no) { dialog, which ->
-                                                        is_menu_visible = true
+                                                        isMenuVisible = true
                                                     }
                                                     .show()
                                             }
@@ -419,7 +421,7 @@ class NotesAdapter(
                                                 .setTitle(R.string.warning)
                                                 .setMessage(R.string.all_unlocked)
                                                 .setNeutralButton(R.string.ok) { dialog, which ->
-                                                    is_menu_visible = true
+                                                    isMenuVisible = true
                                                 }
                                                 .show()
                                         } else {
@@ -431,11 +433,11 @@ class NotesAdapter(
                                                 .setTitle(R.string.warning)
                                                 .setMessage(R.string.want_unlock_selected_notes)
                                                 .setPositiveButton(R.string.yes) { dialog, which ->
-                                                    is_menu_visible = false
+                                                    isMenuVisible = false
                                                     adapterListener?.menuOnClick(
                                                         selectedNotes,
                                                         selectedNotePositions,
-                                                        is_all_selected,
+                                                        isAllSelected,
                                                         3
                                                     )
                                                     selectedNotes.clear()
@@ -443,7 +445,7 @@ class NotesAdapter(
                                                     actionMode?.finish()
                                                 }
                                                 .setNegativeButton(R.string.no) { dialog, which ->
-                                                    is_menu_visible = true
+                                                    isMenuVisible = true
                                                 }
                                                 .show()
                                         }
@@ -455,8 +457,8 @@ class NotesAdapter(
                         }
 
                         override fun onDestroyActionMode(actionMode: ActionMode?) {
-                            is_menu_visible = false
-                            is_all_selected = false
+                            isMenuVisible = false
+                            isAllSelected = false
                             selectedNotes.clear()
                             selectedNotePositions.clear()
                             notifyDataSetChanged()

@@ -5,22 +5,19 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.Typeface
+import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.Html
-import android.text.Layout
-import android.text.TextWatcher
+import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
-import androidx.core.text.HtmlCompat
+import androidx.core.text.*
 import androidx.core.view.ViewCompat
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
@@ -36,24 +33,20 @@ import com.application.noteapp.databinding.FragmentAddOrUpdateNoteBinding
 import com.application.noteapp.model.Font
 import com.application.noteapp.model.Note
 import com.application.noteapp.receivers.NotificationReceiver
-import com.application.noteapp.util.FormatNumber
-import com.application.noteapp.util.getAvailableFonts
-import com.application.noteapp.util.getCurrentPhoneLanguage
-import com.application.noteapp.util.hideKeyboard
+import com.application.noteapp.util.*
 import com.application.noteapp.viewmodel.NoteViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialContainerTransform
-import com.yahiaangelo.markdownedittext.MarkdownEditText
+import io.github.mthli.knife.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.Normalizer
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     lateinit var binding: FragmentAddOrUpdateNoteBinding
@@ -128,10 +121,9 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         try {
             binding.noteContentEditText.setOnFocusChangeListener { _, focused ->
                 if (focused) {
-                    binding.markDownStyleBar.visibility = View.VISIBLE
-                    binding.noteContentEditText.setStylesBar(binding.styleBar)
+                    binding.styleBar.visibility = View.VISIBLE
                 } else {
-                    binding.markDownStyleBar.visibility = View.GONE
+                    binding.styleBar.visibility = View.GONE
                 }
             }
         } catch (ex: Exception) {
@@ -156,7 +148,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 binding.apply {
                     addOrUpdateNoteFragmentParent.setBackgroundColor(color)
                     FragmentAddOrUpdateToolbar.setBackgroundColor(color)
-                    markDownStyleBar.setBackgroundColor(color)
+                    styleBar.setBackgroundColor(color)
                     activity.window.statusBarColor = color
                 }
             }
@@ -195,13 +187,13 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         binding.favoriteButton.setOnClickListener {
             if (note != null) {
                 if (!note!!.is_favorite) {
-                    binding.favoriteButton.setBackgroundResource(R.drawable.favorite_enable)
+                    binding.favoriteButton.setBackgroundResource(R.drawable.ic_favorite_enable)
                     binding.favoriteButton.backgroundTintList =
                         ColorStateList.valueOf(resources.getColor(R.color.app_yellow))
                     note!!.is_favorite = true
                     viewModel.updateNoteFavoriteState(note!!.id, true)
                 } else {
-                    binding.favoriteButton.setBackgroundResource(R.drawable.favorite_disable)
+                    binding.favoriteButton.setBackgroundResource(R.drawable.ic_favorite_disable)
                     binding.favoriteButton.backgroundTintList =
                         ColorStateList.valueOf(resources.getColor(R.color.black))
                     note!!.is_favorite = false
@@ -218,14 +210,160 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     .show()
             }
         }
-        binding.styleBar.stylesList = arrayOf(
-            MarkdownEditText.TextStyle.UNORDERED_LIST,
-            MarkdownEditText.TextStyle.TASKS_LIST
-        )
-//        binding.noteContentEditText.triggerTasksListStyle(false)
-//        binding.noteContentEditText.taskBoxColor = R.color.app_yellow
+
+        binding.noteContentEditText.setSelection(binding.noteContentEditText.editableText.length)
+        initStyleBar()
+        handleStyleBarWithSoftKeyBoard(view)
+
+        // handle bullet selection
+        binding.bullet.setOnClickListener {
+            val editTextCursor = binding.noteContentEditText.selectionStart
+            val currentText = binding.noteContentEditText.editableText
+            if(currentText.contains('\n')){
+                val index = currentText.substring(0,editTextCursor).indexOfLast {char->
+                char=='\n'
+                }
+                if(index==-1){
+                    if(binding.noteContentEditText.editableText[0] !='\u2022'){
+                        binding.noteContentEditText.editableText.insert(0, "\u2022 ")
+                    }
+                    else{
+                        binding.noteContentEditText.setText(binding.noteContentEditText.text.delete(0, 2) as Spanned)
+                        setSelectionToEndOfLine(0)
+                    }
+                }
+                else{
+                    if(binding.noteContentEditText.editableText[index+1] !='\u2022'){
+                        binding.noteContentEditText.editableText.insert(index+1,"\u2022 ")
+                    }
+                    else{
+                        binding.noteContentEditText.setText(binding.noteContentEditText.text.delete(index+1, index+3) as Spanned)
+                        setSelectionToEndOfLine(index+1)
+                    }
+
+                }
+            }
+            else{
+                if(binding.noteContentEditText.editableText[0] !='\u2022'){
+                    binding.noteContentEditText.editableText.insert(0,"\u2022 ")
+                }
+                else{
+                    binding.noteContentEditText.setText(binding.noteContentEditText.text.delete(0, 2) as Spanned)
+                    setSelectionToEndOfLine(0)
+                }
+            }
+        }
 
     }
+
+    private fun setSelectionToEndOfLine(index:Int) {
+        val end = binding.noteContentEditText.editableText.substring(index,binding.noteContentEditText.editableText.length).indexOfFirst {char->
+            char=='\n'
+        }
+        if(end!=0 && end!=-1){
+            binding.noteContentEditText.setSelection(end+index)
+        }
+        else{
+            binding.noteContentEditText.setSelection(binding.noteContentEditText.text.length)
+        }
+    }
+
+    private fun handleStyleBarWithSoftKeyBoard(view: View) {
+        var isVisible = false
+        fun onKeyboardVisibilityChanged(opened: Boolean) {
+            Log.e("Keyboard", "keyboard $opened")
+            if (opened && binding.noteContentEditText.hasFocus()) {
+                binding.styleBar.visibility = View.VISIBLE
+            } else {
+                binding.styleBar.visibility = View.GONE
+            }
+        }
+
+        view.viewTreeObserver?.addOnGlobalLayoutListener {
+            val rect = Rect()
+            view.getWindowVisibleDisplayFrame(rect)
+            val screenHeight = view.rootView.height
+            val keypadHeight = screenHeight - rect.bottom
+
+            // 0.15 ratio is perhaps enough to determine keypad height
+            if (keypadHeight > screenHeight * 0.15) {
+                // keyboard is opened
+                if (!isVisible) {
+                    isVisible = true
+                    onKeyboardVisibilityChanged(true)
+                }
+            } else {
+                // keyboard is closed
+                if (isVisible) {
+                    isVisible = false
+                    onKeyboardVisibilityChanged(false)
+                }
+            }
+        }
+    }
+
+    private fun initStyleBar() {
+//        // Underline
+//        binding.underline.setOnClickListener {
+//            binding.noteContentEditText.underline(
+//                !binding.noteContentEditText.contains(
+//                    KnifeText.FORMAT_UNDERLINED
+//                )
+//            )
+//        }
+//        binding.underline.setOnLongClickListener {
+//            true
+//        }
+
+        // Bold
+        binding.bold.setOnClickListener {
+            binding.noteContentEditText.bold(
+                !binding.noteContentEditText.contains(
+                    KnifeText.FORMAT_BOLD
+                )
+            )
+        }
+        binding.bold.setOnLongClickListener {
+            true
+        }
+
+        // Italic
+        binding.italic.setOnClickListener {
+            binding.noteContentEditText.italic(
+                !binding.noteContentEditText.contains(
+                    KnifeText.FORMAT_ITALIC
+                )
+            )
+        }
+        binding.italic.setOnLongClickListener {
+            true
+        }
+
+        // StrikeThrough
+        binding.strikethrough.setOnClickListener {
+            binding.noteContentEditText.strikethrough(
+                !binding.noteContentEditText.contains(
+                    KnifeText.FORMAT_STRIKETHROUGH
+                )
+            )
+        }
+        binding.strikethrough.setOnLongClickListener {
+            true
+        }
+
+        // Bullet
+//        binding.bullet.setOnClickListener {
+//            binding.noteContentEditText.bullet(
+//                !binding.noteContentEditText.contains(
+//                    KnifeText.FORMAT_BULLET
+//                )
+//            )
+//        }
+//        binding.bullet.setOnLongClickListener {
+//            true
+//        }
+    }
+
 
     private fun checkChanges() {
         requireView().hideKeyboard()
@@ -233,7 +371,10 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         val newContent = binding.noteContentEditText.text.toString()
         val newColor = color
         if (note != null) {
-            if (note!!.title != newTitle || note!!.content != newContent || note!!.color != newColor) {
+            val lastContent = SpannableStringBuilder()
+            lastContent.append(HtmlCompat.fromHtml(note!!.content, HtmlCompat.FROM_HTML_MODE_COMPACT))
+            setUpBulletStyle(lastContent, lastContent.length)
+            if (note!!.title != newTitle || lastContent.toString() != newContent || note!!.color.toString() != newColor.toString()) {
                 MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
                     .setIcon(R.drawable.warning)
                     .setTitle(R.string.warning)
@@ -341,7 +482,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         note!!.alarm_set = false
         note!!.alarm_date = ""
         viewModel.updateAlarmState(note!!.id, false, "")
-        binding.notificationButton.setBackgroundResource(R.drawable.alarm_disable)
+        binding.notificationButton.setBackgroundResource(R.drawable.ic_alarm_off)
         binding.notificationButton.backgroundTintList =
             ColorStateList.valueOf(resources.getColor(R.color.black))
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -374,7 +515,11 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         alarmManager.set(AlarmManager.RTC_WAKEUP, cal.timeInMillis, pendingIntent)
 
         val temp: List<String> = cal.time.toString().split(" ")
-        alarmDate = temp[0] + " " + temp[1] + " " + temp[2] + " " + temp[3] + " " + temp[5]
+        alarmDate =
+            temp[0] + " " + temp[1] + " " + temp[2] + " " + temp[5] + " " + temp[3].substring(
+                0,
+                temp[3].lastIndexOf(":")
+            )
 
         MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
             .setIcon(R.drawable.bell)
@@ -384,7 +529,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             }
             .show()
 
-        binding.notificationButton.setBackgroundResource(R.drawable.alarm_enable)
+        binding.notificationButton.setBackgroundResource(R.drawable.ic_alarm_on)
         binding.notificationButton.backgroundTintList =
             ColorStateList.valueOf(resources.getColor(R.color.app_red))
         note!!.alarm_set = true
@@ -560,21 +705,21 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
 
         if (note != null) {
             if (note.alarm_set) {
-                binding.notificationButton.setBackgroundResource(R.drawable.alarm_enable)
+                binding.notificationButton.setBackgroundResource(R.drawable.ic_alarm_on)
                 binding.notificationButton.backgroundTintList =
                     ColorStateList.valueOf(resources.getColor(R.color.app_red))
             } else {
-                binding.notificationButton.setBackgroundResource(R.drawable.alarm_disable)
+                binding.notificationButton.setBackgroundResource(R.drawable.ic_alarm_off)
                 binding.notificationButton.backgroundTintList =
                     ColorStateList.valueOf(resources.getColor(R.color.black))
             }
 
             if (note.is_favorite) {
-                binding.favoriteButton.setBackgroundResource(R.drawable.favorite_enable)
+                binding.favoriteButton.setBackgroundResource(R.drawable.ic_favorite_enable)
                 binding.favoriteButton.backgroundTintList =
                     ColorStateList.valueOf(resources.getColor(R.color.app_yellow))
             } else {
-                binding.favoriteButton.setBackgroundResource(R.drawable.favorite_disable)
+                binding.favoriteButton.setBackgroundResource(R.drawable.ic_favorite_disable)
                 binding.favoriteButton.backgroundTintList =
                     ColorStateList.valueOf(resources.getColor(R.color.black))
             }
@@ -584,7 +729,14 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             val typeface = ResourcesCompat.getFont(requireView().context, note.fontId)
             title.typeface = typeface
             content.typeface = typeface
-            content.renderMD(note.content)
+            Log.e("openedDatabase", note.content)
+
+            val builder = SpannableStringBuilder()
+            builder.append(HtmlCompat.fromHtml(note.content, HtmlCompat.FROM_HTML_MODE_COMPACT))
+            setUpBulletStyle(builder, builder.length)
+            content.text = builder
+
+            selectedFontId = note.fontId
 
             if (currentLang == "fa") date.text = FormatNumber.convertToPersian(note.date)
             else date.text = note.date
@@ -596,12 +748,12 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     addOrUpdateNoteFragmentParent.setBackgroundColor(color)
                 }
                 FragmentAddOrUpdateToolbar.setBackgroundColor(color)
-                markDownStyleBar.setBackgroundColor(color)
+                styleBar.setBackgroundColor(color)
             }
             activity?.window?.statusBarColor = note.color
         } else {
-            binding.notificationButton.setBackgroundResource(R.drawable.alarm_disable)
-            binding.favoriteButton.setBackgroundResource(R.drawable.favorite_disable)
+            binding.notificationButton.setBackgroundResource(R.drawable.ic_alarm_off)
+            binding.favoriteButton.setBackgroundResource(R.drawable.ic_favorite_disable)
             binding.noteEditedOnDate.text = currentDate
         }
     }
@@ -614,7 +766,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     Note(
                         0,
                         binding.noteTitleEditText.text.toString(),
-                        binding.noteContentEditText.getMD(),
+                        binding.noteContentEditText.getHtml(),
                         currentDate,
                         color,
                         selectedFontId,
@@ -642,10 +794,10 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 Note(
                     note!!.id,
                     binding.noteTitleEditText.text.toString(),
-                    binding.noteContentEditText.getMD(),
+                    binding.noteContentEditText.getHtml(),
                     currentDate,
                     color,
-                    note!!.fontId,
+                    selectedFontId,
                     note!!.alarm_set,
                     note!!.alarm_date,
                     note!!.is_locked,
@@ -653,5 +805,8 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 )
             )
         }
+    }
+    private fun KnifeText.getHtml(): String {
+        return Parser.toHtml(editableText)
     }
 }

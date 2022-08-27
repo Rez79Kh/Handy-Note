@@ -86,8 +86,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
                                 android:layout_marginEnd="5dp"
-                                android:background="@drawable/alarm_enable"
-                                android:backgroundTint="#ed7d31"
+                                android:background="@drawable/ic_alarm_on"
                                 android:visibility="gone" />
 
                             <ImageView
@@ -96,8 +95,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
                                 android:layout_marginEnd="5dp"
-                                android:backgroundTint="@color/app_yellow"
-                                android:background="@drawable/favorite_enable"
+                                android:background="@drawable/ic_favorite_enable"
                                 android:visibility="gone" />
 
                         </LinearLayout>

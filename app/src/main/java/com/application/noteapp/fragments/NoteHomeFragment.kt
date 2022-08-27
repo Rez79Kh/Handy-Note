@@ -63,8 +63,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
 
     enum class AppFlag{
         START,
-        PAUSE,
-        RESUME
+        PAUSE
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

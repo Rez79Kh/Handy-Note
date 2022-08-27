@@ -14,11 +14,14 @@
     <color name="app_toolbar">#4AAFA6</color>
     <color name="app_date_bar">#7ED5CD</color>
     <color name="app_grey">#EDEDED</color>
-    <color name="chip_select">#1E7BBF</color>
+    <color name="chip_select">#FFCC48</color>
     <color name="neg_color_dialog">#FBA76D</color>
     <color name="dialog_text_color">#fafafa</color>
     <color name="ic_launcher_background">#fbd881</color>
     <color name="grey">#B8B8B8</color>
+    <color name="edit_text_bg">#FFFFFC</color>
+    <color name="lock_unlock_icon">#575757</color>
+    <color name="favorite_icon">#EA5E5E</color>
 
     <!--color picker palette-->
     <color name="sky_blue">#00ADB5</color>

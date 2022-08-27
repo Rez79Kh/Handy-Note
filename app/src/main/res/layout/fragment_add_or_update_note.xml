@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="15dp"
-                    android:background="@drawable/favorite_disable"
+                    android:background="@drawable/ic_favorite_disable"
                     android:paddingStart="5dp"
                     android:paddingTop="10dp"
                     android:paddingEnd="5dp"
@@ -91,7 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
-                    android:background="@drawable/alarm_disable"
+                    android:background="@drawable/ic_alarm_off"
                     android:paddingStart="5dp"
                     android:paddingTop="10dp"
                     android:paddingEnd="5dp"
@@ -106,7 +106,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/markDownStyleBar"
+            android:layout_above="@id/styleBar"
             android:layout_below="@id/FragmentAddOrUpdateToolbar">
 
 
@@ -127,6 +127,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="10dp"
+                        android:singleLine="true"
                         android:layout_marginEnd="20dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/add_title_bg"
@@ -136,7 +137,7 @@
                         android:inputType="none"
                         android:textSize="22sp" />
 
-                    <com.yahiaangelo.markdownedittext.MarkdownEditText
+                    <io.github.mthli.knife.KnifeText
                         android:id="@+id/noteContentEditText"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -149,11 +150,15 @@
                         android:hint="@string/note_content"
                         android:inputType="none"
                         android:padding="10dp"
-                        android:textSize="16sp" />
-
+                        android:scrollbars="vertical"
+                        android:textSize="16sp"
+                        app:bulletColor="@color/black"
+                        app:bulletGapWidth="@dimen/bullet_gap_width"
+                        app:bulletRadius="@dimen/bullet_radius"
+                        app:historyEnable="true"
+                        app:historySize="99" />
 
                 </LinearLayout>
-
 
             </androidx.core.widget.NestedScrollView>
 
@@ -200,21 +205,71 @@
 
 
         <LinearLayout
-            android:id="@+id/markDownStyleBar"
+            android:id="@+id/styleBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:visibility="gone">
 
-            <com.yahiaangelo.markdownedittext.MarkdownStylesBar
-                android:id="@+id/styleBar"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:padding="5dp"/>
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/style_bar_icons_bg"
+                    android:contentDescription="@null"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:scaleType="center"
+                    android:src="@drawable/baseline_format_bold_18"
+                    app:tint="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/italic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/style_bar_icons_bg"
+                    android:contentDescription="@null"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:scaleType="center"
+                    android:src="@drawable/baseline_format_italic_18"
+                    app:tint="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/strikethrough"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/style_bar_icons_bg"
+                    android:contentDescription="@null"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:scaleType="center"
+                    android:src="@drawable/baseline_format_strikethrough_18"
+                    app:tint="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/bullet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/style_bar_icons_bg"
+                    android:contentDescription="@null"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:scaleType="center"
+                    android:src="@drawable/baseline_format_list_bulleted_18"
+                    app:tint="@color/black" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

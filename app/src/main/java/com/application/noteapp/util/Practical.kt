@@ -3,9 +3,15 @@ package com.application.noteapp.util
 import android.app.KeyguardManager
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.Rect
 import android.provider.Settings
+import android.text.Editable
+import android.text.Spanned
+import android.text.style.BulletSpan
 import android.util.Log
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.core.os.ConfigurationCompat
 import androidx.core.view.ViewCompat
@@ -13,7 +19,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.application.noteapp.R
+import com.application.noteapp.fragments.AddOrUpdateNoteFragment
 import com.application.noteapp.model.Font
+import io.github.mthli.knife.KnifeBulletSpan
 
 /*
 Practical functions to use in whole app
@@ -76,5 +84,23 @@ fun hasPattern(context: Context): Boolean {
         Log.e("Settings.SettingNotFoundException", ex.message.toString())
         false
     }
-
+}
+fun setUpBulletStyle(editable: Editable, end: Int) {
+    val bulletSpans = editable.getSpans(
+        0, end,
+        BulletSpan::class.java
+    )
+    for (span in bulletSpans) {
+        val spanStart = editable.getSpanStart(span)
+        var spanEnd = editable.getSpanEnd(span)
+        spanEnd =
+            if (0 < spanEnd && spanEnd < editable.length && editable[spanEnd] == '\n') spanEnd - 1 else spanEnd
+        editable.removeSpan(span)
+        editable.setSpan(
+            KnifeBulletSpan(Color.BLACK, 6, 17),
+            spanStart,
+            spanEnd,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+    }
 }
