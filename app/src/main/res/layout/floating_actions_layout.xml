@@ -19,7 +19,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="16dp"
             android:backgroundTint="@color/app_yellow"
-            android:src="@drawable/share"
+            android:src="@drawable/ic_share"
             app:fabSize="mini"
             app:rippleColor="@color/grey" />
 
@@ -30,7 +30,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="16dp"
             android:backgroundTint="@color/app_yellow"
-            android:src="@drawable/font"
+            android:src="@drawable/ic_font"
             app:fabSize="mini"
             app:rippleColor="@color/grey" />
 
@@ -41,7 +41,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="16dp"
             android:backgroundTint="@color/app_yellow"
-            android:src="@drawable/delete"
+            android:src="@drawable/baseline_delete_forever_24"
             app:fabSize="mini"
             app:rippleColor="@color/grey" />
 
@@ -52,7 +52,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="16dp"
             android:backgroundTint="@color/app_yellow"
-            android:src="@drawable/save"
+            android:src="@drawable/ic_save"
             app:fabSize="mini"
             app:rippleColor="@color/grey" />
 
@@ -63,7 +63,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="16dp"
             android:backgroundTint="@color/app_yellow"
-            android:src="@drawable/color_palette"
+            android:src="@drawable/ic_color_palette"
             app:fabSize="mini"
             app:rippleColor="@color/grey" />
 
@@ -75,7 +75,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:layout_margin="16dp"
             android:backgroundTint="@color/app_yellow"
-            android:src="@drawable/options"
+            android:src="@drawable/baseline_polyline_24"
             app:backgroundTint="@color/white"
             app:rippleColor="@color/grey" />
 

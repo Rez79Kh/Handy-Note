@@ -29,7 +29,7 @@ class NotificationReceiver:BroadcastReceiver() {
         val content = intent.getStringExtra("content")
         val note_id = intent.getIntExtra("note_id",-1)
 
-        val pendingIntent = PendingIntent.getActivity(context,note_id,i,PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(context,note_id,i,PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val builder = Notification.Builder(context,channelID)
             .setSmallIcon(R.mipmap.ic_launcher)

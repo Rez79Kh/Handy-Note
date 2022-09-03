@@ -76,7 +76,7 @@
     </style>
 
     <style name="CustomActionOverflowButton" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
-        <item name="android:src">@drawable/lock_action</item>
+        <item name="android:src">@drawable/ic_change_lock_state</item>
     </style>
 
 </resources>

@@ -41,13 +41,16 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:background="@drawable/edit_date_bar"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingStart="13dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="13dp"
+                android:paddingBottom="5dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:src="@drawable/calender"
+                    android:src="@drawable/baseline_edit_calendar_24"
                     app:tint="@color/black" />
 
 
@@ -55,11 +58,8 @@
                     android:id="@+id/noteEditedOnDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
                     android:ellipsize="end"
-                    android:paddingStart="13dp"
-                    android:paddingTop="5dp"
-                    android:paddingEnd="13dp"
-                    android:paddingBottom="5dp"
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="14sp"
@@ -127,14 +127,16 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="10dp"
-                        android:singleLine="true"
                         android:layout_marginEnd="20dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/add_title_bg"
                         android:gravity="top|start"
+                        android:textColor="@color/black"
                         android:hint="@string/note_title"
+                        android:textColorHint="@color/grey"
                         android:importantForAutofill="no"
                         android:inputType="none"
+                        android:singleLine="true"
                         android:textSize="22sp" />
 
                     <io.github.mthli.knife.KnifeText
@@ -144,10 +146,12 @@
                         android:layout_marginStart="22dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="22dp"
+                        android:textColorHint="@color/grey"
                         android:layout_marginBottom="20dp"
                         android:background="@drawable/add_title_bg"
                         android:gravity="top|start"
                         android:hint="@string/note_content"
+                        android:textColor="@color/black"
                         android:inputType="none"
                         android:padding="10dp"
                         android:scrollbars="vertical"
@@ -162,24 +166,24 @@
 
             </androidx.core.widget.NestedScrollView>
 
-            <androidx.core.widget.NestedScrollView
+            <LinearLayout
                 android:id="@+id/colorPickerLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:background="@drawable/color_picker_bar"
+                android:orientation="vertical"
                 android:visibility="visible">
 
-                <LinearLayout
+                <ImageButton
+                    android:id="@+id/closeColorPickerButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:background="@drawable/ic_baseline_close_24" />
 
-                    <ImageButton
-                        android:id="@+id/closeColorPickerButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/ic_baseline_close_24" />
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
                     <com.thebluealliance.spectrum.SpectrumPalette
                         android:id="@+id/colorPicker"
@@ -192,9 +196,9 @@
                         app:spectrum_columnCount="1"
                         app:spectrum_outlineWidth="1.0dp" />
 
-                </LinearLayout>
 
-            </androidx.core.widget.NestedScrollView>
+                </androidx.core.widget.NestedScrollView>
+            </LinearLayout>
 
 
             <include

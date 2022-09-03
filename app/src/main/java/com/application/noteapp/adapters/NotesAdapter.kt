@@ -118,7 +118,7 @@ class NotesAdapter(
                                 itemView.context,
                                 R.style.AlertDialogTheme
                             )
-                                .setIcon(R.drawable.warning)
+                                .setIcon(R.drawable.ic_warning)
                                 .setTitle(R.string.warning)
                                 .setMessage(R.string.want_unlock_note)
                                 .setPositiveButton(R.string.yes) { dialog, which ->
@@ -151,7 +151,7 @@ class NotesAdapter(
                                 itemView.context,
                                 R.style.AlertDialogTheme
                             )
-                                .setIcon(R.drawable.warning)
+                                .setIcon(R.drawable.ic_warning)
                                 .setTitle(R.string.warning)
                                 .setMessage(R.string.want_unlock_note)
                                 .setPositiveButton(R.string.yes) { dialog, which ->
@@ -308,7 +308,7 @@ class NotesAdapter(
                                             view!!.context,
                                             R.style.AlertDialogTheme
                                         )
-                                            .setIcon(R.drawable.warning)
+                                            .setIcon(R.drawable.ic_warning)
                                             .setTitle(R.string.warning)
                                             .setMessage(R.string.want_delete_all_notes)
                                             .setPositiveButton(R.string.yes) { dialog, which ->
@@ -358,7 +358,7 @@ class NotesAdapter(
                                                     view!!.context,
                                                     R.style.AlertDialogTheme
                                                 )
-                                                    .setIcon(R.drawable.warning)
+                                                    .setIcon(R.drawable.ic_warning)
                                                     .setTitle(R.string.warning)
                                                     .setMessage(R.string.all_locked)
                                                     .setNeutralButton(R.string.ok) { dialog, which ->
@@ -371,7 +371,7 @@ class NotesAdapter(
                                                     view!!.context,
                                                     R.style.AlertDialogTheme
                                                 )
-                                                    .setIcon(R.drawable.warning)
+                                                    .setIcon(R.drawable.ic_warning)
                                                     .setTitle(R.string.warning)
                                                     .setMessage(R.string.want_lock_notes)
                                                     .setPositiveButton(R.string.yes) { dialog, which ->
@@ -399,7 +399,7 @@ class NotesAdapter(
                                             view!!.context,
                                             R.style.AlertDialogTheme
                                         )
-                                            .setIcon(R.drawable.warning)
+                                            .setIcon(R.drawable.ic_warning)
                                             .setTitle(R.string.warning)
                                             .setMessage(R.string.no_password_already_set)
                                             .setNeutralButton(R.string.ok) { dialog, which ->
@@ -417,7 +417,7 @@ class NotesAdapter(
                                                 view!!.context,
                                                 R.style.AlertDialogTheme
                                             )
-                                                .setIcon(R.drawable.warning)
+                                                .setIcon(R.drawable.ic_warning)
                                                 .setTitle(R.string.warning)
                                                 .setMessage(R.string.all_unlocked)
                                                 .setNeutralButton(R.string.ok) { dialog, which ->
@@ -429,7 +429,7 @@ class NotesAdapter(
                                                 view!!.context,
                                                 R.style.AlertDialogTheme
                                             )
-                                                .setIcon(R.drawable.warning)
+                                                .setIcon(R.drawable.ic_warning)
                                                 .setTitle(R.string.warning)
                                                 .setMessage(R.string.want_unlock_selected_notes)
                                                 .setPositiveButton(R.string.yes) { dialog, which ->

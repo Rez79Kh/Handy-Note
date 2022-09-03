@@ -76,7 +76,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
             override fun handleOnBackPressed() {
                 requireView().hideKeyboard()
                 MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-                    .setIcon(R.drawable.warning)
+                    .setIcon(R.drawable.ic_warning)
                     .setTitle(R.string.warning)
                     .setMessage(R.string.want_close_app)
                     .setPositiveButton(R.string.yes) { dialog, which ->

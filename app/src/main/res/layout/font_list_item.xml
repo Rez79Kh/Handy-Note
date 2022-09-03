@@ -22,7 +22,8 @@
                 android:id="@+id/fontIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/fonts_item_icon" />
+                app:tint="@color/black"
+                android:src="@drawable/baseline_font_download_24"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/fontName"

@@ -3,22 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menuDeleteNote"
-        android:icon="@drawable/delete"
+        android:icon="@drawable/baseline_delete_forever_24"
         android:title="@string/delete"
+        android:iconTint="@color/black"
         app:showAsAction="always" />
     <item
         android:id="@+id/menuSelectAllNote"
-        android:icon="@drawable/select_all"
+        android:icon="@drawable/ic_multiple"
         android:title="@string/select_all"
         app:showAsAction="always" />
     <item
         android:id="@+id/menuLockNote"
-        android:icon="@drawable/lock"
+        android:icon="@drawable/baseline_lock_24"
         android:title="@string/lock"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menuUnlockNote"
-        android:icon="@drawable/font"
+        android:icon="@drawable/baseline_unlock_24"
         android:title="@string/unlock"
         app:showAsAction="ifRoom" />
 </menu>

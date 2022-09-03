@@ -8,10 +8,13 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.text.TextWatcher
 import android.text.format.DateFormat
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat
@@ -159,7 +162,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 if (!note!!.alarm_set) showDatePicker()
                 else {
                     MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-                        .setIcon(R.drawable.warning)
+                        .setIcon(R.drawable.ic_warning)
                         .setTitle(R.string.warning)
                         .setMessage(getString(R.string.cancel_alarm, note!!.alarm_date))
                         .setPositiveButton(R.string.yes) { dialog, which ->
@@ -173,7 +176,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 }
             } else {
                 MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-                    .setIcon(R.drawable.warning)
+                    .setIcon(R.drawable.ic_warning)
                     .setTitle(R.string.warning)
                     .setMessage(R.string.create_note_first)
                     .setPositiveButton(R.string.ok) { dialog, which ->
@@ -201,7 +204,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 }
             } else {
                 MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-                    .setIcon(R.drawable.warning)
+                    .setIcon(R.drawable.ic_warning)
                     .setTitle(R.string.warning)
                     .setMessage(R.string.create_note_first)
                     .setNeutralButton(R.string.ok) { dialog, which ->
@@ -233,27 +236,87 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     }
                 }
                 else{
-                    if(binding.noteContentEditText.editableText[index+1] !='\u2022'){
-                        binding.noteContentEditText.editableText.insert(index+1,"\u2022 ")
+                    if(binding.noteContentEditText.editableText.length==index+1){
+                        binding.noteContentEditText.editableText.append("\u2022 ")
                     }
-                    else{
-                        binding.noteContentEditText.setText(binding.noteContentEditText.text.delete(index+1, index+3) as Spanned)
-                        setSelectionToEndOfLine(index+1)
+                    else {
+                        if (binding.noteContentEditText.editableText[index + 1] != '\u2022') {
+                            binding.noteContentEditText.editableText.insert(index + 1, "\u2022 ")
+                        } else {
+                            binding.noteContentEditText.setText(
+                                binding.noteContentEditText.text.delete(
+                                    index + 1,
+                                    index + 3
+                                ) as Spanned
+                            )
+                            setSelectionToEndOfLine(index + 1)
+                        }
                     }
 
                 }
             }
             else{
-                if(binding.noteContentEditText.editableText[0] !='\u2022'){
-                    binding.noteContentEditText.editableText.insert(0,"\u2022 ")
+                if(binding.noteContentEditText.editableText.isEmpty()){
+                    binding.noteContentEditText.editableText.append("\u2022 ")
                 }
-                else{
-                    binding.noteContentEditText.setText(binding.noteContentEditText.text.delete(0, 2) as Spanned)
-                    setSelectionToEndOfLine(0)
+                else {
+                    if (binding.noteContentEditText.editableText[0] != '\u2022') {
+                        binding.noteContentEditText.editableText.insert(0, "\u2022 ")
+                    } else {
+                        binding.noteContentEditText.setText(
+                            binding.noteContentEditText.text.delete(
+                                0,
+                                2
+                            ) as Spanned
+                        )
+                        setSelectionToEndOfLine(0)
+                    }
                 }
             }
         }
 
+        binding.noteContentEditText.addTextChangedListener(object :TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//                if( text.toString().isNotEmpty() && text.toString()[binding.noteContentEditText.selectionStart-1] == '\n' ){
+//                    Log.e("enter","enter")
+//                    if (text != null) {
+//                        if (lastHasBullet(binding.noteContentEditText.editableText)) {
+//                            addBulletToStart()
+//                        }
+//                    }
+//                }
+            }
+
+            override fun afterTextChanged(text: Editable?) {
+
+            }
+
+        })
+
+    }
+
+    private fun addBulletToStart() {
+        Log.e("addBullet","addBullet")
+        binding.noteContentEditText.editableText.insert(binding.noteContentEditText.selectionStart, "\u2022 ")
+    }
+
+    private fun lastHasBullet(text:Editable): Boolean {
+        val start = text.substring(0,binding.noteContentEditText.selectionStart-1).indexOfLast {char->
+            char=='\n'
+        }
+        Log.e("sss",start.toString())
+        if(start!=-1){
+            val line = text.substring(start,binding.noteContentEditText.selectionStart)
+            Log.e("start",start.toString())
+            Log.e("end",binding.noteContentEditText.selectionStart.toString())
+            Log.e("line", line)
+            return line.contains("\u2022 ")
+        }
+        return false
     }
 
     private fun setSelectionToEndOfLine(index:Int) {
@@ -376,7 +439,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             setUpBulletStyle(lastContent, lastContent.length)
             if (note!!.title != newTitle || lastContent.toString() != newContent || note!!.color.toString() != newColor.toString()) {
                 MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-                    .setIcon(R.drawable.warning)
+                    .setIcon(R.drawable.ic_warning)
                     .setTitle(R.string.warning)
                     .setMessage(R.string.unsaved_changes)
                     .setPositiveButton(R.string.yes) { dialog, which ->
@@ -392,7 +455,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         } else {
             if (newTitle.isNotEmpty() || newContent.isNotEmpty()) {
                 MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-                    .setIcon(R.drawable.warning)
+                    .setIcon(R.drawable.ic_warning)
                     .setTitle(R.string.warning)
                     .setMessage(R.string.unsaved_changes)
                     .setPositiveButton(R.string.yes) { dialog, which ->
@@ -468,7 +531,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             return true
         }
         MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-            .setIcon(R.drawable.warning)
+            .setIcon(R.drawable.ic_warning)
             .setTitle(R.string.warning)
             .setMessage(R.string.invalid_date)
             .setNeutralButton(R.string.ok) { dialog, which ->
@@ -491,7 +554,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             requireContext(),
             note!!.id,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         alarmManager.cancel(pendingIntent);
@@ -510,7 +573,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             requireContext(),
             note!!.id,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         alarmManager.set(AlarmManager.RTC_WAKEUP, cal.timeInMillis, pendingIntent)
 
@@ -522,7 +585,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             )
 
         MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-            .setIcon(R.drawable.bell)
+            .setIcon(R.drawable.ic_alarm_on)
             .setTitle(R.string.successful)
             .setMessage(getString(R.string.set_alarm, alarmDate))
             .setNeutralButton(R.string.ok) { dialog, which ->
@@ -539,10 +602,9 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
 
     private fun handleActionButtons() {
         binding.toolsFloatingActButtonLayout.apply {
-            toolsFab.animate().rotationBy(180f)
 
             toolsFab.setOnClickListener {
-                if (toolsFab.rotation == 180f) showActionButtons()
+                if (toolsFab.rotation == 0f) showActionButtons()
                 else hideActionButtons()
             }
 
@@ -556,7 +618,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 } else {
                     // Your note is empty
                     MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-                        .setIcon(R.drawable.bell)
+                        .setIcon(R.drawable.ic_warning)
                         .setTitle(R.string.warning)
                         .setMessage(R.string.cant_add_empty_note)
                         .setNeutralButton(R.string.ok) { dialog, which ->
@@ -573,7 +635,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                         requireContext(),
                         R.style.AlertDialogTheme
                     )
-                        .setIcon(R.drawable.warning)
+                        .setIcon(R.drawable.ic_warning)
                         .setTitle(R.string.warning)
                         .setMessage(R.string.want_delete_note)
                         .setPositiveButton(R.string.yes) { dialog, which ->
@@ -587,7 +649,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 } else {
                     // Your note is empty
                     MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-                        .setIcon(R.drawable.bell)
+                        .setIcon(R.drawable.ic_warning)
                         .setTitle(R.string.warning)
                         .setMessage(R.string.save_note_first)
                         .setNeutralButton(R.string.ok) { dialog, which ->
@@ -650,7 +712,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     startActivity(Intent.createChooser(intent, getString(R.string.send_copy_to)))
                 } else {
                     MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-                        .setIcon(R.drawable.bell)
+                        .setIcon(R.drawable.ic_warning)
                         .setTitle(R.string.warning)
                         .setMessage(R.string.cant_share_empty_note)
                         .setNeutralButton(R.string.ok) { dialog, which ->
@@ -677,7 +739,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
 
     private fun showActionButtons() {
         binding.toolsFloatingActButtonLayout.apply {
-            toolsFab.animate().rotationBy(-180f)
+            toolsFab.animate().rotationBy(-90f)
             saveNoteFab.animate().translationY(-180f).translationX(-80f)
             deleteNoteFab.animate().translationY(-180f).translationX(80f)
             changeFontFab.animate().translationY(-330f).translationX(-80f)
@@ -688,7 +750,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
 
     private fun hideActionButtons() {
         binding.toolsFloatingActButtonLayout.apply {
-            toolsFab.animate().rotationBy(180f)
+            toolsFab.animate().rotationBy(90f)
             saveNoteFab.animate().translationY(0f).translationX(0f)
             deleteNoteFab.animate().translationY(0f).translationX(0f)
             changeFontFab.animate().translationY(0f).translationX(0f)

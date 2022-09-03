@@ -9,9 +9,18 @@
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/add_title_bg.xml" value="0.2275" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/baseline_alarm_off_24.xml" value="0.169" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/baseline_alarm_on_24.xml" value="0.1595" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/baseline_draw_24.xml" value="0.1545" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/baseline_favorite_24.xml" value="0.2145" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/baseline_lock_24.xml" value="0.137" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/gradient.xml" value="0.1" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/home_toolbar.xml" value="0.1545" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.1545" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/ic_check_box.xml" value="0.141" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/ic_d.xml" value="0.1" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/ic_search.xml" value="0.1545" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/ic_t.xml" value="0.1" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/outline_note_alt_24.xml" value="0.1545" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/search_bar_bg.xml" value="0.1545" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/style_bar_icons_bg.xml" value="0.1" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/font-fa/a.xml" value="0.2611111111111111" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/font-fa/aller.xml" value="0.2611111111111111" />
@@ -24,13 +33,16 @@
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/font/iran_sans.xml" value="0.3046875" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/font/kalameh.xml" value="0.15078125" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/font/shabnam.xml" value="0.3046875" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/activity_splash_screen.xml" value="0.3055555555555556" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/choose_font_dialog.xml" value="0.1175925925925926" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/dialog_link.xml" value="0.1" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/floating_actions_layout.xml" value="0.21666666666666667" />
-        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/font_list_item.xml" value="0.1" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/font_list_item.xml" value="0.264" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/fragment_add_or_update_note.xml" value="0.264" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/fragment_note_home.xml" value="0.264" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/markdown.xml" value="0.11319444444444444" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/note_list_item.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/menu/select_menu.xml" value="0.264" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/drawable/add_title_bg.xml" value="0.213" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/drawable/bottom_sheet_bar.xml" value="0.109" />
         <entry key="..\:/Users/SetareYek/AndroidStudioProjects/NoteApp/app/src/main/res/drawable/floating_action_button_bg.xml" value="0.1905" />
