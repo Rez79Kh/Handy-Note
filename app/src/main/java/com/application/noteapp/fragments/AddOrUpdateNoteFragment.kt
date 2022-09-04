@@ -335,6 +335,10 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         var isVisible = false
         fun onKeyboardVisibilityChanged(opened: Boolean) {
             Log.e("Keyboard", "keyboard $opened")
+            if(opened){
+                if (binding.toolsFloatingActButtonLayout.toolsFab.rotation != 0f)
+                hideActionButtons()
+            }
             if (opened && binding.noteContentEditText.hasFocus()) {
                 binding.styleBar.visibility = View.VISIBLE
             } else {
@@ -604,6 +608,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         binding.toolsFloatingActButtonLayout.apply {
 
             toolsFab.setOnClickListener {
+                requireView().hideKeyboard()
                 if (toolsFab.rotation == 0f) showActionButtons()
                 else hideActionButtons()
             }

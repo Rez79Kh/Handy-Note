@@ -255,6 +255,7 @@ class NotesAdapter(
             holder.parent.setCardBackgroundColor(getItem(holder.position).color)
             selectedNotes.remove(getItem(holder.position))
             selectedNotePositions.remove(holder.position)
+            isAllSelected = false
         }
 
         countNotesText.value = selectedNotes.size.toString()
