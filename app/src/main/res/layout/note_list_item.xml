@@ -126,8 +126,8 @@
                         android:layout_below="@id/noteItemTitle"
                         android:layout_marginStart="5dp"
                         android:layout_marginEnd="5dp"
-                        android:backgroundTint="@color/black"
-                        android:background="?android:attr/listDivider" />
+                        android:background="?android:attr/listDivider"
+                        android:backgroundTint="@color/black" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -159,9 +159,9 @@
                             android:layout_centerInParent="true"
                             android:layout_marginTop="10dp"
                             android:layout_marginBottom="10dp"
-                            app:tint="@color/lock_unlock_icon"
                             android:src="@drawable/baseline_lock_24"
-                            android:visibility="gone" />
+                            android:visibility="gone"
+                            app:tint="@color/lock_unlock_icon" />
 
                     </RelativeLayout>
 

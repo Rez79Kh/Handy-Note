@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">NoteApp</string>
-    <string name="choose_a_font">Choose a Font</string>
-    <string name="font_name">Font Name</string>
     <string name="note_title">Note Title</string>
     <string name="note_content">Note Content</string>
     <string name="my_notes">My Notes</string>
@@ -44,5 +42,4 @@
     <string name="want_close_app">Are you sure you want to close the app?</string>
     <string name="want_delete_note">Are you sure you want to delete the note?</string>
     <string name="no_password_already_set">This cannot be done because there is no password on your phone , you need to set a password on your phone first .</string>
-    <string name="font">Font %1$s</string>
 </resources>

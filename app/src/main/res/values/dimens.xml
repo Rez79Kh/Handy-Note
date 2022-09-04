@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="bullet_radius">2dp</dimen>
-    <dimen name="bullet_gap_width">8dp</dimen>
-</resources>

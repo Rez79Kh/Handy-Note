@@ -1,7 +1,7 @@
 package com.application.noteapp.util
 
 class FormatNumber {
-    companion object{
+    companion object {
         private val persianNumbers = arrayOf("۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹")
         fun convertToPersian(text: String): String {
             if (text.isEmpty()) return ""

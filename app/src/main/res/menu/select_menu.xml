@@ -5,7 +5,6 @@
         android:id="@+id/menuDeleteNote"
         android:icon="@drawable/baseline_delete_forever_24"
         android:title="@string/delete"
-        android:iconTint="@color/black"
         app:showAsAction="always" />
     <item
         android:id="@+id/menuSelectAllNote"

@@ -14,7 +14,6 @@ import android.text.Spanned
 import android.text.TextWatcher
 import android.text.format.DateFormat
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat
@@ -27,19 +26,13 @@ import androidx.fragment.app.setFragmentResult
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.application.noteapp.R
 import com.application.noteapp.activities.MainActivity
-import com.application.noteapp.adapters.FontsAdapter
-import com.application.noteapp.databinding.FontsBottomSheetBinding
 import com.application.noteapp.databinding.FragmentAddOrUpdateNoteBinding
-import com.application.noteapp.model.Font
 import com.application.noteapp.model.Note
 import com.application.noteapp.receivers.NotificationReceiver
 import com.application.noteapp.util.*
 import com.application.noteapp.viewmodel.NoteViewModel
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialContainerTransform
 import io.github.mthli.knife.*
@@ -54,7 +47,6 @@ import java.util.*
 class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     lateinit var binding: FragmentAddOrUpdateNoteBinding
     lateinit var navigator: NavController
-    lateinit var fontAdapter: FontsAdapter
     private val viewModel: NoteViewModel by activityViewModels()
     private val currentDate: String = SimpleDateFormat.getInstance().format(Date())
     var note: Note? = null
@@ -64,13 +56,35 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     private val args: AddOrUpdateNoteFragmentArgs by navArgs()
     private var isColorPickerShowing: Boolean = false
 
-    var selectedFontId: Int = R.font.roboto
-
-    var fonts: ArrayList<Font> = ArrayList()
-
     lateinit var alarmDate: String
 
     private val currentLang: String = getCurrentPhoneLanguage()
+
+    val mapToIranianDays = mapOf(
+        "Sun" to "یکشنبه",
+        "Mon" to "دوشنبه",
+        "Tue" to "سه شنبه",
+        "Wed" to "چهارشنبه",
+        "Thu" to "پنجشنبه",
+        "Fri" to "جمعه",
+        "Sat" to "شنبه"
+    )
+
+    val mapToIranianMonths = mapOf(
+        "Jan" to "ژانویه",
+        "Feb" to "فوریه",
+        "Mar" to "مارس",
+        "Apr" to "آوریل",
+        "May" to "مه",
+        "Jun" to "ژوئن",
+        "Jul" to "ژوئیه",
+        "Aug" to "اوت",
+        "Sep" to "سپتامبر",
+        "Oct" to "اکتبر",
+        "Nov" to "نوامبر",
+        "Dec" to "دسامبر",
+    )
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,9 +118,6 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         } else binding.colorPickerLayout.translationX = 200f
 
         setUpNotificationChannel()
-
-        // Read Fonts file
-        fonts = getAvailableFonts(requireContext())
 
         val activity = activity as MainActivity
 
@@ -161,10 +172,20 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             if (note != null) {
                 if (!note!!.alarm_set) showDatePicker()
                 else {
+                    var convertedDate: String = note!!.alarm_date
+                    if (currentLang == "fa") {
+                        val temp = note!!.alarm_date.split(" ")
+                        Log.e("temp",temp.toString())
+                        convertedDate = mapToIranianDays[temp[0]] + " " + FormatNumber.convertToPersian(
+                            temp[2]
+                        ) + " " + mapToIranianMonths[temp[1]] + " " + FormatNumber.convertToPersian(temp[3]) + " " + "ساعت" + " "+FormatNumber.convertToPersian(
+                            temp[4]
+                        )
+                    }
                     MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
                         .setIcon(R.drawable.ic_warning)
                         .setTitle(R.string.warning)
-                        .setMessage(getString(R.string.cancel_alarm, note!!.alarm_date))
+                        .setMessage(getString(R.string.cancel_alarm, convertedDate))
                         .setPositiveButton(R.string.yes) { dialog, which ->
                             // cancel alarm
                             cancelAlarm()
@@ -222,24 +243,26 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         binding.bullet.setOnClickListener {
             val editTextCursor = binding.noteContentEditText.selectionStart
             val currentText = binding.noteContentEditText.editableText
-            if(currentText.contains('\n')){
-                val index = currentText.substring(0,editTextCursor).indexOfLast {char->
-                char=='\n'
+            if (currentText.contains('\n')) {
+                val index = currentText.substring(0, editTextCursor).indexOfLast { char ->
+                    char == '\n'
                 }
-                if(index==-1){
-                    if(binding.noteContentEditText.editableText[0] !='\u2022'){
+                if (index == -1) {
+                    if (binding.noteContentEditText.editableText[0] != '\u2022') {
                         binding.noteContentEditText.editableText.insert(0, "\u2022 ")
-                    }
-                    else{
-                        binding.noteContentEditText.setText(binding.noteContentEditText.text.delete(0, 2) as Spanned)
+                    } else {
+                        binding.noteContentEditText.setText(
+                            binding.noteContentEditText.text.delete(
+                                0,
+                                2
+                            ) as Spanned
+                        )
                         setSelectionToEndOfLine(0)
                     }
-                }
-                else{
-                    if(binding.noteContentEditText.editableText.length==index+1){
+                } else {
+                    if (binding.noteContentEditText.editableText.length == index + 1) {
                         binding.noteContentEditText.editableText.append("\u2022 ")
-                    }
-                    else {
+                    } else {
                         if (binding.noteContentEditText.editableText[index + 1] != '\u2022') {
                             binding.noteContentEditText.editableText.insert(index + 1, "\u2022 ")
                         } else {
@@ -254,12 +277,10 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     }
 
                 }
-            }
-            else{
-                if(binding.noteContentEditText.editableText.isEmpty()){
+            } else {
+                if (binding.noteContentEditText.editableText.isEmpty()) {
                     binding.noteContentEditText.editableText.append("\u2022 ")
-                }
-                else {
+                } else {
                     if (binding.noteContentEditText.editableText[0] != '\u2022') {
                         binding.noteContentEditText.editableText.insert(0, "\u2022 ")
                     } else {
@@ -275,58 +296,18 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             }
         }
 
-        binding.noteContentEditText.addTextChangedListener(object :TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//                if( text.toString().isNotEmpty() && text.toString()[binding.noteContentEditText.selectionStart-1] == '\n' ){
-//                    Log.e("enter","enter")
-//                    if (text != null) {
-//                        if (lastHasBullet(binding.noteContentEditText.editableText)) {
-//                            addBulletToStart()
-//                        }
-//                    }
-//                }
-            }
-
-            override fun afterTextChanged(text: Editable?) {
-
-            }
-
-        })
-
     }
 
-    private fun addBulletToStart() {
-        Log.e("addBullet","addBullet")
-        binding.noteContentEditText.editableText.insert(binding.noteContentEditText.selectionStart, "\u2022 ")
-    }
-
-    private fun lastHasBullet(text:Editable): Boolean {
-        val start = text.substring(0,binding.noteContentEditText.selectionStart-1).indexOfLast {char->
-            char=='\n'
+    private fun setSelectionToEndOfLine(index: Int) {
+        val end = binding.noteContentEditText.editableText.substring(
+            index,
+            binding.noteContentEditText.editableText.length
+        ).indexOfFirst { char ->
+            char == '\n'
         }
-        Log.e("sss",start.toString())
-        if(start!=-1){
-            val line = text.substring(start,binding.noteContentEditText.selectionStart)
-            Log.e("start",start.toString())
-            Log.e("end",binding.noteContentEditText.selectionStart.toString())
-            Log.e("line", line)
-            return line.contains("\u2022 ")
-        }
-        return false
-    }
-
-    private fun setSelectionToEndOfLine(index:Int) {
-        val end = binding.noteContentEditText.editableText.substring(index,binding.noteContentEditText.editableText.length).indexOfFirst {char->
-            char=='\n'
-        }
-        if(end!=0 && end!=-1){
-            binding.noteContentEditText.setSelection(end+index)
-        }
-        else{
+        if (end != 0 && end != -1) {
+            binding.noteContentEditText.setSelection(end + index)
+        } else {
             binding.noteContentEditText.setSelection(binding.noteContentEditText.text.length)
         }
     }
@@ -335,9 +316,9 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         var isVisible = false
         fun onKeyboardVisibilityChanged(opened: Boolean) {
             Log.e("Keyboard", "keyboard $opened")
-            if(opened){
+            if (opened) {
                 if (binding.toolsFloatingActButtonLayout.toolsFab.rotation != 0f)
-                hideActionButtons()
+                    hideActionButtons()
             }
             if (opened && binding.noteContentEditText.hasFocus()) {
                 binding.styleBar.visibility = View.VISIBLE
@@ -370,18 +351,6 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     }
 
     private fun initStyleBar() {
-//        // Underline
-//        binding.underline.setOnClickListener {
-//            binding.noteContentEditText.underline(
-//                !binding.noteContentEditText.contains(
-//                    KnifeText.FORMAT_UNDERLINED
-//                )
-//            )
-//        }
-//        binding.underline.setOnLongClickListener {
-//            true
-//        }
-
         // Bold
         binding.bold.setOnClickListener {
             binding.noteContentEditText.bold(
@@ -417,18 +386,6 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         binding.strikethrough.setOnLongClickListener {
             true
         }
-
-        // Bullet
-//        binding.bullet.setOnClickListener {
-//            binding.noteContentEditText.bullet(
-//                !binding.noteContentEditText.contains(
-//                    KnifeText.FORMAT_BULLET
-//                )
-//            )
-//        }
-//        binding.bullet.setOnLongClickListener {
-//            true
-//        }
     }
 
 
@@ -439,7 +396,12 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         val newColor = color
         if (note != null) {
             val lastContent = SpannableStringBuilder()
-            lastContent.append(HtmlCompat.fromHtml(note!!.content, HtmlCompat.FROM_HTML_MODE_COMPACT))
+            lastContent.append(
+                HtmlCompat.fromHtml(
+                    note!!.content,
+                    HtmlCompat.FROM_HTML_MODE_COMPACT
+                )
+            )
             setUpBulletStyle(lastContent, lastContent.length)
             if (note!!.title != newTitle || lastContent.toString() != newContent || note!!.color.toString() != newColor.toString()) {
                 MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
@@ -588,10 +550,24 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 temp[3].lastIndexOf(":")
             )
 
+        Log.e("alaram date", alarmDate)
+
+        var convertedDate: String = alarmDate
+        if (currentLang == "fa") {
+            convertedDate = mapToIranianDays[temp[0]] + " " + FormatNumber.convertToPersian(
+                temp[2]
+            ) + " " + mapToIranianMonths[temp[1]] + " " + FormatNumber.convertToPersian(temp[5]) + " " + "ساعت" + " "+FormatNumber.convertToPersian(
+                temp[3].substring(
+                    0,
+                    temp[3].lastIndexOf(":")
+                )
+            )
+        }
+
         MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
             .setIcon(R.drawable.ic_alarm_on)
             .setTitle(R.string.successful)
-            .setMessage(getString(R.string.set_alarm, alarmDate))
+            .setMessage(getString(R.string.set_alarm, convertedDate))
             .setNeutralButton(R.string.ok) { dialog, which ->
             }
             .show()
@@ -663,38 +639,6 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 }
             }
 
-            changeFontFab.setOnClickListener {
-                hideActionButtons()
-                // show change font layout
-                val bottomSheetDialog =
-                    BottomSheetDialog(requireContext(), R.style.BottomSheetDialogTheme)
-                val bottomSheetView = layoutInflater.inflate(R.layout.fonts_bottom_sheet, null)
-                with(bottomSheetDialog) {
-                    setContentView(bottomSheetView)
-                    show()
-                }
-                val bottomSheetBinding = FontsBottomSheetBinding.bind(bottomSheetView)
-
-                bottomSheetBinding.apply {
-                    fontList.layoutManager = LinearLayoutManager(context)
-                    fontAdapter = FontsAdapter(fonts)
-                    fontList.adapter = fontAdapter
-
-                    fontAdapter.onItemClick = { font ->
-                        val typeface = ResourcesCompat.getFont(bottomSheetView.context, font.id)
-                        binding.noteTitleEditText.typeface = typeface
-                        binding.noteContentEditText.typeface = typeface
-                        selectedFontId = font.id
-                        bottomSheetDialog.dismiss()
-                    }
-                    bottomSheetCard.setBackgroundColor(color)
-
-                }
-                bottomSheetView.post {
-                    bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-                }
-            }
-
             colorPickerFab.setOnClickListener {
                 // Show color picker layout
                 hideActionButtons()
@@ -747,9 +691,8 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             toolsFab.animate().rotationBy(-90f)
             saveNoteFab.animate().translationY(-180f).translationX(-80f)
             deleteNoteFab.animate().translationY(-180f).translationX(80f)
-            changeFontFab.animate().translationY(-330f).translationX(-80f)
+            sendCopyOfNoteFab.animate().translationY(-330f).translationX(-80f)
             colorPickerFab.animate().translationY(-330f).translationX(80f)
-            sendCopyOfNoteFab.animate().translationY(-460f)
         }
     }
 
@@ -758,9 +701,8 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             toolsFab.animate().rotationBy(90f)
             saveNoteFab.animate().translationY(0f).translationX(0f)
             deleteNoteFab.animate().translationY(0f).translationX(0f)
-            changeFontFab.animate().translationY(0f).translationX(0f)
+            sendCopyOfNoteFab.animate().translationY(0f).translationX(0f)
             colorPickerFab.animate().translationY(0f).translationX(0f)
-            sendCopyOfNoteFab.animate().translationY(0f)
         }
     }
 
@@ -792,18 +734,10 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             }
             title.setText(note.title)
 
-            // set font
-            val typeface = ResourcesCompat.getFont(requireView().context, note.fontId)
-            title.typeface = typeface
-            content.typeface = typeface
-            Log.e("openedDatabase", note.content)
-
             val builder = SpannableStringBuilder()
             builder.append(HtmlCompat.fromHtml(note.content, HtmlCompat.FROM_HTML_MODE_COMPACT))
             setUpBulletStyle(builder, builder.length)
             content.text = builder
-
-            selectedFontId = note.fontId
 
             if (currentLang == "fa") date.text = FormatNumber.convertToPersian(note.date)
             else date.text = note.date
@@ -836,7 +770,6 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                         binding.noteContentEditText.getHtml(),
                         currentDate,
                         color,
-                        selectedFontId,
                         alarm_set = false,
                         alarm_date = "",
                         is_locked = false,
@@ -864,7 +797,6 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     binding.noteContentEditText.getHtml(),
                     currentDate,
                     color,
-                    selectedFontId,
                     note!!.alarm_set,
                     note!!.alarm_date,
                     note!!.is_locked,
@@ -873,6 +805,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             )
         }
     }
+
     private fun KnifeText.getHtml(): String {
         return Parser.toHtml(editableText)
     }

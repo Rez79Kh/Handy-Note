@@ -131,13 +131,13 @@
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/add_title_bg"
                         android:gravity="top|start"
-                        android:textColor="@color/black"
                         android:hint="@string/note_title"
-                        android:textColorHint="@color/grey"
                         android:importantForAutofill="no"
                         android:inputType="none"
                         android:singleLine="true"
-                        android:textSize="22sp" />
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/grey"
+                        android:textSize="20sp" />
 
                     <io.github.mthli.knife.KnifeText
                         android:id="@+id/noteContentEditText"
@@ -146,19 +146,17 @@
                         android:layout_marginStart="22dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="22dp"
-                        android:textColorHint="@color/grey"
                         android:layout_marginBottom="20dp"
                         android:background="@drawable/add_title_bg"
                         android:gravity="top|start"
                         android:hint="@string/note_content"
-                        android:textColor="@color/black"
                         android:inputType="none"
                         android:padding="10dp"
                         android:scrollbars="vertical"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/grey"
                         android:textSize="16sp"
                         app:bulletColor="@color/black"
-                        app:bulletGapWidth="@dimen/bullet_gap_width"
-                        app:bulletRadius="@dimen/bullet_radius"
                         app:historyEnable="true"
                         app:historySize="99" />
 

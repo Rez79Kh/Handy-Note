@@ -18,8 +18,8 @@ abstract class NoteDatabase() : RoomDatabase() {
         private var instance: NoteDatabase? = null
         private val lock = Any()
 
-        operator fun invoke(context: Context) = instance?: synchronized(lock){
-            instance?: createDatabase(context).also {
+        operator fun invoke(context: Context) = instance ?: synchronized(lock) {
+            instance ?: createDatabase(context).also {
                 instance = it
             }
         }
@@ -27,7 +27,5 @@ abstract class NoteDatabase() : RoomDatabase() {
         private fun createDatabase(context: Context) = Room.databaseBuilder(
             context.applicationContext, NoteDatabase::class.java, "Note_Database"
         ).allowMainThreadQueries().build()
-
     }
-
 }

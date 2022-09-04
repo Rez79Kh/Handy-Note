@@ -9,6 +9,7 @@
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/add_title_bg.xml" value="0.2275" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/baseline_alarm_off_24.xml" value="0.169" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/baseline_alarm_on_24.xml" value="0.1595" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/baseline_delete_forever_24.xml" value="0.1" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/baseline_draw_24.xml" value="0.1545" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/baseline_favorite_24.xml" value="0.2145" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/drawable/baseline_lock_24.xml" value="0.137" />
@@ -33,6 +34,7 @@
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/font/iran_sans.xml" value="0.3046875" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/font/kalameh.xml" value="0.15078125" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/font/shabnam.xml" value="0.3046875" />
+        <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/activity_main.xml" value="0.1175925925925926" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/activity_splash_screen.xml" value="0.3055555555555556" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/choose_font_dialog.xml" value="0.1175925925925926" />
         <entry key="..\:/Users/Administrator/StudioProjects/NoteApp/app/src/main/res/layout/dialog_link.xml" value="0.1" />

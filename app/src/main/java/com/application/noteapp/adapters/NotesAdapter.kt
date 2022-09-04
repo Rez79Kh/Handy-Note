@@ -84,8 +84,6 @@ class NotesAdapter(
                     FormatNumber.convertToPersian(note.date)
                 else date.text = note.date
                 parent.setCardBackgroundColor(note.color)
-                val typeface = ResourcesCompat.getFont(parent.context, note.fontId)
-                title.typeface = typeface
 
                 if (note.is_favorite) {
                     isFavorite.visibility = View.VISIBLE
@@ -103,11 +101,15 @@ class NotesAdapter(
                     content.visibility = View.INVISIBLE
 
                     val builder = SpannableStringBuilder()
-                    builder.append(HtmlCompat.fromHtml(note.content, HtmlCompat.FROM_HTML_MODE_COMPACT))
+                    builder.append(
+                        HtmlCompat.fromHtml(
+                            note.content,
+                            HtmlCompat.FROM_HTML_MODE_COMPACT
+                        )
+                    )
                     setUpBulletStyle(builder, builder.length)
                     content.text = builder
 
-                    content.typeface = typeface
                     lock.visibility = View.VISIBLE
                     parent.setOnClickListener {
                         if (isMenuVisible) {
@@ -181,11 +183,14 @@ class NotesAdapter(
                     lock.visibility = View.GONE
 
                     val builder = SpannableStringBuilder()
-                    builder.append(HtmlCompat.fromHtml(note.content, HtmlCompat.FROM_HTML_MODE_COMPACT))
+                    builder.append(
+                        HtmlCompat.fromHtml(
+                            note.content,
+                            HtmlCompat.FROM_HTML_MODE_COMPACT
+                        )
+                    )
                     setUpBulletStyle(builder, builder.length)
                     content.text = builder
-
-                    content.typeface = typeface
 
                     parent.setOnClickListener {
                         if (isMenuVisible) {
@@ -284,7 +289,7 @@ class NotesAdapter(
                                 clickItem(holder)
                                 countNotesText.observe(holder.binding.lifecycleOwner!!) { value ->
                                     var newVal = value
-                                    if(currentLang=="fa"){
+                                    if (currentLang == "fa") {
                                         newVal = FormatNumber.convertToPersian(value)
                                     }
                                     actionMode!!.title = context.resources.getString(
@@ -394,8 +399,7 @@ class NotesAdapter(
                                             }
 
                                         }
-                                    }
-                                    else{
+                                    } else {
                                         MaterialAlertDialogBuilder(
                                             view!!.context,
                                             R.style.AlertDialogTheme

@@ -253,8 +253,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:tint="@color/app_red"
-                android:src="@drawable/ic_box" />
+                android:src="@drawable/ic_box"
+                app:tint="@color/app_red" />
 
             <TextView
                 android:id="@+id/notFoundNotesText"

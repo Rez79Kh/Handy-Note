@@ -32,63 +32,63 @@ class NoteViewModel(private val noteRepository: NoteRepository) : ViewModel() {
         noteRepository.updateNote(note)
     }
 
-    fun updateAlarmState(note_id:Int,value:Boolean,date:String) = viewModelScope.launch {
-        noteRepository.updateAlarmState(note_id,value,date)
+    fun updateAlarmState(note_id: Int, value: Boolean, date: String) = viewModelScope.launch {
+        noteRepository.updateAlarmState(note_id, value, date)
     }
 
-    fun updateNoteFavoriteState(note_id:Int,value:Boolean) = viewModelScope.launch {
+    fun updateNoteFavoriteState(note_id: Int, value: Boolean) = viewModelScope.launch {
         noteRepository.updateNoteFavoriteState(note_id, value)
     }
 
-    fun updateNoteLockState(note_id:Int, state:Boolean) = viewModelScope.launch {
-        noteRepository.updateNoteLockState(note_id,state)
+    fun updateNoteLockState(note_id: Int, state: Boolean) = viewModelScope.launch {
+        noteRepository.updateNoteLockState(note_id, state)
     }
 
-    fun updateAllNoteLockState(state:Boolean) = viewModelScope.launch {
+    fun updateAllNoteLockState(state: Boolean) = viewModelScope.launch {
         noteRepository.updateAllNoteLockState(state)
     }
 
-    fun getNotesWithAlarmAndLockFilter(): LiveData<List<Note>>  {
+    fun getNotesWithAlarmAndLockFilter(): LiveData<List<Note>> {
         return noteRepository.getNotesWithAlarmAndLockFilter()
     }
 
-    fun getNotesWithLockFilter(): LiveData<List<Note>>  {
+    fun getNotesWithLockFilter(): LiveData<List<Note>> {
         return noteRepository.getNotesWithLockFilter()
     }
 
-    fun getNotesWithUnlockFilter(): LiveData<List<Note>>  {
+    fun getNotesWithUnlockFilter(): LiveData<List<Note>> {
         return noteRepository.getNotesWithUnlockFilter()
     }
 
-    fun getNotesWithFavoriteFilter(): LiveData<List<Note>>  {
+    fun getNotesWithFavoriteFilter(): LiveData<List<Note>> {
         return noteRepository.getNotesWithFavoriteFilter()
     }
 
-    fun getNotesWithAlarmFilter(): LiveData<List<Note>>  {
+    fun getNotesWithAlarmFilter(): LiveData<List<Note>> {
         return noteRepository.getNotesWithAlarmFilter()
     }
 
-    fun getNotesWithAlarmAndLockAndFavoriteFilter(): LiveData<List<Note>>  {
+    fun getNotesWithAlarmAndLockAndFavoriteFilter(): LiveData<List<Note>> {
         return noteRepository.getNotesWithAlarmAndLockAndFavoriteFilter()
     }
 
-    fun getNotesWithAlarmAndUnlockAndFavoriteFilter(): LiveData<List<Note>>  {
+    fun getNotesWithAlarmAndUnlockAndFavoriteFilter(): LiveData<List<Note>> {
         return noteRepository.getNotesWithAlarmAndUnlockAndFavoriteFilter()
     }
 
-    fun getNotesWithAlarmAndUnLockFilter(): LiveData<List<Note>>  {
+    fun getNotesWithAlarmAndUnLockFilter(): LiveData<List<Note>> {
         return noteRepository.getNotesWithAlarmAndUnLockFilter()
     }
 
-    fun getNotesWithAlarmAndFavoriteFilter(): LiveData<List<Note>>  {
+    fun getNotesWithAlarmAndFavoriteFilter(): LiveData<List<Note>> {
         return noteRepository.getNotesWithAlarmAndFavoriteFilter()
     }
 
-    fun getNotesWithLockAndFavoriteFilter(): LiveData<List<Note>>  {
+    fun getNotesWithLockAndFavoriteFilter(): LiveData<List<Note>> {
         return noteRepository.getNotesWithLockAndFavoriteFilter()
     }
 
-    fun getNotesWithUnlockAndFavoriteFilter(): LiveData<List<Note>>  {
+    fun getNotesWithUnlockAndFavoriteFilter(): LiveData<List<Note>> {
         return noteRepository.getNotesWithUnlockAndFavoriteFilter()
     }
 

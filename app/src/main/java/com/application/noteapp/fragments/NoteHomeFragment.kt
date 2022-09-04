@@ -61,7 +61,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
 
     var appFlag = AppFlag.START
 
-    enum class AppFlag{
+    enum class AppFlag {
         START,
         PAUSE
     }
@@ -72,23 +72,24 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
         exitTransition = MaterialElevationScale(false).apply { duration = 300 }
         enterTransition = MaterialElevationScale(true).apply { duration = 300 }
 
-        requireActivity().onBackPressedDispatcher.addCallback(this,object : OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                requireView().hideKeyboard()
-                MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-                    .setIcon(R.drawable.ic_warning)
-                    .setTitle(R.string.warning)
-                    .setMessage(R.string.want_close_app)
-                    .setPositiveButton(R.string.yes) { dialog, which ->
-                        requireActivity().finish()
-                    }
-                    .setNegativeButton(R.string.no) { dialog, which ->
+        requireActivity().onBackPressedDispatcher.addCallback(this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requireView().hideKeyboard()
+                    MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                        .setIcon(R.drawable.ic_warning)
+                        .setTitle(R.string.warning)
+                        .setMessage(R.string.want_close_app)
+                        .setPositiveButton(R.string.yes) { dialog, which ->
+                            requireActivity().finish()
+                        }
+                        .setNegativeButton(R.string.no) { dialog, which ->
 
-                    }
-                    .show()
-            }
+                        }
+                        .show()
+                }
 
-        })
+            })
 
     }
 
@@ -130,7 +131,7 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
             override fun onTextChanged(ch: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (ch.toString().isNotEmpty()) {
                     val text: String = ch.toString()
-                    val query: String = "%$text%"
+                    val query = "%$text%"
                     if (query.isNotEmpty()) {
                         viewModel.findNote(query).observe(viewLifecycleOwner) {
                             notesAdapter.submitList(it)
@@ -165,25 +166,22 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
     }
 
     private fun handleDeviceSecurity() {
-        if(!deviceHasSecurity(requireContext())){
-            Log.e("deviceHasSecurity","false")
+        if (!deviceHasSecurity(requireContext())) {
+            Log.e("deviceHasSecurity", "false")
             // no password , pin , ... is set on the phone
             viewModel.updateAllNoteLockState(false)
             notesAdapter.submitList(viewModel.getAllNotes().value)
-        }
-        else Log.e("deviceHasSecurity","true")
+        } else Log.e("deviceHasSecurity", "true")
     }
 
     override fun onResume() {
-        if(appFlag == AppFlag.PAUSE) {
-            Log.e("onResume","onResume")
+        if (appFlag == AppFlag.PAUSE) {
             handleDeviceSecurity()
         }
         super.onResume()
     }
 
     override fun onPause() {
-        Log.e("onPause","onPause")
         appFlag = AppFlag.PAUSE
         super.onPause()
     }
@@ -196,10 +194,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                 ) && checkedIds.contains(R.id.favorite_filter)
             ) {
                 // alarm , lock , unlock and favorite filter
-                Log.e(
-                    "alarm , lock , unlock and favorite filter",
-                    "alarm , lock , unlock and favorite filter"
-                )
                 binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                     ContextCompat.getColor(
                         requireContext(),
@@ -235,7 +229,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                     )
                 ) {
                     // alarm , lock , unlock filter
-                    Log.e("alarm , lock , unlock filter", "alarm , lock , unlock filter")
                     binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
@@ -269,7 +262,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                     )
                 ) {
                     // unlock , lock , favorite filter
-                    Log.e("unlock , lock , favorite filter", "unlock , lock , favorite filter")
                     binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
@@ -304,7 +296,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                     )
                 ) {
                     // alarm , lock , favorite filter
-                    Log.e("alarm , lock , favorite filter", "alarm , lock , favorite filter")
                     binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
@@ -338,7 +329,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                     )
                 ) {
                     // alarm , unlock , favorite filter
-                    Log.e("alarm , unlock , favorite filter", "alarm , unlock , favorite filter")
                     binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                         ContextCompat.getColor(
                             requireContext(),
@@ -370,7 +360,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                 } else {
                     if (checkedIds.contains(R.id.locked_filter) && checkedIds.contains(R.id.unlocked_filter)) {
                         // lock , unlock filter
-                        Log.e("lock , unlock filter", "lock , unlock filter")
                         binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -401,7 +390,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                             }
                     } else if (checkedIds.contains(R.id.locked_filter) && checkedIds.contains(R.id.alarm_filter)) {
                         // lock , unlock filter
-                        Log.e("lock , alarm filter", "lock , alarm filter")
                         binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -432,7 +420,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                             }
                     } else if (checkedIds.contains(R.id.locked_filter) && checkedIds.contains(R.id.favorite_filter)) {
                         // lock , favorite filter
-                        Log.e("lock , favorite filter", "lock , favorite filter")
                         binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -463,7 +450,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                             }
                     } else if (checkedIds.contains(R.id.unlocked_filter) && checkedIds.contains(R.id.alarm_filter)) {
                         // unlock , alarm filter
-                        Log.e("unlock , alarm filter", "unlock , alarm filter")
                         binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -494,7 +480,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                             }
                     } else if (checkedIds.contains(R.id.unlocked_filter) && checkedIds.contains(R.id.favorite_filter)) {
                         // unlock , favorite filter
-                        Log.e("unlock , favorite filter", "unlock , favorite filter")
                         binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -525,7 +510,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                             }
                     } else if (checkedIds.contains(R.id.alarm_filter) && checkedIds.contains(R.id.favorite_filter)) {
                         // alarm , favorite filter
-                        Log.e("alarm , favorite filter", "alarm , favorite filter")
                         binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -557,7 +541,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                     } else {
                         if (checkedIds.contains(R.id.locked_filter)) {
                             // lock filter
-                            Log.e("lock filter", "lock filter")
                             binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
@@ -588,7 +571,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                                 }
                         } else if (checkedIds.contains(R.id.unlocked_filter)) {
                             // unlock filter
-                            Log.e("unlock filter", "unlock filter")
                             binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
@@ -619,7 +601,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                                 }
                         } else if (checkedIds.contains(R.id.favorite_filter)) {
                             // favorite filter
-                            Log.e("favorite filter", "favorite filter")
                             binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
@@ -650,7 +631,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                                 }
                         } else if (checkedIds.contains(R.id.alarm_filter)) {
                             // alarm filter
-                            Log.e("alarm filter", "alarm filter")
                             binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
@@ -681,7 +661,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                                 }
                         } else {
                             // no filter
-                            Log.e("no filter", "no filter")
                             binding.alarmFilter.chipBackgroundColor = ColorStateList.valueOf(
                                 ContextCompat.getColor(
                                     requireContext(),
@@ -734,8 +713,6 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
                     Log.e("Authentication result", result.toString())
                     Log.e("Authentication Success", "Authentication Success")
 
-                    Log.e("notesToUnlock", notesToUnlock.toString())
-                    Log.e("noteToUnlockPositions", notesToUnlockPositions.toString())
                     if (allNotesToUnlock) {
                         viewModel.updateAllNoteLockState(false)
                     } else {
@@ -870,13 +847,12 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
 
     private fun observeData() {
         viewModel.getAllNotes().observe(viewLifecycleOwner) { notesList ->
-            Log.e("heree","heree")
             binding.noDataFoundLayout.isVisible = notesList.isEmpty()
             notesAdapter.submitList(notesList)
             // for update alarm icon on notes in homepage
-            for(i in notesAdapter.currentList.indices){
-                for(note in notesList){
-                    if(notesAdapter.currentList[i].id == note.id) {
+            for (i in notesAdapter.currentList.indices) {
+                for (note in notesList) {
+                    if (notesAdapter.currentList[i].id == note.id) {
                         if (note.alarm_set != notesAdapter.currentList[i].alarm_set) {
                             notesAdapter.notifyItemChanged(i)
                         }
@@ -899,7 +875,8 @@ class NoteHomeFragment : Fragment(R.layout.fragment_note_home), NotesAdapter.Eve
             layoutManager =
                 StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL)
             setHasFixedSize(true)
-            notesAdapter = NotesAdapter(countNotesText, viewLifecycleOwner, adapterListener,context)
+            notesAdapter =
+                NotesAdapter(countNotesText, viewLifecycleOwner, adapterListener, context)
             notesAdapter.stateRestorationPolicy =
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             adapter = notesAdapter

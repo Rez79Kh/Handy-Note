@@ -9,7 +9,7 @@
         android:id="@+id/noteHomeFragment"
         android:name="com.application.noteapp.fragments.NoteHomeFragment"
         android:label="fragment_note_home"
-        tools:layout="@layout/fragment_note_home" >
+        tools:layout="@layout/fragment_note_home">
         <action
             android:id="@+id/action_noteHomeFragment_to_addOrUpdateNoteFragment"
             app:destination="@id/addOrUpdateNoteFragment" />
@@ -19,15 +19,15 @@
         android:id="@+id/addOrUpdateNoteFragment"
         android:name="com.application.noteapp.fragments.AddOrUpdateNoteFragment"
         android:label="fragment_add_or_update_note"
-        tools:layout="@layout/fragment_add_or_update_note" >
+        tools:layout="@layout/fragment_add_or_update_note">
         <action
             android:id="@+id/action_addOrUpdateNoteFragment_to_noteHomeFragment"
             app:destination="@id/noteHomeFragment" />
         <argument
             android:name="note"
-            app:argType="com.application.noteapp.model.Note"
             android:defaultValue="@null"
-            app:nullable="true"/>
+            app:argType="com.application.noteapp.model.Note"
+            app:nullable="true" />
     </fragment>
 
 
