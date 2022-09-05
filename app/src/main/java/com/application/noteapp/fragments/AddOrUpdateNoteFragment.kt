@@ -175,12 +175,15 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     var convertedDate: String = note!!.alarm_date
                     if (currentLang == "fa") {
                         val temp = note!!.alarm_date.split(" ")
-                        Log.e("temp",temp.toString())
-                        convertedDate = mapToIranianDays[temp[0]] + " " + FormatNumber.convertToPersian(
-                            temp[2]
-                        ) + " " + mapToIranianMonths[temp[1]] + " " + FormatNumber.convertToPersian(temp[3]) + " " + "ساعت" + " "+FormatNumber.convertToPersian(
-                            temp[4]
-                        )
+                        Log.e("temp", temp.toString())
+                        convertedDate =
+                            mapToIranianDays[temp[0]] + " " + FormatNumber.convertToPersian(
+                                temp[2]
+                            ) + " " + mapToIranianMonths[temp[1]] + " " + FormatNumber.convertToPersian(
+                                temp[3]
+                            ) + " " + "ساعت" + " " + FormatNumber.convertToPersian(
+                                temp[4]
+                            )
                     }
                     MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
                         .setIcon(R.drawable.ic_warning)
@@ -219,7 +222,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 } else {
                     binding.favoriteButton.setBackgroundResource(R.drawable.ic_favorite_disable)
                     binding.favoriteButton.backgroundTintList =
-                        ColorStateList.valueOf(resources.getColor(R.color.black))
+                        ColorStateList.valueOf(resources.getColor(R.color.app_yellow))
                     note!!.is_favorite = false
                     viewModel.updateNoteFavoriteState(note!!.id, false)
                 }
@@ -296,6 +299,24 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             }
         }
 
+        binding.saveNoteButton.setOnClickListener {
+            if (binding.noteTitleEditText.text.toString()
+                    .isNotEmpty() && binding.noteContentEditText.text.toString()
+                    .isNotEmpty()
+            ) {
+                if (binding.toolsFloatingActButtonLayout.toolsFab.rotation != 0f) hideActionButtons()
+                saveNote()
+            } else {
+                // Your note is empty
+                MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+                    .setIcon(R.drawable.ic_warning)
+                    .setTitle(R.string.warning)
+                    .setMessage(R.string.cant_add_empty_note)
+                    .setNeutralButton(R.string.ok) { dialog, which ->
+                    }
+                    .show()
+            }
+        }
     }
 
     private fun setSelectionToEndOfLine(index: Int) {
@@ -513,7 +534,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         viewModel.updateAlarmState(note!!.id, false, "")
         binding.notificationButton.setBackgroundResource(R.drawable.ic_alarm_off)
         binding.notificationButton.backgroundTintList =
-            ColorStateList.valueOf(resources.getColor(R.color.black))
+            ColorStateList.valueOf(resources.getColor(R.color.app_red))
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(requireContext(), NotificationReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
@@ -556,7 +577,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
         if (currentLang == "fa") {
             convertedDate = mapToIranianDays[temp[0]] + " " + FormatNumber.convertToPersian(
                 temp[2]
-            ) + " " + mapToIranianMonths[temp[1]] + " " + FormatNumber.convertToPersian(temp[5]) + " " + "ساعت" + " "+FormatNumber.convertToPersian(
+            ) + " " + mapToIranianMonths[temp[1]] + " " + FormatNumber.convertToPersian(temp[5]) + " " + "ساعت" + " " + FormatNumber.convertToPersian(
                 temp[3].substring(
                     0,
                     temp[3].lastIndexOf(":")
@@ -587,25 +608,6 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                 requireView().hideKeyboard()
                 if (toolsFab.rotation == 0f) showActionButtons()
                 else hideActionButtons()
-            }
-
-            saveNoteFab.setOnClickListener {
-                if (binding.noteTitleEditText.text.toString()
-                        .isNotEmpty() && binding.noteContentEditText.text.toString()
-                        .isNotEmpty()
-                ) {
-                    hideActionButtons()
-                    saveNote()
-                } else {
-                    // Your note is empty
-                    MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-                        .setIcon(R.drawable.ic_warning)
-                        .setTitle(R.string.warning)
-                        .setMessage(R.string.cant_add_empty_note)
-                        .setNeutralButton(R.string.ok) { dialog, which ->
-                        }
-                        .show()
-                }
             }
 
             deleteNoteFab.setOnClickListener {
@@ -689,20 +691,18 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
     private fun showActionButtons() {
         binding.toolsFloatingActButtonLayout.apply {
             toolsFab.animate().rotationBy(-90f)
-            saveNoteFab.animate().translationY(-180f).translationX(-80f)
-            deleteNoteFab.animate().translationY(-180f).translationX(80f)
-            sendCopyOfNoteFab.animate().translationY(-330f).translationX(-80f)
-            colorPickerFab.animate().translationY(-330f).translationX(80f)
+            deleteNoteFab.animate().translationY(-180f).translationX(-80f)
+            colorPickerFab.animate().translationY(-180f).translationX(80f)
+            sendCopyOfNoteFab.animate().translationY(-330f).translationX(0f)
         }
     }
 
     private fun hideActionButtons() {
         binding.toolsFloatingActButtonLayout.apply {
             toolsFab.animate().rotationBy(90f)
-            saveNoteFab.animate().translationY(0f).translationX(0f)
+            colorPickerFab.animate().translationY(0f).translationX(0f)
             deleteNoteFab.animate().translationY(0f).translationX(0f)
             sendCopyOfNoteFab.animate().translationY(0f).translationX(0f)
-            colorPickerFab.animate().translationY(0f).translationX(0f)
         }
     }
 
@@ -720,7 +720,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             } else {
                 binding.notificationButton.setBackgroundResource(R.drawable.ic_alarm_off)
                 binding.notificationButton.backgroundTintList =
-                    ColorStateList.valueOf(resources.getColor(R.color.black))
+                    ColorStateList.valueOf(resources.getColor(R.color.app_red))
             }
 
             if (note.is_favorite) {
@@ -730,7 +730,7 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
             } else {
                 binding.favoriteButton.setBackgroundResource(R.drawable.ic_favorite_disable)
                 binding.favoriteButton.backgroundTintList =
-                    ColorStateList.valueOf(resources.getColor(R.color.black))
+                    ColorStateList.valueOf(resources.getColor(R.color.app_yellow))
             }
             title.setText(note.title)
 

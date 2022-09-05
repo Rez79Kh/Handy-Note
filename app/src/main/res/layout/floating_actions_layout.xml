@@ -35,17 +35,6 @@
             app:rippleColor="@color/grey" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/saveNoteFab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_margin="16dp"
-            android:backgroundTint="@color/app_yellow"
-            android:src="@drawable/ic_save"
-            app:fabSize="mini"
-            app:rippleColor="@color/grey" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/colorPickerFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -17,7 +17,11 @@
         <RelativeLayout
             android:id="@+id/FragmentAddOrUpdateToolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="10dp">
 
             <ImageView
                 android:id="@+id/backButton"
@@ -25,40 +29,22 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:paddingStart="5dp"
-                android:paddingTop="10dp"
-                android:paddingEnd="5dp"
-                android:paddingBottom="5dp"
                 android:src="@drawable/ic_baseline_arrow_back_ios_24" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginStart="4dp"
+                android:layout_centerVertical="true"
                 android:layout_marginEnd="4dp"
-                android:background="@drawable/edit_date_bar"
-                android:orientation="horizontal"
-                android:paddingStart="13dp"
-                android:paddingTop="5dp"
-                android:paddingEnd="13dp"
-                android:paddingBottom="5dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_edit_calendar_24"
-                    app:tint="@color/black" />
-
+                android:layout_toEndOf="@id/backButton"
+                android:orientation="horizontal">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/noteEditedOnDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
                     android:ellipsize="end"
                     android:textAlignment="center"
                     android:textColor="@color/black"
@@ -71,8 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="15dp">
+                android:layout_centerVertical="true">
 
                 <ImageButton
                     android:id="@+id/favoriteButton"
@@ -80,22 +65,22 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="15dp"
-                    android:background="@drawable/ic_favorite_disable"
-                    android:paddingStart="5dp"
-                    android:paddingTop="10dp"
-                    android:paddingEnd="5dp"
-                    android:paddingBottom="5dp" />
+                    android:background="@drawable/ic_favorite_disable" />
 
                 <ImageButton
                     android:id="@+id/notificationButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
-                    android:background="@drawable/ic_alarm_off"
-                    android:paddingStart="5dp"
-                    android:paddingTop="10dp"
-                    android:paddingEnd="5dp"
-                    android:paddingBottom="5dp" />
+                    android:layout_marginEnd="15dp"
+                    android:background="@drawable/ic_alarm_off" />
+
+                <ImageButton
+                    android:id="@+id/saveNoteButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:background="@drawable/baseline_save_as_24" />
 
             </LinearLayout>
 

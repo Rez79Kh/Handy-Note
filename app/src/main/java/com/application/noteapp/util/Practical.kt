@@ -4,15 +4,12 @@ import android.app.KeyguardManager
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
-import android.provider.Settings
 import android.text.Editable
 import android.text.Spanned
 import android.text.style.BulletSpan
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.core.os.ConfigurationCompat
-import com.application.noteapp.R
 import io.github.mthli.knife.KnifeBulletSpan
 
 /*
@@ -29,27 +26,15 @@ fun getCurrentPhoneLanguage() =
         .substringBefore("_")
 
 fun deviceHasSecurity(context: Context): Boolean {
-    return hasPassOrPin(context) || hasPattern(context)
+    return isPassSet(context)
 }
 
-fun hasPassOrPin(context: Context): Boolean {
+fun isPassSet(context: Context): Boolean {
     val keyguardManager: KeyguardManager =
         context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
     return keyguardManager.isKeyguardSecure
 }
 
-fun hasPattern(context: Context): Boolean {
-    val contentResolver = context.contentResolver
-
-    return try {
-        val lockPatternEnable =
-            Settings.Secure.getInt(contentResolver, Settings.Secure.LOCK_PATTERN_ENABLED)
-        lockPatternEnable == 1;
-    } catch (ex: Settings.SettingNotFoundException) {
-        Log.e("Settings.SettingNotFoundException", ex.message.toString())
-        false
-    }
-}
 fun setUpBulletStyle(editable: Editable, end: Int) {
     val bulletSpans = editable.getSpans(
         0, end,
