@@ -797,10 +797,10 @@ class AddOrUpdateNoteFragment : Fragment(R.layout.fragment_add_or_update_note) {
                     binding.noteContentEditText.getHtml(),
                     currentDate,
                     color,
-                    note!!.alarm_set,
-                    note!!.alarm_date,
-                    note!!.is_locked,
-                    note!!.is_favorite
+                    alarm_set = note!!.alarm_set,
+                    alarm_date = note!!.alarm_date,
+                    is_locked = note!!.is_locked,
+                    is_favorite = note!!.is_favorite
                 )
             )
         }

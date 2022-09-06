@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">یادداشت</string>
+    <string name="app_name">یادداشت روان</string>
     <string name="note_title">عنوان یادداشت</string>
     <string name="note_content">متن یادداشت</string>
     <string name="my_notes">یادداشت های من</string>
