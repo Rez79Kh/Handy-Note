@@ -8,7 +8,7 @@ This application implemented using :
 - Room Database
 
 ## Download
-Download the APK file from [here.](https://drive.google.com/file/d/1nQfZZl91HtLM0yurBE6NRmYX8yC6iap0/view?usp=sharing)
+You can download the APK file from [release](https://github.com/Rez79Kh/Handy-Note/releases/tag/v1.0.0) section.
 
 ## Application Features
 - Animated Splash Screen
